@@ -42,8 +42,8 @@ class PostDetail(APIView):
 
 
 class UserPostList(APIView):
-    def get(self, request, user_id):
-        queryset = Post.objects.filter(author_id=user_id)
+    def get(self, request, user_name):
+        queryset = Post.objects.filter(author__username=user_name)
         serializer = PostSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

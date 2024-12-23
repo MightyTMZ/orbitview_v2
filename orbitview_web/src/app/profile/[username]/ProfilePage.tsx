@@ -12,26 +12,30 @@ const ProfilePage = () => {
 
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
 
-  const fetchEndpoint = `${backendServer}/profile/${username}/`;
-
-  console.log(fetchEndpoint);
+  // console.log(profileFetchEndpoint);
 
   useEffect(() => {
     if (username) {
-      const fetchProfile = async () => {
+      const fetchProfileandPosts = async () => {
         try {
-          const response = await axios.get(fetchEndpoint);
-          setProfile(response.data);
-          console.log(profile);
+          const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
+          const response1 = await axios.get(profileFetchEndpoint);
+          setProfile(response1.data);
+          const postsByUserFetchEndpoint = `${backendServer}/content/posts/${username}/`;
+          console.log(postsByUserFetchEndpoint);
+          const response2 = await axios.get(postsByUserFetchEndpoint);
+          setPosts(response2.data);
+          console.log(posts); // testing
         } catch (error) {
-          console.error("Error fetching profile", error);
+          console.error("Error fetching profile or posts", error);
         } finally {
           setLoading(false);
         }
       };
 
-      fetchProfile();
+      fetchProfileandPosts();
     }
   }, [username]);
 
@@ -74,6 +78,22 @@ const ProfilePage = () => {
 
         {/* Follow button */}
         <button className={styles.followBtn}>Follow</button>
+      </div>
+      <div className={styles.postsContainer}>
+        <h2>Posts by {profile.user.first_name}</h2>
+        {posts.length === 0 ? (
+          <p>
+            No posts from {profile.first_name} {profile.last_name} yet.
+          </p>
+        ) : (
+          posts.map((post: any) => (
+            <div key={post.id} className={styles.post}>
+              <h3 className={styles.postTitle}>{post.title}</h3>
+              <p className={styles.postContent}>{post.content}</p>
+              {/* You can add more post details here */}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
