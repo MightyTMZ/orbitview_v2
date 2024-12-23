@@ -13,6 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = [
+            'id',
             'title', 
             'content',
             'date_posted',
@@ -31,6 +32,7 @@ class CommmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
+            'id',
             'post', 
             'name',
             'body',

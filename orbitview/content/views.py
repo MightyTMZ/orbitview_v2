@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from .models import Post, Comment
 from .serializers import PostSerializer, CommmentSerializer
 from django.contrib.auth.models import User
+from users.serializers import ProfileUserSerializer
+from rest_framework.permissions import IsAdminUser
 
 
 class PostListCreate(APIView):
@@ -107,3 +109,43 @@ class LikeComment(APIView):
         else:
             comment.likes.add(request.user)
             return Response({"message": "Comment liked."}, status=status.HTTP_200_OK)
+
+
+# For fetching more information about posts (e.g. specific people who liked it)
+
+class PostLikesList(APIView):
+
+    # add pagination and as they scroll through the list, the frontend will fetch the api even further
+
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        queryset = post.likes
+        serializer = ProfileUserSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class PostSharesList(APIView):
+
+    # add pagination and as they scroll through the list, the frontend will fetch the api even further
+
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        queryset = post.shares
+        serializer = ProfileUserSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+class PostSavesList(APIView):
+
+    # we don't want to share this information with others
+    # the reels we save on instagram tend to be vulnerable information
+    # only the OV recommendation system can get access to this
+
+    permission_classes = [IsAdminUser]
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        queryset = post.saves
+        serializer = ProfileUserSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    

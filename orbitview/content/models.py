@@ -13,20 +13,32 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(User, related_name="blogpost", blank=True)
-    saves = models.ManyToManyField(User, related_name="blogsave", blank=True)
+    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
+    saves = models.ManyToManyField(User, related_name="saved_posts", blank=True)
+    shares = models.ManyToManyField(User, related_name="shared_posts", blank=True)
 
     def total_likes(self):
         return self.likes.count()
 
     def total_saves(self):
         return self.saves.count()
+    
+    def total_shares(self):
+        return self.shares.count()
 
     def __str__(self):
-        return self.title
+        return f"{self.id}: {self.title}"
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={"pk":self.pk})
+
+
+'''
+class PostAttachment(models.Model): # PDFs, files, images or any attachments people want to send
+    file = models.FileField(upload_to=dynamic route that sorts the file attachments people put on)
+    post = models.ForeignKey(Post)
+'''
+
 
 
 

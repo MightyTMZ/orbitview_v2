@@ -77,23 +77,17 @@ const ProfilePage = () => {
         </div>
 
         {/* Follow button */}
-        <button className={styles.followBtn}>Follow</button>
+        <button className={styles.actionBtn}>Connect</button>
+        <button className={styles.actionBtn}>Follow</button>
+        <button className={styles.actionBtn}>Message</button>
       </div>
-      <div className={styles.postsContainer}>
-        <h2>Posts by {profile.user.first_name}</h2>
-        {posts.length === 0 ? (
-          <p>
-            No posts from {profile.first_name} {profile.last_name} yet.
-          </p>
-        ) : (
-          posts.map((post: any) => (
-            <div key={post.id} className={styles.post}>
-              <h3 className={styles.postTitle}>{post.title}</h3>
-              <p className={styles.postContent}>{post.content}</p>
-              {/* You can add more post details here */}
-            </div>
-          ))
-        )}
+      <div className="container mx-auto mt-8 px-4">
+        <h1 className="text-4xl font-extrabold text-white mb-6">Posts</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.map((userPost: Post) => (
+            <PostPreviewCard key={userPost.date_posted} post={userPost} />
+          ))}
+        </div>
       </div>
     </div>
   );

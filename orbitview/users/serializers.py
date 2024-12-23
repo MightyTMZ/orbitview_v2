@@ -24,6 +24,32 @@ class UserSerializer(serializers.ModelSerializer):
                   # 'email', privacy duh!
                   'first_name', 
                   'last_name']
+        
+
+class SimpleProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = [
+            'image',
+            'by_line',
+            'is_online',
+        ]
+
+
+# for the views of retrieving the list of users who liked, shared, or saved a post
+class ProfileUserSerializer(serializers.ModelSerializer):
+
+    profile = SimpleProfileSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+            'first_name', 
+            'last_name',
+            'profile',
+        ]
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -38,8 +64,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'user',
             'is_private',
             'is_online',
-            'following',
-            'followers',
+            # 'following',
+            # 'followers',
             'bio',
             'by_line',
             'date_of_birth',

@@ -1,20 +1,15 @@
 from django.urls import path
-from .views import (
-    PostListCreate,
-    PostDetail,
-    CommentListCreate,
-    LikePost,
-    SavePost,
-    LikeComment,
-    UserPostList
-)
+from . import views
 
 urlpatterns = [
-    path('posts/', PostListCreate.as_view(), name='post-list-create'),
-    path('posts/<str:user_name>/', UserPostList.as_view(), name='user-post-list'),
-    path('posts/<int:pk>/', PostDetail.as_view(), name='post-detail'),
-    path('posts/<int:post_id>/comments/', CommentListCreate.as_view(), name='comment-list-create'),
-    path('posts/<int:pk>/like/', LikePost.as_view(), name='like-post'),
-    path('posts/<int:pk>/save/', SavePost.as_view(), name='save-post'),
-    path('comments/<int:pk>/like/', LikeComment.as_view(), name='like-comment'),
+    path('posts/', views.PostListCreate.as_view(), name='post-list-create'),
+    path('posts/<str:user_name>/', views.UserPostList.as_view(), name='user-post-list'),
+    path('posts/<int:pk>/', views.PostDetail.as_view(), name='post-detail'),
+    path('posts/<int:post_id>/comments/', views.CommentListCreate.as_view(), name='comment-list-create'),
+    path('posts/<int:pk>/like/', views.LikePost.as_view(), name='like-post'),
+    path('posts/<int:pk>/save/', views.SavePost.as_view(), name='save-post'),
+    path('comments/<int:pk>/like/', views.LikeComment.as_view(), name='like-comment'),
+    path('posts/<int:pk>/likes/', views.PostLikesList.as_view(), name="list-of-users-likes"),
+    path('posts/<int:pk>/shared/', views.PostSharesList.as_view(), name="list-of-users-shares"),
+    path('posts/<int:pk>/saved/', views.PostSavesList.as_view(), name="list-of-users-saves"),
 ]

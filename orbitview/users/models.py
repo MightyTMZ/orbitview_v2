@@ -12,7 +12,7 @@ def validate_age(value):
         raise ValidationError('Users must be at least 13 years old to register.')
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     is_private = models.BooleanField(default=False)  # Private account setting
     is_online = models.BooleanField(default=False)
     following = models.ManyToManyField(User, related_name="following", blank=True)
