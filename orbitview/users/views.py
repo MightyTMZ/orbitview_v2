@@ -3,9 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import Profile, FollowRequest
+from django.contrib.auth.models import User
 from .serializers import ProfileSerializer, FollowRequestSerializer
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
+@method_decorator(cache_page(90), name='dispatch') # cache it for 90 seconds
 class ProfileDetailAPIView(APIView):
     """
     Retrieve or update a user's profile.

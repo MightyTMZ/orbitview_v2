@@ -25,7 +25,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 
-class CommmentSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     
     post = PostSerializer(read_only=True)
     
@@ -40,3 +40,5 @@ class CommmentSerializer(serializers.ModelSerializer):
             'likes',
             'reply',
         ]
+
+

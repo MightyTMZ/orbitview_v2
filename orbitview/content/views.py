@@ -3,10 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment
-from .serializers import PostSerializer, CommmentSerializer
+from .serializers import PostSerializer, CommentSerializer
 from django.contrib.auth.models import User
 from users.serializers import ProfileUserSerializer
 from rest_framework.permissions import IsAdminUser
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 
 class PostListCreate(APIView):
@@ -23,6 +26,7 @@ class PostListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+@method_decorator(cache_page(90), name='dispatch')  # Cache for 90 seconds
 class PostDetail(APIView):
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
@@ -43,6 +47,8 @@ class PostDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# the user's own list of posts that they can edit
+# @method_decorator(cache_page(30), name='dispatch')  # Cache for 15 minutes
 class UserPostList(APIView):
     def get(self, request, user_name):
         queryset = Post.objects.filter(author__username=user_name)
@@ -52,17 +58,37 @@ class UserPostList(APIView):
 
 class CommentListCreate(APIView):
     def get(self, request, post_id):
+        # Retrieve the Post instance
         post = get_object_or_404(Post, pk=post_id)
-        comments = post.comments.all().order_by('-date_added')
-        serializer = CommmentSerializer(comments, many=True)
+
+        # Filter comments by Post using content type and object_id
+        post_content_type = ContentType.objects.get_for_model(Post)
+        comments = Comment.objects.filter(
+            content_type=post_content_type,
+            object_id=post.id
+        ).order_by('-date_added')
+
+        serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, post_id):
+        # Retrieve the Post instance
         post = get_object_or_404(Post, pk=post_id)
-        serializer = CommmentSerializer(data=request.data)
+
+        # Get the ContentType for Post
+        post_content_type = ContentType.objects.get_for_model(Post)
+
+        # Pass data to the serializer
+        serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(post=post, name=request.user)
+            # Save the comment with generic relations
+            serializer.save(
+                content_type=post_content_type,
+                object_id=post.id,
+                name=request.user  # Assuming the authenticated user is the commenter
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
