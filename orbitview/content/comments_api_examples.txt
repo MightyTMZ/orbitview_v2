@@ -1,0 +1,10 @@
+Example Requests:
+
+GET /post/1/comments/:
+- Retrieves comments for the Post with ID 1.
+
+POST /post/1/comments/:
+- Creates a new comment for the Post with ID 1.
+
+GET /article/42/comments/:
+- Retrieves comments for the Article with ID 42.

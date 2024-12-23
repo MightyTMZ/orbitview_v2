@@ -2,14 +2,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
 from django.contrib.auth.models import User
 from users.serializers import ProfileUserSerializer
 from rest_framework.permissions import IsAdminUser
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from django.contrib.contenttypes.models import ContentType
+from .models import Post, Comment, Article
+from .serializers import PostSerializer, CommentSerializer, ArticleSerializer
 
 
 class PostListCreate(APIView):
@@ -26,8 +26,22 @@ class PostListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-@method_decorator(cache_page(90), name='dispatch')  # Cache for 90 seconds
+class ArticleListCreate(APIView):
+    def get(self, request):
+        article = Article.objects.all().order_by('-created_at')
+        serializer = ArticleSerializer(article, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = ArticleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
 class PostDetail(APIView):
+    cache_page(90)
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         serializer = PostSerializer(post)
@@ -45,6 +59,29 @@ class PostDetail(APIView):
         post = get_object_or_404(Post, pk=pk, author=request.user)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+class ArticleDetail(APIView):
+    cache_page(90)
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        serializer = ArticleSerializer(article)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        article = get_object_or_404(Article, pk=pk, author=request.user)
+        serializer = ArticleSerializer(article, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        article = get_object_or_404(Article, pk=pk, author=request.user)
+        article.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
 
 
 # the user's own list of posts that they can edit
@@ -54,38 +91,40 @@ class UserPostList(APIView):
         queryset = Post.objects.filter(author__username=user_name)
         serializer = PostSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class UserArticleList(APIView):
+    def get(self, request, user_name):
+        queryset = Article.objects.filter(author__username=user_name)
+        serializer = ArticleSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CommentListCreate(APIView):
-    def get(self, request, post_id):
-        # Retrieve the Post instance
-        post = get_object_or_404(Post, pk=post_id)
-
-        # Filter comments by Post using content type and object_id
-        post_content_type = ContentType.objects.get_for_model(Post)
+    def get(self, request, content_type, object_id):
+        # Retrieve the ContentType dynamically
+        content_type_model = get_object_or_404(ContentType, model=content_type.lower())
+        # Retrieve the comments for the specific object
         comments = Comment.objects.filter(
-            content_type=post_content_type,
-            object_id=post.id
+            content_type=content_type_model,
+            object_id=object_id
         ).order_by('-date_added')
 
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, post_id):
-        # Retrieve the Post instance
-        post = get_object_or_404(Post, pk=post_id)
-
-        # Get the ContentType for Post
-        post_content_type = ContentType.objects.get_for_model(Post)
+    def post(self, request, content_type, object_id):
+        # Retrieve the ContentType dynamically
+        content_type_model = get_object_or_404(ContentType, model=content_type.lower())
 
         # Pass data to the serializer
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             # Save the comment with generic relations
             serializer.save(
-                content_type=post_content_type,
-                object_id=post.id,
-                name=request.user  # Assuming the authenticated user is the commenter
+                content_type=content_type_model,
+                object_id=object_id,
+                name=request.user
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -119,6 +158,36 @@ class SavePost(APIView):
             return Response({"message": "Post unsaved."}, status=status.HTTP_200_OK)
         else:
             post.saves.add(request.user)
+            return Response({"message": "Post saved."}, status=status.HTTP_200_OK)
+
+
+class LikeArticle(APIView):
+    """
+    Handles liking and unliking a post.
+    """
+
+    def post(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        if request.user in article.likes.all():
+            article.likes.remove(request.user)
+            return Response({"message": "Post unliked."}, status=status.HTTP_200_OK)
+        else:
+            article.likes.add(request.user)
+            return Response({"message": "Post liked."}, status=status.HTTP_200_OK)
+
+
+class SaveArticle(APIView):
+    """
+    Handles saving and unsaving a post.
+    """
+
+    def post(self, request, pk):
+        article = get_object_or_404(Post, pk=pk)
+        if request.user in article.saves.all():
+            article.saves.remove(request.user)
+            return Response({"message": "Post unsaved."}, status=status.HTTP_200_OK)
+        else:
+            article.saves.add(request.user)
             return Response({"message": "Post saved."}, status=status.HTTP_200_OK)
 
 
@@ -172,6 +241,44 @@ class PostSavesList(APIView):
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         queryset = post.saves
+        serializer = ProfileUserSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+class ArticleLikesList(APIView):
+
+    # add pagination and as they scroll through the list, the frontend will fetch the api even further
+
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        queryset = article.likes
+        serializer = ProfileUserSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class ArticleSharesList(APIView):
+
+    # add pagination and as they scroll through the list, the frontend will fetch the api even further
+
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        queryset = article.shares
+        serializer = ProfileUserSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+class ArticleSavesList(APIView):
+
+    # we don't want to share this information with others
+    # the reels we save on instagram tend to be vulnerable information
+    # only the OV recommendation system can get access to this
+
+    permission_classes = [IsAdminUser]
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        queryset = article.saves
         serializer = ProfileUserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     

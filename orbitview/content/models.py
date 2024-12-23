@@ -22,6 +22,9 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
     saves = models.ManyToManyField(User, related_name="saved_posts", blank=True)
     shares = models.ManyToManyField(User, related_name="shared_posts", blank=True)
+    archived = models.BooleanField(default=False)
+    unlisted = models.BooleanField(default=False)
+
 
     def total_likes(self):
         return self.likes.count()
@@ -31,6 +34,23 @@ class Post(models.Model):
     
     def total_shares(self):
         return self.shares.count()
+    
+
+    @property
+    def likes_count(self):
+        return self.total_likes()
+    
+    @property
+    def shares_count(self):
+        return self.total_shares()
+    
+    @property
+    def saves_count(self):
+        return self.total_saves()
+    
+    @property
+    def public(self):
+        return not self.archived and not self.unlisted
 
     def __str__(self):
         return f"{self.id}: {self.title}"
@@ -63,20 +83,55 @@ class Article(models.Model):
             raise ValidationError("Article content is too long")
         
 
+    def validate_subtitle_length(subtitle):
+        if len(subtitle) > 150:
+            raise ValidationError("Subtitle cannot be longer than 150 characters.")
+
     title = models.CharField(max_length=255)
+    subtitle = models.TextField(validators=[validate_subtitle_length], blank=True, null=True)
     content = RichTextField() #validators=validate_article)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     archived = models.BooleanField(default=False)
     unlisted = models.BooleanField(default=False)
+    likes = models.ManyToManyField(User, related_name="liked_articles", blank=True)
+    saves = models.ManyToManyField(User, related_name="saved_articles", blank=True)
+    shares = models.ManyToManyField(User, related_name="shared_articles", blank=True)
 
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_saves(self):
+        return self.saves.count()
+    
+    def total_shares(self):
+        return self.shares.count()
 
     @property
     def public(self):
         return not self.archived and not self.unlisted
+    
+
+    @property
+    def likes_count(self):
+        return self.total_likes()
+    
+    @property
+    def shares_count(self):
+        return self.total_shares()
+    
+    @property
+    def saves_count(self):
+        return self.total_saves()
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('article-detail', kwargs={"pk":self.pk})
+    
+    
 
 
 class Comment(models.Model):
