@@ -1,0 +1,36 @@
+.cube span {
+  color: white;
+  display: block;
+  font-size: 100px;
+  height: 200px;
+  line-height: 200px;
+  opacity: 0.5;
+  position: absolute;
+  text-align: center;
+  width: 200px;
+}
+.back {
+  background-color: #f00;
+  transform: rotateY(180deg) translateZ(100px);
+}
+.top {
+  background-color: #ff7400;
+  transform: rotateX(90deg) translateZ(100px);
+}
+.bottom {
+  background-color: #aaa;
+  box-shadow: 0 10px 100px rgba(0, 0, 0, 0.7);
+  transform: rotateX(-90deg) translateZ(100px);
+}
+.left {
+  background-color: #099;
+  transform: rotateY(-90deg) translateZ(100px);
+}
+.right {
+  background-color: #0c0;
+  transform: rotateY(90deg) translateZ(100px);
+}
+.front {
+  background-color: #ff0;
+  transform: translateZ(100px);
+}

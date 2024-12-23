@@ -1,0 +1,4 @@
+Layouts in next.js is a UI that page(s) share
+
+Place all the possible navbars in the layout.tsx file
+Pass the children to it and style the children (main content) appropriately and corresponding to the right navbar (e.g. side, top, etc)

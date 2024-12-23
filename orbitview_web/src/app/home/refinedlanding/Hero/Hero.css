@@ -1,0 +1,119 @@
+#hero {
+  background: linear-gradient(135deg, #0a1419, #1b3a48, #3d697a);
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between; /* Keeps items on opposite ends on wide screens */
+  text-align: left;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.hero-sign-in-icon {
+  display: inline;
+}
+
+#welcome-to-ov {
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+#letter-o-as-ov-logo {
+  height: 16px;
+
+}
+
+.ov-hero-btn {
+  border-radius: 20px;
+  text-align: left;
+}
+
+.agreement-link {
+  color: #4285f4;
+}
+
+@media (max-width: 768px) {
+  #hero {
+    flex-direction: column;
+  }
+
+  .orbit-logo {
+    order: 2; /* Moves logo below the text/buttons */
+    margin-top: 20px;
+  }
+}
+
+.orbit-logo img {
+  height: auto;
+}
+
+.orbit-content,
+.orbit-content .orbit-auth-buttons,
+.orbit-content .orbit-signup {
+  margin-bottom: 20px; /* Adds spacing between elements */
+}
+
+.orbit-auth-buttons button {
+  margin: 10px;
+  padding: 15px 20px;
+  background: #c2e9f4;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+}
+
+#orbit-google-auth {
+  border: 2px solid white; /* Google blue */
+  background: #002a6d;
+  color: white;
+}
+
+#orbit-google-auth:hover {
+  background: white;
+  color: #666;
+  transition: 0.3s;
+}
+
+#orbit-microsoft-auth {
+  border: 1.5px solid #16253e; /* Google blue */
+  background: white;
+  color: #16253e;
+}
+
+#orbit-microsoft-auth:hover {
+  background: #16253e;
+  color: white;
+  transition: 0.3s;
+}
+
+.orbit-email-auth {
+  background-color: #fff;
+  color: #434141;
+}
+
+.orbit-email-auth:hover {
+  background: #666;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.orbit-signup p {
+  font-size: 0.75rem;
+}
+
+.new-to-ov {
+  color: #61dafb; /* React blue */
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.disclaimer {
+  margin-bottom: 20px;
+}
+
+.orbit-react-typed {
+  color: #7e98c4; /* Styling specific for ReactTyped component */
+}

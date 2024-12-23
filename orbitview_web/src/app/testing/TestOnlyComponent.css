@@ -1,0 +1,70 @@
+/*
+OrbitView supported fonts:
+- Helvitica
+- Poppins
+- Verdana
+- Roboto
+- Lato
+- EB Garamond
+- Baskervville
+- Bodoni
+- Oswald
+- Montserrat
+- Courier
+- IBM Plex Sans
+- Lexend
+- Orbitron
+- Raleway
+- Fredericka The Great
+*/
+
+.helvitica {
+  font-family: Helvetica, sans-serif;
+}
+.times-new-roman {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.arial {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.calibri {
+  font-family: Calibri, sans-serif;
+}
+
+.bodoni {
+  font-family: "Bodoni", sans-serif;
+}
+
+.verdana {
+  font-family: Verdana, sans-serif;
+}
+
+.poppins {
+  font-family: "Poppins", sans-serif;
+}
+.baskervville {
+  font-family: "Baskervville", sans-serif;
+}
+.oswald {
+  font-family: "Oswald", sans-serif;
+}
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+.courier {
+  font-family: "Courier", sans-serif;
+}
+.ibm_plex_sans {
+  font-family: "IBM Plex Sans", sans-serif;
+}
+.orbitron {
+  font-family: "Orbitron", sans-serif;
+}
+.raleway {
+  font-family: "Raleway", sans-serif;
+}
+.fredericka_the_great {
+  font-family: "Fredericka The Great", sans-serif;
+}

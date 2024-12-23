@@ -1,0 +1,95 @@
+.spinnerBody {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #0a0a0a;
+  margin: 0;
+  overflow: hidden;
+}
+
+.orbitContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.planet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, #4ca1af, #2c3e50);
+  border-radius: 50%;
+  box-shadow: 0 0 20px 10px rgba(76, 161, 175, 0.5);
+  transform: translate(-50%, -50%);
+}
+
+.orbitRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.6);
+  animation: spin 8s linear infinite;
+}
+
+.ring1 {
+  width: 120px;
+  height: 120px;
+}
+
+.ring2 {
+  width: 160px;
+  height: 160px;
+  animation-duration: 12s;
+}
+
+.orbitObject {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(45deg, #a1c4fd, #c2e9fb);
+  border-radius: 50%;
+  box-shadow: 0 0 10px 5px rgba(161, 196, 253, 0.8);
+}
+
+.object1 {
+  top: 50%;
+  left: 50%;
+  animation: orbit1 0.25s linear infinite;
+}
+
+.object2 {
+  top: 50%;
+  left: 50%;
+  animation: orbit2 0.5s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes orbit1 {
+  from {
+    transform: rotate(0deg) translateX(60px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(60px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit2 {
+  from {
+    transform: rotate(0deg) translateX(80px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(80px) rotate(-360deg);
+  }
+}

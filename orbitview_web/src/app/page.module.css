@@ -1,0 +1,15 @@
+.mainContent {
+  padding: 20px;
+  margin-top: 60px; /* Adjust this value based on the actual height of the navbar */
+}
+
+/* When the navbar is on the left or right */
+.leftNavActive .mainContent,
+.rightNavActive .mainContent {
+  margin-left: 250px; /* Assuming sidebar width */
+}
+
+.rightNavActive .mainContent {
+  margin-left: 0;
+  margin-right: 250px;
+}

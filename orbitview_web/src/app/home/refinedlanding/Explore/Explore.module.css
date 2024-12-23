@@ -1,0 +1,49 @@
+.exploreContainer {
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  font-family: "Poppins", sans-serif;
+  padding-bottom: 2rem;
+}
+
+.exploreHeader h1 {
+  font-size: 32px;
+  color: #000;
+}
+
+.exploreHeader h1 span {
+  color: #007bff; /* Light blue color */
+  text-decoration: underline;
+}
+
+.exploreSubtitle {
+  color: #666;
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+.exploreItems {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.item {
+  background-color: #e0f7fa; /* Light cyan background */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.item:hover {
+  background-color: #b2ebf2; /* Darker cyan background on hover */
+}
+
+.showAll {
+  background-color: #0288d1;
+  color: white;
+}

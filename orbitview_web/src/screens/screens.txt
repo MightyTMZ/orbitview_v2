@@ -1,0 +1,23 @@
+Central news feed --> where users can see updates, posts, and news relevant to their interests and field. Use a dynamic, card-based layout with rich media integration (videos, 3D models, interactive polls).
+Sidebar navigation --> Include icons from the logo for aesthetic consistency, providing links to Messages, Network, Jobs, Learning, and other core sections.
+
+navigation bar:
+
+- have the user choose between where the navbar is used (top (sticky), left (sticky), right (sticky), left (sticky))
+- have the user customize (through drag and drop) the order of the nav items, also have them be able to customize their own navbar (
+    - color
+    - shade
+    - text-color
+    - any other options?
+
+)
+- have the user switch between a wide range of background brightnesses (using a slider or selecting a shade of darkness)
+- automatic adjustment of the screen brightness based on the time of the day 
+
+
+(user can turn this setting on or off. If this is turned on
+
+
+, the user can customize certain brightnesses to happen at certain times in day and plan ahead like Calendly)
+- music while scrolling/orbiting on OrbitView (optional for now)
+= 3D mode --> the screen shows OrbitView as a 3D movie-like way and the user simply wears a pair of 3d cheap goggles to have a more "immersive" time!!!!

@@ -1,0 +1,11 @@
+User options (customizing the navbar):
+
+- Responsive navbar: https://www.w3schools.com/howto/howto_css_sidebar_responsive.asp
+- Choose the navbar to be on the top, bottom, left, right (
+    off canvas menu: https://www.w3schools.com/howto/howto_js_off-canvas.asp
+    side bar with icons: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_sidebar_icons
+    bottom navigation: https://www.w3schools.com/howto/howto_css_bottom_nav.asp
+
+)
+- Hover sidenav buttons https://www.w3schools.com/howto/howto_css_sidenav_buttons.asp
+- 
