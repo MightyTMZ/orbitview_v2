@@ -41,6 +41,13 @@ class PostDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class UserPostList(APIView):
+    def get(self, request, user_id):
+        queryset = Post.objects.filter(author_id=user_id)
+        serializer = PostSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class CommentListCreate(APIView):
     def get(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
