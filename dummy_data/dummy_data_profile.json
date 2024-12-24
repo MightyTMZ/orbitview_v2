@@ -1,0 +1,19 @@
+
+{
+    "user": {
+        "id": 1,
+        "username": "daniel",
+        "first_name": "Daniel",
+        "last_name": "Rayati"
+    },
+    "is_private": false,
+    "is_online": false,
+    "bio": "Managing the tech stack of the Earth @ OrbitView",
+    "by_line": "CTO of OrbitView",
+    "date_of_birth": "2007-11-06",
+    "updated": "2024-12-23T14:54:13.922088Z",
+    "created": "2024-12-23T14:54:13.922088Z",
+    "image": "/profile_pics/1705541603455-modified.png",
+    "followers_count": 21,
+    "following_count": 19
+}

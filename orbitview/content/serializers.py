@@ -34,7 +34,7 @@ class PostSerializer(serializers.ModelSerializer):
             # 'likes', too big to serialize
             'likes_count',
             'shares_count',
-            'save_count',
+            'saves_count',
         ]
 
     def get_likes_count(self, obj):

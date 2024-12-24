@@ -1,0 +1,46 @@
+[
+    {
+        "title": "Second article on OrbitView",
+        "content": "<h2>Fames Sed Proin Pretium Velit</h2>\r\n\r\n<h3>Aliquet Enim Pretium Cum Accumsan Montes Maecenas Facilisi</h3>\r\n\r\n<p><em>Condimentum</em>&nbsp;pretium, metus. Cursus pulvinar.</p>\r\n\r\n<p>Commodo volutpat. Tristique venenatis cubilia luctus. A malesuada hac hymenaeos class maecenas rhoncus parturient facilisis.</p>\r\n\r\n<h3>Cubilia Nostra Magnis Facilisi Non Rhoncus</h3>\r\n\r\n<p>Interdum tristique pretium sodales mattis.</p>\r\n\r\n<p>Nostra Elit, massa bibendum euismod nostra tortor dictum cum accumsan commodo.</p>\r\n\r\n<p>Vivamus ad fusce&nbsp;<strong>erat</strong>&nbsp;accumsan.</p>\r\n\r\n<p>Imperdiet. Enim&nbsp;<strong>morbi</strong>&nbsp;dictum interdum.</p>\r\n\r\n<p>Mauris dolor etiam duis Senectus cum.</p>\r\n\r\n<p>Dignissim, ante. Curabitur fames vestibulum Dignissim.</p>\r\n\r\n<h3>Facilisi Porta Scelerisque Gravida Erat Vivamus Vivamus</h3>\r\n\r\n<p>Justo. Nisl id faucibus semper sodales ultrices lectus urna vel cursus.</p>\r\n\r\n<p>Taciti morbi vel nunc diam felis conubia porta taciti.</p>\r\n\r\n<h3>Facilisis Dictum Sed Iaculis Turpis Facilisi Massa</h3>\r\n\r\n<p>Lorem cum consectetuer eleifend nisl per.</p>\r\n\r\n<p>Orci semper ullamcorper volutpat. Condimentum magna. Vel aliquam ligula.</p>\r\n\r\n<p>Tempus Ante in nullam risus tellus sem.</p>",
+        "author": {
+            "id": 4,
+            "username": "daniel",
+            "first_name": "Daniel",
+            "last_name": "Rayati",
+            "profile": {
+                "image": "/profile_pics/1705541603455-modified.png",
+                "by_line": "CTO of OrbitView",
+                "is_online": false
+            }
+        },
+        "created_at": "2024-12-23T23:32:48.647677Z",
+        "public": true,
+        "archived": false,
+        "unlisted": false,
+        "likes_count": 8,
+        "shares_count": 4,
+        "saves_count": 5
+    },
+    {
+        "title": "First article on OrbitView",
+        "content": "<p>In the rapidly evolving world of technology, social media continues to play a vital role in shaping how we connect, learn, and grow. But as we look around at existing platforms, a glaring question arises: Are these tools empowering us, or are they holding us back? Enter OrbitView, the groundbreaking next-generation social media platform poised to redefine the way we interact with the world and each other.</p>\r\n\r\n<h3>A New Standard for Connection</h3>\r\n\r\n<p>OrbitView isn&rsquo;t just another app on your phone. It&rsquo;s a carefully crafted ecosystem designed to foster <strong>meaningful connections</strong>, <strong>personal growth</strong>, and <strong>immersive experiences</strong>. Unlike traditional platforms that often thrive on vanity metrics like likes and follower counts, OrbitView focuses on creating real-world value for its users.</p>\r\n\r\n<p><strong>Networking Made Easy</strong><br />\r\nGone are the days of awkward LinkedIn connections or shallow Instagram DMs. With OrbitView, users can build authentic networks through features like OrbitNodes&mdash;certified meetup zones in cities that turn digital connections into real-world relationships.</p>\r\n\r\n<p><strong>Collaborate and Learn</strong><br />\r\nOrbitView&#39;s suite of tools empowers users to learn new skills, create content, and collaborate on projects seamlessly. Integrated generative AI tools help professionals across industries craft articles, presentations, and prototypes effortlessly.</p>\r\n\r\n<hr />\r\n<h3>OrbitView&rsquo;s Immersive Reader: A Game-Changer</h3>\r\n\r\n<p>One of OrbitView&#39;s standout features is the <strong>Immersive Reader</strong>, an innovative tool designed to make consuming content as engaging and customizable as possible. Users can adjust font styles, change contrast levels, and even add stereoscopic filters for a visually stimulating experience. Future updates will allow users to annotate articles and export customized versions for sharing&mdash;an industry-first in personalized content.</p>\r\n\r\n<hr />\r\n<h3>Affordable Innovation</h3>\r\n\r\n<p>OrbitView integrates AR/VR learning tools at a fraction of the cost of traditional methods. Imagine attending a seminar or learning a new skill through a stereoscopic lens right from your device. It&rsquo;s not just futuristic&mdash;it&rsquo;s here.</p>\r\n\r\n<hr />\r\n<h3>Built for the Gen Z Era</h3>\r\n\r\n<p>OrbitView was designed with the next generation in mind. Gen Z craves platforms that are as dynamic and multidimensional as they are. Whether you&rsquo;re launching a startup, building a personal brand, or simply seeking inspiration, OrbitView provides the tools, network, and resources to make it happen.</p>\r\n\r\n<p><strong>Our Promise</strong><br />\r\nOrbitView isn&rsquo;t about keeping you glued to a screen. It&rsquo;s about equipping you to navigate the real world with confidence, knowledge, and connections.</p>\r\n\r\n<hr />\r\n<h3>Join the OrbitView Revolution</h3>\r\n\r\n<p>OrbitView is more than just a platform&mdash;it&rsquo;s a movement. Be part of a social network that prioritizes you and your growth. Whether you&rsquo;re an entrepreneur, a creator, or someone searching for genuine connections, OrbitView welcomes you.</p>\r\n\r\n<p>The future of social media is here. Are you ready to take the leap?</p>\r\n\r\n<p><em>Sign up now and start orbiting!</em></p>",
+        "author": {
+            "id": 1,
+            "username": "tom",
+            "first_name": "Tom",
+            "last_name": "Zhang",
+            "profile": {
+                "image": "/profile_pics/Screenshot_2024-10-12_163132-modified.png",
+                "by_line": "CEO of OrbitView",
+                "is_online": false
+            }
+        },
+        "created_at": "2024-12-23T21:51:41.243854Z",
+        "public": true,
+        "archived": false,
+        "unlisted": false,
+        "likes_count": 4,
+        "shares_count": 5,
+        "saves_count": 4
+    }
+]
