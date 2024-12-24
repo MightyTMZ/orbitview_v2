@@ -1,0 +1,116 @@
+[
+    {
+        "id": 5,
+        "title": "AR/VR Career Opportunities",
+        "banner_pic": "http://127.0.0.1:8000/event_banners/gray_bg.jpg",
+        "category": [
+            {
+                "id": 4,
+                "title": "AR/VR"
+            }
+        ],
+        "organizer": [
+            {
+                "id": 1,
+                "name": "Meta",
+                "logo": "http://127.0.0.1:8000/media/organizer_logos/meta_logo.png",
+                "contact_email": "admin@meta.com",
+                "contact_phone": "123456789",
+                "website": "http://meta.com",
+                "address": "1 Hacker Way, Mountain View, California",
+                "description": "Meta ranks among the largest American information technology companies, alongside other Big Five corporations Alphabet (Google), Amazon, Apple, and Microsoft. The company was ranked #31 on the Forbes Global 2000 ranking in 2023",
+                "social_media_links": {
+                    "Instagram": "https://www.instagram.com/meta/"
+                },
+                "created_at": "2024-12-06T03:45:38.873556Z",
+                "updated_at": "2024-12-06T03:45:38.873556Z",
+                "is_active": true
+            }
+        ],
+        "location": "Virtual",
+        "locations": [
+            {
+                "id": 5,
+                "title": "Zoom",
+                "url": "https://us06web.zoom.us/j/86020809015"
+            }
+        ],
+        "date": "2024-12-27T00:00:00Z",
+        "description": "<p>Discover how to build a career in the rapidly growing AR/VR industry.</p>"
+    },
+    {
+        "id": 1,
+        "title": "AI Revolution 2025",
+        "banner_pic": "http://127.0.0.1:8000/event_banners/gray_bg.jpg",
+        "category": [
+            {
+                "id": 1,
+                "title": "Artificial Intelligence (AI)"
+            },
+            {
+                "id": 6,
+                "title": "Law"
+            }
+        ],
+        "organizer": [
+            {
+                "id": 1,
+                "name": "Meta",
+                "logo": "http://127.0.0.1:8000/media/organizer_logos/meta_logo.png",
+                "contact_email": "admin@meta.com",
+                "contact_phone": "123456789",
+                "website": "http://meta.com",
+                "address": "1 Hacker Way, Mountain View, California",
+                "description": "Meta ranks among the largest American information technology companies, alongside other Big Five corporations Alphabet (Google), Amazon, Apple, and Microsoft. The company was ranked #31 on the Forbes Global 2000 ranking in 2023",
+                "social_media_links": {
+                    "Instagram": "https://www.instagram.com/meta/"
+                },
+                "created_at": "2024-12-06T03:45:38.873556Z",
+                "updated_at": "2024-12-06T03:45:38.873556Z",
+                "is_active": true
+            },
+            {
+                "id": 2,
+                "name": "Nvidia",
+                "logo": "http://127.0.0.1:8000/media/organizer_logos/nvidia_logo.png",
+                "contact_email": "admin@nvidia.com",
+                "contact_phone": "123456789",
+                "website": "http://nvidia.com",
+                "address": "2788 San Tomas Expressway, Santa Clara, CA 95051",
+                "description": "Nvidia's professional line of GPUs are used for edge-to-cloud computing and in supercomputers and workstations for applications in fields such as architecture, engineering and construction, media and entertainment, automotive, scientific research, and manufacturing design.",
+                "social_media_links": {
+                    "Website": "https://www.nvidia.com/location-selector/"
+                },
+                "created_at": "2024-12-06T03:48:43.397010Z",
+                "updated_at": "2024-12-06T03:48:43.397010Z",
+                "is_active": true
+            },
+            {
+                "id": 3,
+                "name": "OrbitView",
+                "logo": null,
+                "contact_email": "admin@orbitview.net",
+                "contact_phone": "4372476482",
+                "website": "https://orbitviewmedia.com",
+                "address": "373 Hollywood Ave",
+                "description": "OrbitView is a unified platform for learning new skills, connecting with others, and pushing you to gain real-world experience—all at the same time.",
+                "social_media_links": {
+                    "Website": "https://orbitview.vercel.app/"
+                },
+                "created_at": "2024-12-06T03:53:24.455040Z",
+                "updated_at": "2024-12-06T03:53:24.455040Z",
+                "is_active": true
+            }
+        ],
+        "location": "Virtual",
+        "locations": [
+            {
+                "id": 1,
+                "title": "Virtual",
+                "url": "https://us06web.zoom.us/j/86020809015"
+            }
+        ],
+        "date": "2024-12-28T18:00:00Z",
+        "description": "<p>A deep dive into the latest advancements in artificial intelligence and how it&rsquo;s transforming industries.</p>"
+    }
+]
