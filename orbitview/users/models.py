@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from transformers import pipeline
 from django.dispatch import receiver
 from datetime import date
 
@@ -17,12 +18,19 @@ class Profile(models.Model):
     is_online = models.BooleanField(default=False)
     following = models.ManyToManyField(User, related_name="following", blank=True)
     followers = models.ManyToManyField(User, related_name='my_followers', blank=True)
+    location = models.CharField(max_length=100, null=True, blank=True)
+    skills_description = models.CharField(max_length=2500, null=True, blank=True)
+    interests_description = models.CharField(max_length=2500, null=True, blank=True)
     bio = models.CharField(default="", blank=True, null=True, max_length=350)
     by_line = models.CharField(max_length=60, default="-")
     date_of_birth = models.DateField(validators=[validate_age])
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics', blank=True, null=True)
+    visible_to_search = models.BooleanField(default=False)
+    # do they want to appear in natural language queries or not
+    embedding = models.JSONField(null=True, blank=True) # store the embeddings
+    
 
     def profile_posts(self):
         return self.user.post_set.all()
@@ -54,6 +62,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile'
+    
+    def save(self, *args, **kwargs):
+        if not self.embedding:
+            embedder = pipeline("feature-extraction", model="sentence-transformers/all-MiniLM-L6-v2")
+            text = f"{self.bio} {self.skills_description} {self.location}"
+            self.embedding = embedder(text)[0]
+        return super().save(*args, **kwargs)
 
 
 
