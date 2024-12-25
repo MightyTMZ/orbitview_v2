@@ -103,6 +103,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             'content',
             'author',
             'created_at',
+            'featured_image',
             'public',
             'archived',
             'unlisted',

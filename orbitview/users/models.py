@@ -38,7 +38,7 @@ class Profile(models.Model):
     date_of_birth = models.DateField(validators=[validate_age])
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics', blank=True, null=True)
+    image = models.ImageField(default='default_pfp.jpg', upload_to='media/profile_pics', blank=True, null=True)
     visible_to_search = models.BooleanField(default=False)
     # do they want to appear in natural language queries or not
     embedding = models.JSONField(null=True, blank=True) # store the embeddings

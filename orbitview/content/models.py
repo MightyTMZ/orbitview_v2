@@ -89,6 +89,7 @@ class Article(models.Model):
 
     title = models.CharField(max_length=255)
     subtitle = models.TextField(validators=[validate_subtitle_length], blank=True, null=True)
+    featured_image = models.ImageField(upload_to="media/featured_images", default="media/default_article_feature_img.webp")
     content = RichTextField() #validators=validate_article)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
     created_at = models.DateTimeField(auto_now_add=True)
