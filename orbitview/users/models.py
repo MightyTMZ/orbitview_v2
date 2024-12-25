@@ -28,6 +28,12 @@ class Profile(models.Model):
     is_online = models.BooleanField(default=False)
     following = models.ManyToManyField(User, related_name="following", blank=True)
     followers = models.ManyToManyField(User, related_name='my_followers', blank=True)
+    blocked = models.ManyToManyField(User, related_name="blocked_users", blank=True, symmetrical=False)
+    restricted = models.ManyToManyField(User, related_name="restricted_users", blank=True, symmetrical=False)
+
+    # "Do not show content from this producer"
+    do_not_show = models.ManyToManyField(User, related_name="do_not_show_users", blank=True, symmetrical=False)
+
     location = models.CharField(max_length=100, null=True, blank=True)
     skills_description = models.TextField(max_length=2500, null=True, blank=True)
     interests_description = models.TextField(max_length=2500, null=True, blank=True)
@@ -60,17 +66,54 @@ class Profile(models.Model):
         if follower_user == self.user:
             raise ValidationError("Something went wrong. Could not perform operation")
 
+        elif not self.followers.filter(id=follower_user.id).exists():
+            raise ValidationError(f"Unable to remove {follower_user.username}. They do not appear on your followers list.");
+
         self.followers.remove(follower_user)
 
     def add_following(self, user):
         if user == self.user:
             raise ValidationError("You cannot follow yourself.")
-        self.following.add(user)
+
+        elif self.following.filter(id=user.id).exists():
+            raise ValidationError(f"You are already following {user.username}")
+        
+       self.following.add(user)
 
     def add_follower(self, user):
         if user == self.user:
             raise ValidationError("You cannot add yourself as a follower.")
         self.followers.add(user)
+
+    def block_user(self, blocked_user):
+        if blocked_user == self.user:
+            raise ValidationError("You cannot block yourself")
+        elif self.blocked.filter(id=blocked_user.id).exists():
+            raise ValidationError(f"{blocked_user.username} is already blocked.")
+        self.blocked.add(blocked_user)
+
+    def unblock_user(self, blocked_user):
+        if blocked_user == self.user:
+            raise ValidationError("You cannot unblock yourself") #LMAO :)
+        elif not self.blocked.filter(id=blocked_user.id).exists():
+            raise ValidationError(f"{blocked_user.username} could not be unblocked as they are not on your blocked list.")
+        self.blocked.remove(blocked_user)
+
+
+    def restrict_user(self, restricted_user):
+        if restricted_user == self.user:
+            raise ValidationError("You cannot restrict yourself")
+        elif self.restricted.filter(id=blocked_user.id).exists():
+            raise ValidationError(f"{blocked_user.username} is already restricted.")
+        self.restricted.add(blocked_user)
+
+    def unrestrict_user(self, restricted_user):
+        if restricted_user == self.user:
+            raise ValidationError("You cannot unrestrict yourself") #LMAO :)
+        elif not self.restricted.filter(id=restricted_user.id).exists():
+            raise ValidationError(f"{blocked_user.username} could not be unrestricted as they are not on your restricted list.")
+        self.restricted.remove(restricted_user)
+            
 
     def __str__(self):
         return f'{self.user.username} Profile'
