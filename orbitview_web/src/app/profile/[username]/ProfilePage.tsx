@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import styles from "./ProfilePage.module.css";
+import PostPreviewCard from "./PostPreviewCard";
 
 // Profile component
 const ProfilePage = () => {
@@ -84,9 +85,15 @@ const ProfilePage = () => {
       <div className="container mx-auto mt-8 px-4">
         <h1 className="text-4xl font-extrabold text-white mb-6">Posts</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((userPost: Post) => (
-            <PostPreviewCard key={userPost.date_posted} post={userPost} />
-          ))}
+          {posts.length > 0 ? (
+            <div>
+              {posts.map((userPost) => (
+                <PostPreviewCard key={userPost} post={userPost} />
+              ))}
+            </div>
+          ) : (
+            <div>No posts yet</div>
+          )}
         </div>
       </div>
     </div>

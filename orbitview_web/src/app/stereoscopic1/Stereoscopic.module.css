@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+.stereoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+  text-align: center;
+  color: #fff;
+}
+
+.orbitViewText {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8vmax;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+  color: #fff;
+  text-shadow: 
+    -3px 0 rgba(255, 0, 0, 0.9), /* Red shadow for left eye */
+     3px 0 rgba(0, 255, 255, 0.9); /* Cyan shadow for right eye */
+}
+
+.orbitViewSubtitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2vmax;
+  margin-top: 1rem;
+  color: #dcdcdc;
+  text-shadow: 
+    -2px 0 rgba(255, 0, 0, 0.7), 
+     2px 0 rgba(0, 255, 255, 0.7);
+}
+
+/* Hover interaction */
+.orbitViewText:hover {
+  text-shadow: 
+    -4px 0 rgba(255, 0, 0, 1), 
+     4px 0 rgba(0, 255, 255, 1);
+}
+
+.orbitViewSubtitle:hover {
+  text-shadow: 
+    -3px 0 rgba(255, 0, 0, 1), 
+     3px 0 rgba(0, 255, 255, 1);
+}

@@ -13,14 +13,26 @@ def validate_age(value):
         raise ValidationError('Users must be at least 13 years old to register.')
 
 class Profile(models.Model):
+
+    CHECK_IN_CYCLE_LENGTH_OPTIONS = [
+        ("12h", '12 hours'),
+        ("1D", '1 day (24 hours)'),
+        ("2D", '2 days (48 hours)'),
+        ("3D", '3 days (72 hours)'),
+        ("5D", '5 days'),
+        ("1W", '1 week (7 days)'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     is_private = models.BooleanField(default=False)  # Private account setting
     is_online = models.BooleanField(default=False)
     following = models.ManyToManyField(User, related_name="following", blank=True)
     followers = models.ManyToManyField(User, related_name='my_followers', blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
-    skills_description = models.CharField(max_length=2500, null=True, blank=True)
-    interests_description = models.CharField(max_length=2500, null=True, blank=True)
+    skills_description = models.TextField(max_length=2500, null=True, blank=True)
+    interests_description = models.TextField(max_length=2500, null=True, blank=True)
+    currently_working_on = models.TextField(max_length=2500, null=True, blank=True)
+    check_in_cycle_length = models.CharField(max_length=255, choices=CHECK_IN_CYCLE_LENGTH_OPTIONS, default="2D")
     bio = models.CharField(default="", blank=True, null=True, max_length=350)
     by_line = models.CharField(max_length=60, default="-")
     date_of_birth = models.DateField(validators=[validate_age])
@@ -66,7 +78,7 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if not self.embedding:
             embedder = pipeline("feature-extraction", model="sentence-transformers/all-MiniLM-L6-v2")
-            text = f"{self.bio} {self.skills_description} {self.location}"
+            text = f"{self.bio} {self.skills_description} {self.location} {self.currently_working_on}"
             self.embedding = embedder(text)[0]
         return super().save(*args, **kwargs)
 
