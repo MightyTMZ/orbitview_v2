@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { backendServer } from "@/importantLinks";
 import styles from "./TraditionalArticle.module.css";
+import Link from "next/link";
 
 interface Author {
   id: number;
@@ -15,11 +16,11 @@ interface Author {
 }
 
 interface ArticleProps {
-  articleId: number; // Article ID for fetching the data
+  id: number; // Article ID for fetching the data
 }
 
 // takes in only the id parameter
-const TraditionalArticleComponent: React.FC<ArticleProps> = ({ articleId }) => {
+const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
   const [article, setArticle] = useState<null | {
     title: string;
     content: string;
@@ -35,7 +36,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ articleId }) => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`${backendServer}/content/articles/${articleId}`);
+        const response = await fetch(`${backendServer}/content/articles/${id}/`);
         if (!response.ok) throw new Error("Failed to fetch article.");
         const data = await response.json();
         setArticle(data);
@@ -47,7 +48,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ articleId }) => {
     };
 
     fetchArticle();
-  }, [articleId]);
+  }, [id]);
 
   if (loading) {
     return <div className={styles.loader}>Loading...</div>;
@@ -74,7 +75,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ articleId }) => {
         <h1 className={styles.title}>{article.title}</h1>
         <div className={styles.meta}>
           <img
-            src={article.author.profile.image}
+            src={`${backendServer}/${article.author.profile.image}/`}
             alt={`${article.author.first_name}'s profile`}
             className={styles.profileImage}
           />
@@ -86,6 +87,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ articleId }) => {
             | Published on {new Date(article.created_at).toLocaleDateString()}
           </p>
         </div>
+        <Link href={`/article/${id}/immersive`}>Read in immersive </Link>
       </header>
 
       <section

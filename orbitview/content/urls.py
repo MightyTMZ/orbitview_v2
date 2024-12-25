@@ -2,13 +2,13 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('posts/', views.PostListCreate.as_view(), name='post-list-create'),
-    path('posts/<str:user_name>/', views.UserPostList.as_view(), name='user-post-list'),
+    path('posts/', views.PostListCreate.as_view(), name='post-list-create'),    
     path('posts/<int:pk>/', views.PostDetail.as_view(), name='post-detail'),
+    path('posts/<str:user_name>/', views.UserPostList.as_view(), name='user-post-list'),
 
     path('articles/', views.ArticleListCreate.as_view(), name='article-list-create'),
+    path('articles/<int:id>/', views.ArticleDetail.as_view(), name='article-detail'),
     path('articles/<str:user_name>/', views.UserArticleList.as_view(), name='user-article-list'),
-    path('articles/<int:pk>/', views.ArticleDetail.as_view(), name='article-detail'),
     
     path('<str:content_type>/<int:object_id>/comments/', views.CommentListCreate.as_view(), name='comment-list-create'),
     

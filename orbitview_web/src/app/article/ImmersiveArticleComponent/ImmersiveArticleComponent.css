@@ -9,11 +9,11 @@
 
 /* Stereoscopic Mode Overlay */
 .article-container.stereoscopic-mode {
-  background: linear-gradient(
+  /*background: linear-gradient(
     90deg,
     rgba(255, 0, 0, 0.1) 0%,
     rgba(0, 255, 255, 0.1) 100%
-  );
+  );*/
   transform: translateZ(0);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
@@ -67,3 +67,29 @@
   height: 50px;
   border-radius: 50%;
 }
+
+.orbitViewText {
+  text-shadow: 
+    -2px 0 rgba(255, 0, 0, 0.9), /* Red shadow for left eye */
+     2px 0 rgba(0, 255, 255, 0.9); /* Cyan shadow for right eye */
+}
+
+.orbitViewTitle {
+  text-shadow: 
+    -3px 0 rgba(255, 0, 0, 0.7), 
+     3px 0 rgba(0, 255, 255, 0.7);
+}
+
+/* Hover interaction 
+.orbitViewText:hover {
+  text-shadow: 
+    -4px 0 rgba(255, 0, 0, 1), 
+     4px 0 rgba(0, 255, 255, 1);
+}
+
+.orbitViewSubtitle:hover {
+  text-shadow: 
+    -3px 0 rgba(255, 0, 0, 1), 
+     3px 0 rgba(0, 255, 255, 1);
+}
+*/

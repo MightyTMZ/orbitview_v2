@@ -1,9 +1,9 @@
-'use client'
+"use client";
 // because its immersive, it will be client
-
 
 import React, { useState } from "react";
 import "./ImmersiveArticleComponent.css";
+import { backendServer } from "@/importantLinks";
 
 interface Author {
   id: number;
@@ -110,12 +110,17 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
 
       {/* Article Content */}
       <article className={`article-content contrast-${settings.contrast}`}>
-        <h1>{title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
-        <footer className="article-footer">
-          <div className="author-info">
+        <h1 className={`${settings.stereoscopic ? "orbitViewTitle" : ""}`}>
+          {title}
+        </h1>
+        <header>
+          <div
+            className={`author-info ${
+              settings.stereoscopic ? "orbitViewText" : ""
+            }`}
+          >
             <img
-              src={author.profile.image}
+              src={`${backendServer}/${author.profile.image}`}
               alt={`${author.first_name} ${author.last_name}`}
             />
             <p>
@@ -123,7 +128,13 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
               {new Date(created_at).toLocaleDateString()}
             </p>
           </div>
-        </footer>
+        </header>
+        <hr />
+        <div
+          dangerouslySetInnerHTML={{ __html: content }}
+          className={`${settings.stereoscopic ? "orbitViewText" : ""}`}
+        />
+        <footer className="article-footer">OrbitView</footer>
       </article>
     </div>
   );

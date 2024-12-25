@@ -15,6 +15,7 @@ from .models import (
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'title',
         'author',
         'date_posted',
@@ -30,6 +31,7 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'title',
         'author',
         'created_at',

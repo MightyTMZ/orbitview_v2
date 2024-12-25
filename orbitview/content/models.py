@@ -99,6 +99,9 @@ class Article(models.Model):
     likes = models.ManyToManyField(User, related_name="liked_articles", blank=True)
     saves = models.ManyToManyField(User, related_name="saved_articles", blank=True)
     shares = models.ManyToManyField(User, related_name="shared_articles", blank=True)
+    hide_likes_counts = models.BooleanField(default=False)
+    hide_shares_counts = models.BooleanField(default=False)
+    
 
     def total_likes(self):
         return self.likes.count()

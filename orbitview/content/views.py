@@ -41,7 +41,6 @@ class ArticleListCreate(APIView):
     
 
 class PostDetail(APIView):
-    cache_page(90)
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         serializer = PostSerializer(post)
@@ -63,22 +62,23 @@ class PostDetail(APIView):
 
 
 class ArticleDetail(APIView):
-    cache_page(90)
-    def get(self, request, pk):
-        article = get_object_or_404(Article, pk=pk)
+    def get(self, request, id):
+        article = get_object_or_404(Article, pk=id)
+        print(article)
         serializer = ArticleSerializer(article)
+        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, pk):
-        article = get_object_or_404(Article, pk=pk, author=request.user)
+    def put(self, request, id):
+        article = get_object_or_404(Article, pk=id, author=request.user)
         serializer = ArticleSerializer(article, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        article = get_object_or_404(Article, pk=pk, author=request.user)
+    def delete(self, request, id):
+        article = get_object_or_404(Article, pk=id, author=request.user)
         article.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
