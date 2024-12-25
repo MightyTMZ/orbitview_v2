@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from users.views import CustomLoginAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +27,9 @@ urlpatterns = [
     path('content/', include('content.urls')),
     path('social/', include('social.urls')),
     path('notifications/', include('notifications.urls')),
-
+    path('auth/', include('djoser.urls')),
+    path("auth/token/", include("djoser.urls.jwt")),
+    path("auth/token/login/", CustomLoginAPIView.as_view()),
     # orbitview.net/tom.zhang.official
     path('', include('users.urls')),
 ]

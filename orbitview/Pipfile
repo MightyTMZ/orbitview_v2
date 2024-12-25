@@ -10,6 +10,7 @@ djangorestframework = "*"
 django-cors-headers = "*"
 transformers = "*"
 scikit-learn = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 

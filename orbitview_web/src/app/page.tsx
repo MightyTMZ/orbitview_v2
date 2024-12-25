@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+'use client'
 // import { NavbarProvider } from '../context/NavBarContext';
 
 // import Navbar from "@/components/Navbar";
@@ -8,12 +8,15 @@ import { Fragment } from "react";
 // Landing page
 
 import LandingPage from "./home/LandingPage";
-
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 export default function Home() {
   return (
     <>
-      <LandingPage></LandingPage>
+      <Provider store={store}>
+        <LandingPage/>
+      </Provider>
     </>
   );
 }

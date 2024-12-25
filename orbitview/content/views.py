@@ -64,9 +64,9 @@ class PostDetail(APIView):
 class ArticleDetail(APIView):
     def get(self, request, id):
         article = get_object_or_404(Article, pk=id)
-        print(article)
+        # print(article)
         serializer = ArticleSerializer(article)
-        print(serializer.data)
+        # print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, id):
