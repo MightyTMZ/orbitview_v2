@@ -78,7 +78,7 @@ class Profile(models.Model):
         elif self.following.filter(id=user.id).exists():
             raise ValidationError(f"You are already following {user.username}")
         
-       self.following.add(user)
+        self.following.add(user)
 
     def add_follower(self, user):
         if user == self.user:
@@ -103,15 +103,15 @@ class Profile(models.Model):
     def restrict_user(self, restricted_user):
         if restricted_user == self.user:
             raise ValidationError("You cannot restrict yourself")
-        elif self.restricted.filter(id=blocked_user.id).exists():
-            raise ValidationError(f"{blocked_user.username} is already restricted.")
-        self.restricted.add(blocked_user)
+        elif self.restricted.filter(id=restricted_user.id).exists():
+            raise ValidationError(f"{restricted_user.username} is already restricted.")
+        self.restricted.add(restricted_user)
 
     def unrestrict_user(self, restricted_user):
         if restricted_user == self.user:
             raise ValidationError("You cannot unrestrict yourself") #LMAO :)
         elif not self.restricted.filter(id=restricted_user.id).exists():
-            raise ValidationError(f"{blocked_user.username} could not be unrestricted as they are not on your restricted list.")
+            raise ValidationError(f"{restricted_user.username} could not be unrestricted as they are not on your restricted list.")
         self.restricted.remove(restricted_user)
             
 
