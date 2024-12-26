@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAdminUser
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.contrib.contenttypes.models import ContentType
+from rest_framework.permissions import IsAuthenticated
 from .models import Post, Comment, Article
 from .serializers import PostSerializer, CommentSerializer, ArticleSerializer
 
@@ -152,7 +153,11 @@ class LikePost(APIView):
     Handles liking and unliking a post.
     """
 
+
     def post(self, request, pk):
+        if not request.user.is_authenticated:
+            return Response({"error": "Please sign in to like. You must have an OrbitView account to like articles."}, status=status.HTTP_401_UNAUTHORIZED)
+        
         post = get_object_or_404(Post, pk=pk)
         if request.user in post.likes.all():
             post.likes.remove(request.user)
@@ -168,7 +173,11 @@ class SavePost(APIView):
     """
 
     def post(self, request, pk):
+        if not request.user.is_authenticated:
+            return Response({"error": "Please sign in to save. You must have an OrbitView account to save posts."}, status=status.HTTP_401_UNAUTHORIZED)
+        
         post = get_object_or_404(Post, pk=pk)
+        
         if request.user in post.saves.all():
             post.saves.remove(request.user)
             return Response({"message": "Post unsaved."}, status=status.HTTP_200_OK)
@@ -183,7 +192,12 @@ class LikeArticle(APIView):
     """
 
     def post(self, request, pk):
+        # check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({"error": "Please sign in to like. You must have an OrbitView account to like articles."}, status=status.HTTP_401_UNAUTHORIZED)
+        
         article = get_object_or_404(Article, pk=pk)
+        
         if request.user in article.likes.all():
             article.likes.remove(request.user)
             return Response({"message": "Post unliked."}, status=status.HTTP_200_OK)
@@ -198,6 +212,9 @@ class SaveArticle(APIView):
     """
 
     def post(self, request, pk):
+        if not request.user.is_authenticated:
+            return Response({"error": "Please sign in to save. You must have an OrbitView account to save articles."}, status=status.HTTP_401_UNAUTHORIZED)
+       
         article = get_object_or_404(Post, pk=pk)
         if request.user in article.saves.all():
             article.saves.remove(request.user)
@@ -213,7 +230,11 @@ class LikeComment(APIView):
     """
 
     def post(self, request, pk):
+        if not request.user.is_authenticated:
+            return Response({"error": "Please sign in to like. You must have an OrbitView account to like comments."}, status=status.HTTP_401_UNAUTHORIZED)
+        
         comment = get_object_or_404(Comment, pk=pk)
+
         if request.user in comment.likes.all():
             comment.likes.remove(request.user)
             return Response({"message": "Comment unliked."}, status=status.HTTP_200_OK)
