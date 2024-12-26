@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import styles from "./ProfilePage.module.css";
-import PostPreviewCard from "./PostPreviewCard";
+import PostsList from "./PostList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import PostsLayout from "./PostsLayout";
 
 interface User {
   id: number;
@@ -141,14 +142,29 @@ const ProfilePage = () => {
       <div className="container mx-auto mt-8 px-4">
         <h1 className="text-4xl font-extrabold text-white mb-6">Posts</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.length > 0 ? (
-            <div>
+          {/*<div>
               {posts.map((userPost) => (
                 <PostPreviewCard key={userPost} post={userPost} />
               ))}
+            </div>*/}
+          {posts.length > 0 ? (
+            <div>
+              <PostsList posts={posts}></PostsList>
             </div>
           ) : (
-            <div>No posts yet</div>
+            <div>
+              {isTheUserSeeingTheirOwnProfile && posts.length == 0 ? (
+                <>
+                  <div>
+                    You have not made a post yet... Create your post{" "}
+                    <a href="">here!</a>
+                    Learn more about posting on OrbitView <a href="">here</a>
+                  </div>
+                </>
+              ) : (
+                <>No posts yet</>
+              )}
+            </div>
           )}
         </div>
       </div>

@@ -36,6 +36,7 @@ class PostSerializer(serializers.ModelSerializer):
             'shares_count',
             'saves_count',
         ]
+        
 
     def get_likes_count(self, obj):
         return obj.total_likes()

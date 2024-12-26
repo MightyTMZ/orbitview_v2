@@ -97,9 +97,11 @@ class ArticleDetail(APIView):
 class UserPostList(APIView):
 
     permission_classes = []
+    
 
     def get(self, request, user_name):
-        queryset = Post.objects.filter(author__username=user_name)
+        queryset = Post.objects.filter(author__username=user_name).order_by('-date_posted')
+        
         serializer = PostSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -109,7 +111,7 @@ class UserArticleList(APIView):
     permission_classes = []
 
     def get(self, request, user_name):
-        queryset = Article.objects.filter(author__username=user_name)
+        queryset = Article.objects.filter(author__username=user_name).order_by('-created_at')
         serializer = ArticleSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
