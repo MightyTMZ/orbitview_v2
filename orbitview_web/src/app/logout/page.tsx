@@ -1,17 +1,18 @@
-"use client";
-
 import React from "react";
+import Logout from "./Logout";
+import { Provider } from "react-redux";
+import { store, persistor } from "@/redux/store";
+import Spinner from "@/components/Spinner/Spinner";
+import { PersistGate } from "redux-persist/integration/react";
 
 const page = () => {
-  localStorage.setItem("isAuthenticated", "false");
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  localStorage.removeItem("currentUser");
-
-
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <h1 style={{ fontSize: 60 }}>You are now logged out! Please get off OrbitView and rejoin the Team's meeting</h1>
+    <div>
+      <Provider store={store}>
+        <PersistGate loading={<Spinner />} persistor={persistor}>
+          <Logout />
+        </PersistGate>
+      </Provider>
     </div>
   );
 };

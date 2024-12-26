@@ -1,6 +1,12 @@
-import type { Metadata } from "next";
+'use client'
+
+// import type { Metadata } from "next";
 import localFont from "next/font/local";
 import AppContainer from "./AppContainer";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "@/redux/store";
+import { Provider } from "react-redux";
+import Spinner from "@/components/Spinner/Spinner";
 // importing the additional fonts that we support here on OrbitView
 import {
   Poppins,
@@ -131,10 +137,10 @@ const fredericka_the_great = Fredericka_the_Great({
   weight: ["400"],
 });
 
-export const metadata: Metadata = {
+/*export const metadata: Metadata = {
   title: "OrbitView",
   description: "Where Learning, Connections, Growth Take Flight",
-};
+}; */
 
 export default function RootLayout({
   children,
@@ -163,7 +169,9 @@ export default function RootLayout({
           
           `}
       >
-        <AppContainer> {children}</AppContainer>
+        <Provider store={store}>
+              <PersistGate loading={<Spinner />} persistor={persistor}><AppContainer> {children}</AppContainer></PersistGate></Provider>
+        
       </body>
     </html>
   );

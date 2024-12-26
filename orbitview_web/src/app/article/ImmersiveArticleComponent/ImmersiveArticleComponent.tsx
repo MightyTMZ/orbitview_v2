@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import "./ImmersiveArticleComponent.css";
 import { backendServer } from "@/importantLinks";
+import Spinner from "@/components/Spinner/Spinner";
 
 interface Author {
   id: number;
@@ -43,6 +44,11 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
   },
 }) => {
   const [settings, setSettings] = useState(immersiveSettings);
+  // const [loading, setLoading] = useState(true);
+
+  /*if (loading) {
+    return <Spinner />;
+  } */
 
   const handleSettingChange = (
     setting: keyof typeof settings,
@@ -50,6 +56,8 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
   ) => {
     setSettings({ ...settings, [setting]: value });
   };
+
+  // setTimeout(() => setLoading(false), 1000);
 
   return (
     <div

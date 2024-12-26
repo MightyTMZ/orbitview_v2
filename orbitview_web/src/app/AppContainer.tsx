@@ -5,27 +5,35 @@ import { backendServer } from "@/components/importantLinks";
 import Link from "next/link";
 import { FaUserCircle, FaTimes, FaBars } from "react-icons/fa";
 import styles from "./AppContainer.module.css";
-import { store } from "@/redux/store";
+import { store, persistor } from "@/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import Spinner from "@/components/Spinner/Spinner";
+import Image from "next/image";
 
 interface Props {
   children: ReactNode;
 }
 
 const AppContainer = (props: Props) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [navbarOrientation, setNavbarOrientation] = useState("top"); // ['top', 'left', 'right', 'bottom']
-  const refreshToken =
-    typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
+  // const refreshToken = typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
 
   const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
   const [isWideForRightOrLeft, setisWideForRightOrLeft] = useState(false);
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  if (user || error) {
+  /* if (user || error) {
     // ghost reference
-  }
+  } */
+
+  const { isAuthenticated, current_user } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const checkDeviceType = () => {
     setisWideForRightOrLeft(window.innerWidth >= 1500);
@@ -47,7 +55,7 @@ const AppContainer = (props: Props) => {
     };
   }, [navbarOrientation, isWideForRightOrLeft]); // Add both `navbarOrientation` and `isWideForRightOrLeft` as dependencies
 
-  const renewUserLogin = async () => {
+  /*const renewUserLogin = async () => {
     if (!refreshToken) return; // Skip if refreshToken doesn't exist
 
     try {
@@ -65,18 +73,14 @@ const AppContainer = (props: Props) => {
         throw new Error(data.error || "Login failed!");
       }
 
-      // Store JWT token in localStorage
-      localStorage.setItem("accessToken", data.access);
-      localStorage.setItem("isAuthenticated", "true");
-      setIsAuthenticated(true); // Update state
+      
     } catch (error: any) {
       console.error("Error during login:", error.message || error);
-      localStorage.removeItem("isAuthenticated");
-      setIsAuthenticated(false);
+      
     }
-  };
+  };*/
 
-  const getUserInfo = async () => {
+  /* const getUserInfo = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
 
@@ -99,19 +103,7 @@ const AppContainer = (props: Props) => {
       console.error("Error fetching user data:", error);
       setError(error);
     }
-  };
-
-  useEffect(() => {
-    // Check localStorage for authentication status when the component mounts
-    if (typeof window !== "undefined") {
-      const authStatus = localStorage.getItem("isAuthenticated") === "true";
-      setIsAuthenticated(authStatus);
-
-      if (!authStatus) {
-        renewUserLogin(); // Attempt to renew login if not authenticated
-      }
-    }
-  }, []);
+  }; */
 
   const renderingAppropriateNavbar = () => {
     if (isNavbarCollapsed) return null;
@@ -130,9 +122,18 @@ const AppContainer = (props: Props) => {
               <Link href="/network">Network</Link>
               <Link href="/learn">Learn</Link>
 
-              {isAuthenticated ? (
+              {isAuthenticated && current_user ? (
                 <>
-                  <FaUserCircle size={30} className="inline-block" />
+                  <Image
+                    src={`${backendServer}/${current_user.image}`}
+                    alt={`${current_user.user.first_name} ${current_user.user.last_name}`}
+                    height={30}
+                    width={30}
+                    style={{  
+                      display: "inline"
+
+                    }}
+                  ></Image>
                   <Link href="/logout">Log Out</Link>
                 </>
               ) : (
@@ -255,10 +256,39 @@ const AppContainer = (props: Props) => {
             </div>
           </nav>
         );
+      default:
+        return (
+          <nav
+            className={`bg-gray-800 p-4 text-white flex justify-between items-center ${styles.nav} ${styles.topNavigation}`}
+          >
+            <Link href="/" className="text-2xl font-bold mr-2">
+              OrbitView
+            </Link>
+            <div className="space-x-4">
+              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/events">Events</Link>
+              <Link href="/network">Network</Link>
+              <Link href="/learn">Learn</Link>
+
+              {isAuthenticated ? (
+                <>
+                  <FaUserCircle size={30} className="inline-block" />
+                  <Link href="/logout">Log Out</Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/login">Login</Link>
+                  <Link href="/signup">Sign Up</Link>
+                </>
+              )}
+            </div>
+          </nav>
+        );
     }
   };
 
-  const renderControlPanel = () => {
+  {
+    /* const renderControlPanel = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({
       x: 0,
@@ -291,14 +321,13 @@ const AppContainer = (props: Props) => {
           left: `${position.x}px`,
           top: `${position.y}px`,
           cursor: isDragging ? "grabbing" : "grab",
-          zIndex: "99999"
+          zIndex: "99999",
         }}
         onMouseDown={handleDragStart}
         onMouseMove={handleDrag}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragEnd} // Handles when mouse leaves the panel
       >
-        {/* Toggle button for collapsing */}
         <button
           onClick={() => setIsNavbarCollapsed((prev) => !prev)}
           className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
@@ -306,7 +335,6 @@ const AppContainer = (props: Props) => {
           {isNavbarCollapsed ? <FaBars /> : <FaTimes />}
         </button>
 
-        {/* Conditional rendering for the control panel based on the collapse state */}
         {!isNavbarCollapsed && (
           <div className="grid grid-cols-2 gap-2">
             <button
@@ -345,24 +373,24 @@ const AppContainer = (props: Props) => {
         )}
       </div>
     );
-  };
+  }; */
+  }
 
   console.log(isWideForRightOrLeft);
 
   return (
-      <div>
-        {renderingAppropriateNavbar()}
-        {/*renderControlPanel() */}
-        <main
-          id="main-content"
-          style={{
-            marginRight: navbarOrientation === "right" ? "200px" : "0",
-          }}
-        >
-          {props.children}
-        </main>
-      </div>
-
+    <div>
+      {renderingAppropriateNavbar()}
+      {/*renderControlPanel() */}
+      <main
+        id="main-content"
+        style={{
+          marginRight: navbarOrientation === "right" ? "200px" : "0",
+        }}
+      >
+        {props.children}
+      </main>
+    </div>
   );
 };
 

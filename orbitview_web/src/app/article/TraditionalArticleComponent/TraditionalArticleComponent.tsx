@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { backendServer } from "@/importantLinks";
 import styles from "./TraditionalArticle.module.css";
 import Link from "next/link";
+import Spinner from "@/components/Spinner/Spinner";
 
 interface Author {
   id: number;
@@ -36,7 +37,9 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`${backendServer}/content/articles/${id}/`);
+        const response = await fetch(
+          `${backendServer}/content/articles/${id}/`
+        );
         if (!response.ok) throw new Error("Failed to fetch article.");
         const data = await response.json();
         setArticle(data);
@@ -51,7 +54,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
   }, [id]);
 
   if (loading) {
-    return <div className={styles.loader}>Loading...</div>;
+    return <Spinner />;
   }
 
   if (error) {
