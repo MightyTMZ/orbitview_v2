@@ -97,8 +97,8 @@ const ProfilePage = () => {
     return `${backendServer}/profile/${username}`;
   };
 
-  const followURL = getProfileURL + "/follow/"
-  const profileConnectionsListURL = `${backendServer}/social/connections/`
+  const followURL = getProfileURL + "/follow/";
+  const profileConnectionsListURL = `${backendServer}/social/connections/`;
 
   const handleFollowingUser = () => {
     console.log(`${username} was just followed...`);
@@ -114,7 +114,9 @@ const ProfilePage = () => {
 
   const handleClickOnDashboard = () => {
     if (current_user) {
-      console.log(`You are logged in as ${current_user.user.username}. Hope you enjoy your dashboard`);
+      console.log(
+        `You are logged in as ${current_user.user.username}. Hope you enjoy your dashboard`
+      );
     } else {
       console.log(
         "You are signed in. Please make an account so you gain access to your very own dashboard"
@@ -225,24 +227,38 @@ const ProfilePage = () => {
                 <PostPreviewCard key={userPost} post={userPost} />
               ))}
             </div>*/}
-          {posts.length > 0 ? (
+          {profile.is_private ? (
             <div>
-              <PostsList posts={posts}></PostsList>
+              <h3 style={{  
+                fontWeight: "bold",
+                fontSize: "1.5rem"
+
+              }}>This account is private</h3>
+              <p>Follow to see their posts and articles</p>
             </div>
           ) : (
-            <div>
-              {isTheUserSeeingTheirOwnProfile && posts.length == 0 ? (
-                <>
-                  <div>
-                    You have not made a post yet... Create your post{" "}
-                    <a href="">here!</a>
-                    Learn more about posting on OrbitView <a href="">here</a>
-                  </div>
-                </>
+            <>
+              {posts.length > 0 ? (
+                <div>
+                  <PostsList posts={posts}></PostsList>
+                </div>
               ) : (
-                <>No posts yet</>
+                <div>
+                  {isTheUserSeeingTheirOwnProfile && posts.length == 0 ? (
+                    <>
+                      <div>
+                        You have not made a post yet... Create your post{" "}
+                        <a href="">here!</a>
+                        Learn more about posting on OrbitView{" "}
+                        <a href="">here</a>
+                      </div>
+                    </>
+                  ) : (
+                    <>No posts yet</>
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
         </div>
       </div>

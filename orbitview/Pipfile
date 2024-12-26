@@ -11,6 +11,8 @@ django-cors-headers = "*"
 transformers = "*"
 scikit-learn = "*"
 djangorestframework-simplejwt = "*"
+tensorflow = "*"
+tf-keras = "*"
 
 [dev-packages]
 
