@@ -129,9 +129,9 @@ const AppContainer = (props: Props) => {
                     alt={`${current_user.user.first_name} ${current_user.user.last_name}`}
                     height={30}
                     width={30}
-                    style={{  
-                      display: "inline"
-
+                    style={{
+                      display: "inline",
+                      borderRadius: "50%",
                     }}
                   ></Image>
                   <Link href="/logout">Log Out</Link>
