@@ -150,7 +150,7 @@ class CustomLoginAPIView(APIView):
                 
             }, status=status.HTTP_200_OK)
 
-            '''print({
+            print({
                 'access': str(refresh.access_token),
                 'refresh': str(refresh),
                 'logged_in_user': serializer.data,

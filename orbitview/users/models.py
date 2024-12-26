@@ -52,6 +52,9 @@ class Profile(models.Model):
     # do they want to appear in natural language queries or not
     embedding = models.JSONField(null=True, blank=True) # store the embeddings
     
+    @property
+    def public(self):
+        return not self.is_private
 
     def profile_posts(self):
         return self.user.post_set.all()

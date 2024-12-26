@@ -8,18 +8,33 @@ from rest_framework.permissions import IsAdminUser
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from .models import Post, Comment, Article
 from .serializers import PostSerializer, CommentSerializer, ArticleSerializer
 
 
 class PostListCreate(APIView):
+
+    permission_classes = []
+
+    # add pagination
     def get(self, request):
-        posts = Post.objects.all().order_by('-date_posted')
+        if request.user.is_authenticated:
+            posts = Post.objects.filter(
+                Q(author__profile__is_private=False) | 
+                Q(author__user__in=request.user.following.all())
+            ).order_by('-date_posted')
+            
+        else:
+            posts = Post.objects.filter(author__profile__is_private=False).order_by('-date_posted')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return Response({'message': "Please sign in to create a post."})
+
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(author=request.user)
@@ -29,12 +44,25 @@ class PostListCreate(APIView):
 
 # must be authenticated 
 class ArticleListCreate(APIView):
-    def get(self, request): 
-        article = Article.objects.all().order_by('-created_at')
-        serializer = ArticleSerializer(article, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
+    permission_classes = []
+
+    # add pagination 
+    def get(self, request):
+        if request.user.is_authenticated:
+            posts = Article.objects.filter(
+                Q(author__profile__is_private=False) | 
+                Q(author__user__in=request.user.following.all())
+            ).order_by('-date_posted')
+            
+        else:
+            posts = Article.objects.filter(author__profile__is_private=False).order_by('-date_posted')
+        serializer = ArticleSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     def post(self, request):
+        if not request.user.is_authenticated:
+            return Response({'message': "Please sign in to create a post."})
         serializer = ArticleSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(author=request.user)
@@ -96,16 +124,30 @@ class ArticleDetail(APIView):
 # the user's own list of posts that they can edit
 # @method_decorator(cache_page(30), name='dispatch')  # Cache for 15 minutes
 class UserPostList(APIView):
-
-    permission_classes = []
+    # get the cookies here
     
+    permission_classes = []
 
     def get(self, request, user_name):
-        queryset = Post.objects.filter(author__username=user_name).order_by('-date_posted')
+        user = get_object_or_404(User, username=user_name)
+
+        if user.profile.is_private and not request.user.is_authenticated:
+            return Response({'message': "This account is private. Follow to see posts and articles."}, 
+                            status=status.HTTP_403_FORBIDDEN)
         
-        serializer = PostSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+        elif user.profile.public: 
+            queryset = Post.objects.filter(author__username=user_name).order_by('-date_posted')
+            serializer = PostSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        elif user.profile.is_private and user in request.user.profile.following.all():
+            queryset = Post.objects.filter(author__username=user_name).order_by('-date_posted')
+        
+            serializer = PostSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response({'message': "This account is private. Follow to see posts and articles."}, 
+                            status=status.HTTP_403_FORBIDDEN)
 
 class UserArticleList(APIView):
 
