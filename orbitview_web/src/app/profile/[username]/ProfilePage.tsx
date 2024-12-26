@@ -44,9 +44,16 @@ const ProfilePage = () => {
   const [isTheUserSeeingTheirOwnProfile, setIsTheUserSeeingTheirOwnProfile] =
     useState(false);
 
+  useEffect(() => {
+    // Check if the current user is seeing their own profile
+    if (isAuthenticated && current_user && profile) {
+      const isOwnProfile = current_user.user.id === profile.user.id;
+      setIsTheUserSeeingTheirOwnProfile(isOwnProfile);
+    }
+  }, [isAuthenticated, current_user, profile]);
 
-  console.log("User is authenticated: " + isAuthenticated);
-  console.log("User is: " + current_user);
+  // console.log("User is authenticated: " + isAuthenticated);
+  // console.log("User is: " + current_user);
 
   // user --> the current user in the Redux state
   // profile --> the fetched profile based on the URL
@@ -60,11 +67,6 @@ const ProfilePage = () => {
           const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
           const fetchProfileResponse = await axios.get(profileFetchEndpoint);
           setProfile(fetchProfileResponse.data);
-
-          if (isAuthenticated && current_user && profile) {
-            const isOwnProfile = current_user.user.id == profile.user.id;
-            setIsTheUserSeeingTheirOwnProfile(isOwnProfile);
-          }
 
           const postsByUserFetchEndpoint = `${backendServer}/content/posts/${username}/`;
           const fetchPostsByUserResponse = await axios.get(
