@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import Logout from "./Logout";
 import { Provider } from "react-redux";
@@ -9,9 +11,8 @@ const page = () => {
   return (
     <div>
       <Provider store={store}>
-        <PersistGate loading={<Spinner />} persistor={persistor}>
+        
           <Logout />
-        </PersistGate>
       </Provider>
     </div>
   );
