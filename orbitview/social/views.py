@@ -14,6 +14,19 @@ class ConnectionList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
+class UserConnectionList(APIView):
+    def get(self, request, username):
+        requested_user = User.objects.filter(username=username)
+
+        if requested_user.profile.hide_connection_list:
+            # People can still see their mutual connections and followers
+            return Response({"message": f"{requested_user.first_name} has their full connection list set to private"})
+
+        connection_list = get_object_or_404(ConnectionList, user=requested_user)
+        serializer = ConnectionListSerializer(connection_list)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
 class ConnectionRequest(APIView):
     def get(self, request):
         # Get all connection requests for the authenticated user

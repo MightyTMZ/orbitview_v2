@@ -7,7 +7,6 @@ import styles from "./ProfilePage.module.css";
 import PostsList from "./PostList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import PostsLayout from "./PostsLayout";
 
 interface User {
   id: number;
@@ -94,6 +93,55 @@ const ProfilePage = () => {
     return <div>Profile not found.</div>;
   }
 
+  const getProfileURL = () => {
+    return `${backendServer}/profile/${username}`;
+  };
+
+  const followURL = getProfileURL + "/follow/"
+  const profileConnectionsListURL = `${backendServer}/social/connections/`
+
+  const handleFollowingUser = () => {
+    console.log(`${username} was just followed...`);
+  };
+
+  const handleConnectingUser = () => {
+    console.log(`Connecting request was just sent to ${username}`);
+  };
+
+  const handleMessageUser = () => {
+    console.log(`Messaging ${username} right now`);
+  };
+
+  const handleClickOnDashboard = () => {
+    if (current_user) {
+      console.log(`You are logged in as ${current_user.user.username}. Hope you enjoy your dashboard`);
+    } else {
+      console.log(
+        "You are signed in. Please make an account so you gain access to your very own dashboard"
+      );
+    }
+  };
+
+  const handleClickOnEditProfile = () => {
+    if (current_user) {
+      console.log(
+        "Redirecting you to the page so you can edit your profile..."
+      );
+    } else {
+      console.log(
+        "You are not signed in. I don't know who you are so I don't which profile I should allow you to edit."
+      );
+    }
+  };
+
+  const handleViewArchive = () => {
+    if (current_user) {
+      console.log("Redirecting you to your archive page");
+    } else {
+      console.log("NO ARCHIVE. Please log in to see your archive.");
+    }
+  };
+
   return (
     <div className={styles.profilePage}>
       {/* Profile image */}
@@ -127,15 +175,45 @@ const ProfilePage = () => {
 
         {isTheUserSeeingTheirOwnProfile ? (
           <>
-            <button className={styles.actionBtn}>Edit Profile</button>
-            <button className={styles.actionBtn}>View Archive</button>
-            <button className={styles.actionBtn}>Dashboard</button>
+            <button
+              className={styles.actionBtn}
+              onClick={() => handleClickOnEditProfile()}
+            >
+              Edit Profile
+            </button>
+            <button
+              className={styles.actionBtn}
+              onClick={() => handleViewArchive()}
+            >
+              View Archive
+            </button>
+            <button
+              className={styles.actionBtn}
+              onClick={() => handleClickOnDashboard()}
+            >
+              Dashboard
+            </button>
           </>
         ) : (
           <>
-            <button className={styles.actionBtn}>Connect</button>
-            <button className={styles.actionBtn}>Follow</button>
-            <button className={styles.actionBtn}>Message</button>
+            <button
+              className={styles.actionBtn}
+              onClick={() => handleConnectingUser()}
+            >
+              Connect
+            </button>
+            <button
+              className={styles.actionBtn}
+              onClick={() => handleFollowingUser()}
+            >
+              Follow
+            </button>
+            <button
+              className={styles.actionBtn}
+              onClick={() => handleMessageUser()}
+            >
+              Message
+            </button>
           </>
         )}
       </div>

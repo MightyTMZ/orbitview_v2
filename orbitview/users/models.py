@@ -34,6 +34,9 @@ class Profile(models.Model):
     # "Do not show content from this producer"
     do_not_show = models.ManyToManyField(User, related_name="do_not_show_users", blank=True, symmetrical=False)
 
+    hide_connection_list = models.BooleanField(default=False)
+    hide_followers_list = models.BooleanField(default=False)
+
     location = models.CharField(max_length=100, null=True, blank=True)
     skills_description = models.TextField(max_length=2500, null=True, blank=True)
     interests_description = models.TextField(max_length=2500, null=True, blank=True)

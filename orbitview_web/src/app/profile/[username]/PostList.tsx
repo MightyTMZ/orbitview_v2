@@ -53,15 +53,29 @@ const renderFullName = (author: Author) => {
   return `${author.user.first_name} ${author.user.last_name}`;
 };
 
-const getFullURL = (post: Post) => {
-  console.log("Mr. Saleem")
-}
-
-
 const PostCard = ({ post }: CardProps) => {
   const contentRef = useRef<HTMLDivElement>(null); // Ref for the content div
   const [isOverflowing, setIsOverflowing] = useState(false); // Track if content overflows
   const [showFullContent, setShowFullContent] = useState(false); // Track if full content is shown
+
+  const getPostFullURL = (post: Post) => {
+    return `${backendServer}/posts/${post.id}`;
+  };
+
+  const likeURL = getPostFullURL(post) + "/like/";
+  const saveURL = getPostFullURL(post) + "/save/";
+
+  const handleLikingPost = (post: Post) => {
+    console.log(`${post.title} ${post.id} was liked`);
+  };
+
+  const handleSharingPost = (post: Post) => {
+    console.log(`${post.title} ${post.id} was shared`);
+  };
+
+  const handleSavingPost = (post: Post) => {
+    console.log(`${post.title} ${post.id} was saved`);
+  };
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -139,7 +153,10 @@ const PostCard = ({ post }: CardProps) => {
 
       {/* Engagement Metrics */}
       <div className="flex justify-between items-center mt-4">
-        <button className="flex items-center text-red-500 hover:text-red-600">
+        <button
+          className="flex items-center text-red-500 hover:text-red-600"
+          onClick={() => handleLikingPost(post)}
+        >
           <svg
             className="w-5 h-5 mr-1"
             fill="currentColor"
@@ -150,7 +167,10 @@ const PostCard = ({ post }: CardProps) => {
           </svg>
           {post.likes_count}
         </button>
-        <button className="flex items-center text-blue-500 hover:text-blue-600">
+        <button
+          className="flex items-center text-blue-500 hover:text-blue-600"
+          onClick={() => handleSharingPost(post)}
+        >
           <svg
             className="w-5 h-5 mr-1"
             fill="currentColor"
@@ -161,7 +181,10 @@ const PostCard = ({ post }: CardProps) => {
           </svg>
           {post.shares_count}
         </button>
-        <button className="flex items-center text-gray-500 hover:text-gray-600">
+        <button
+          className="flex items-center text-gray-500 hover:text-gray-600"
+          onClick={() => handleSavingPost(post)}
+        >
           <svg
             className="w-5 h-5 mr-1"
             fill="currentColor"
