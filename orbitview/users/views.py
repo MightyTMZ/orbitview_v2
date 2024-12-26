@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import timedelta
-from .serializers import ProfileSerializer, FollowRequestSerializer
+from .serializers import ProfileSerializer, FollowRequestSerializer, LoggedOnProfileSerializer
 from .models import Profile, FollowRequest
 
 
@@ -107,7 +107,7 @@ class CustomLoginAPIView(APIView):
             
             # fetch the user who just logged in
             profile = get_object_or_404(Profile, user__username=user.username)
-            serializer = ProfileSerializer(profile)
+            serializer = LoggedOnProfileSerializer(profile)
             
             response = JsonResponse({
                 'message': "Login successful",
@@ -141,16 +141,16 @@ class CustomLoginAPIView(APIView):
             final_response = Response({
                 'access': str(refresh.access_token),
                 'refresh': str(refresh),
-                'user': serializer.data,
+                'logged_in_user': serializer.data,
                 
             }, status=status.HTTP_200_OK)
 
-            '''print({
+            print({
                 'access': str(refresh.access_token),
                 'refresh': str(refresh),
-                'user': serializer.data,
+                'logged_in_user': serializer.data,
                 
-            }) # testing purposes'''
+            }) # testing purposes ONLY'''
 
             return final_response
         

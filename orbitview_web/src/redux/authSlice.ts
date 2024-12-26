@@ -1,14 +1,21 @@
 'use client'
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit'
+
+
+
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+}
+
 
 interface UserProfile {
-    user: {
-        id: number;
-        username: string;
-        first_name: string;
-        last_name: string;
-    }
+    user: User;
     is_private: boolean;
     is_online: boolean;
     bio: string;
@@ -26,14 +33,14 @@ interface AuthState {
   isAuthenticated: boolean;
   // token: string | null; 
   // NOT storing tokens here
-  user: UserProfile | null;
+  current_user: UserProfile | null;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   // token: null,
   // NOT storing tokens here
-  user: null, // not authenticated --> no user to store
+  current_user: null, // not authenticated --> no user to store
 };
 
 const authSlice = createSlice({
@@ -42,11 +49,11 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<UserProfile>) => {
       state.isAuthenticated = true;
-      state.user = action.payload;
+      state.current_user = action.payload;
     },
     logout: (state) => {
       state.isAuthenticated = false;
-      state.user = null; // clear the user once they log out
+      state.current_user = null; // clear the user once they log out
       // state.token = null;
     },
   },

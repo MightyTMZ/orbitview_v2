@@ -17,11 +17,23 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    # used for moments when privacy is not a concern
     class Meta:
         model = User
         fields = ['id', 
                   'username', 
                   # 'email', privacy duh!
+                  'first_name', 
+                  'last_name']
+        
+
+# used when the user is actually logged on
+class LoggedOnUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 
+                  'username', 
+                  'email', # notice that we include email this time
                   'first_name', 
                   'last_name']
         
@@ -52,11 +64,43 @@ class ProfileUserSerializer(serializers.ModelSerializer):
         ]
 
 
+
 class ProfileSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
 
     user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = [
+            'user',
+            'is_private',
+            'is_online',
+            # 'following',
+            # 'followers',
+            'bio',
+            'by_line',
+            'date_of_birth',
+            'updated',
+            'created',
+            'image',
+            'followers_count',
+            'following_count',
+        ]
+
+    def get_followers_count(self, obj):
+        return obj.get_followers_no()
+
+    def get_following_count(self, obj):
+        return obj.get_following_no()
+
+
+class LoggedOnProfileSerializer(serializers.ModelSerializer):
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+
+    user = LoggedOnUserSerializer(read_only=True)
 
     class Meta:
         model = Profile

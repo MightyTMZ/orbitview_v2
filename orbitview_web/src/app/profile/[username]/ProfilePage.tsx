@@ -5,15 +5,51 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import styles from "./ProfilePage.module.css";
 import PostPreviewCard from "./PostPreviewCard";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
+interface Profile {
+  user: User;
+  is_private: boolean;
+  is_online: boolean;
+  bio: string;
+  by_line: string;
+  date_of_birth: string;
+  updated: string;
+  created: string; //  --> when did they join OrbitView
+  image: string;
+  followers_count: number;
+  following_count: number;
+}
 
 // Profile component
 const ProfilePage = () => {
   const backendServer = "http://127.0.0.1:8000";
   const { username } = useParams();
-
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile>();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+
+  const { isAuthenticated, current_user } = useSelector(
+    (state: RootState) => state.auth
+  );
+  const [isTheUserSeeingTheirOwnProfile, setIsTheUserSeeingTheirOwnProfile] =
+    useState(false);
+
+
+  console.log("User is authenticated: " + isAuthenticated);
+  console.log("User is: " + current_user);
+
+  // user --> the current user in the Redux state
+  // profile --> the fetched profile based on the URL
 
   // console.log(profileFetchEndpoint);
 
@@ -22,12 +58,19 @@ const ProfilePage = () => {
       const fetchProfileandPosts = async () => {
         try {
           const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
-          const response1 = await axios.get(profileFetchEndpoint);
-          setProfile(response1.data);
+          const fetchProfileResponse = await axios.get(profileFetchEndpoint);
+          setProfile(fetchProfileResponse.data);
+
+          if (isAuthenticated && current_user && profile) {
+            const isOwnProfile = current_user.user.id == profile.user.id;
+            setIsTheUserSeeingTheirOwnProfile(isOwnProfile);
+          }
+
           const postsByUserFetchEndpoint = `${backendServer}/content/posts/${username}/`;
-          console.log(postsByUserFetchEndpoint);
-          const response2 = await axios.get(postsByUserFetchEndpoint);
-          setPosts(response2.data);
+          const fetchPostsByUserResponse = await axios.get(
+            postsByUserFetchEndpoint
+          );
+          setPosts(fetchPostsByUserResponse.data);
           console.log(posts); // testing
         } catch (error) {
           console.error("Error fetching profile or posts", error);
@@ -38,7 +81,7 @@ const ProfilePage = () => {
 
       fetchProfileandPosts();
     }
-  }, [username]);
+  }, [username, isAuthenticated, current_user]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -78,9 +121,20 @@ const ProfilePage = () => {
         </div>
 
         {/* Follow button */}
-        <button className={styles.actionBtn}>Connect</button>
-        <button className={styles.actionBtn}>Follow</button>
-        <button className={styles.actionBtn}>Message</button>
+
+        {isTheUserSeeingTheirOwnProfile ? (
+          <>
+            <button className={styles.actionBtn}>Edit Profile</button>
+            <button className={styles.actionBtn}>View Archive</button>
+            <button className={styles.actionBtn}>Dashboard</button>
+          </>
+        ) : (
+          <>
+            <button className={styles.actionBtn}>Connect</button>
+            <button className={styles.actionBtn}>Follow</button>
+            <button className={styles.actionBtn}>Message</button>
+          </>
+        )}
       </div>
       <div className="container mx-auto mt-8 px-4">
         <h1 className="text-4xl font-extrabold text-white mb-6">Posts</h1>

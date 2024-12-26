@@ -26,8 +26,9 @@ class PostListCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+# must be authenticated 
 class ArticleListCreate(APIView):
-    def get(self, request):
+    def get(self, request): 
         article = Article.objects.all().order_by('-created_at')
         serializer = ArticleSerializer(article, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -41,6 +42,10 @@ class ArticleListCreate(APIView):
     
 
 class PostDetail(APIView):
+
+    permission_classes = []
+
+
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         serializer = PostSerializer(post)
@@ -62,6 +67,9 @@ class PostDetail(APIView):
 
 
 class ArticleDetail(APIView):
+
+    permission_classes = []
+
     def get(self, request, id):
         article = get_object_or_404(Article, pk=id)
         # print(article)
@@ -87,6 +95,9 @@ class ArticleDetail(APIView):
 # the user's own list of posts that they can edit
 # @method_decorator(cache_page(30), name='dispatch')  # Cache for 15 minutes
 class UserPostList(APIView):
+
+    permission_classes = []
+
     def get(self, request, user_name):
         queryset = Post.objects.filter(author__username=user_name)
         serializer = PostSerializer(queryset, many=True)
@@ -94,6 +105,9 @@ class UserPostList(APIView):
     
 
 class UserArticleList(APIView):
+
+    permission_classes = []
+
     def get(self, request, user_name):
         queryset = Article.objects.filter(author__username=user_name)
         serializer = ArticleSerializer(queryset, many=True)

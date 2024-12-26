@@ -4,3 +4,5 @@ users.txt
 __pycache__
 
 login_request_test.py
+
+successful_login_response.json

@@ -5,6 +5,8 @@ import { backendServer } from "@/components/importantLinks";
 import Link from "next/link";
 import { FaUserCircle, FaTimes, FaBars } from "react-icons/fa";
 import styles from "./AppContainer.module.css";
+import { store } from "@/redux/store";
+import { Provider } from "react-redux";
 
 interface Props {
   children: ReactNode;
@@ -348,19 +350,19 @@ const AppContainer = (props: Props) => {
   console.log(isWideForRightOrLeft);
 
   return (
-    <div>
-      {renderingAppropriateNavbar()}
-      {renderControlPanel()}
+      <div>
+        {renderingAppropriateNavbar()}
+        {/*renderControlPanel() */}
+        <main
+          id="main-content"
+          style={{
+            marginRight: navbarOrientation === "right" ? "200px" : "0",
+          }}
+        >
+          {props.children}
+        </main>
+      </div>
 
-      <main
-        id="main-content"
-        style={{
-          marginRight: navbarOrientation === "right" ? "200px" : "0",
-        }}
-      >
-        {props.children}
-      </main>
-    </div>
   );
 };
 

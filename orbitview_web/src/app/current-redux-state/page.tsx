@@ -1,19 +1,19 @@
 'use client'
 
-import React from "react";
-import ProfilePage from "./ProfilePage";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
+import ExampleComponent from "./TestComponent";
+
+import React from 'react'
 
 const page = () => {
   return (
     <div>
       <Provider store={store}>
-        
-        <ProfilePage />
+        <ExampleComponent></ExampleComponent>
       </Provider>
     </div>
-  );
-};
+  )
+}
 
-export default page;
+export default page

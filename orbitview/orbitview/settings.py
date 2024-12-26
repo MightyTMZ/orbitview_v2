@@ -91,6 +91,12 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000'
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+]
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -142,10 +148,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_METHODS = [
-    "POST"
-]
 
 
 # Internationalization
