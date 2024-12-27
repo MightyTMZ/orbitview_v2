@@ -28,7 +28,7 @@ urlpatterns = [
     path('social/', include('social.urls')),
     path('notifications/', include('notifications.urls')),
     path('auth/', include('djoser.urls')),
-    path("auth/token/", include("djoser.urls.jwt")),
+    path("auth/", include("djoser.urls.jwt")),
     path("login/", CustomLoginAPIView.as_view()),
     path("csrf-token/", csrf_token_view, name="csrf-token"),
     # orbitview.net/tom.zhang.official

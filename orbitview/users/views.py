@@ -28,6 +28,39 @@ class ProfileDetailAPIView(APIView):
         serializer = ProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+    def put(self, request, username):
+        """
+        Update the profile completely.
+        """
+        profile = get_object_or_404(Profile, user__username=username)
+        
+        # Ensure the user is updating their own profile
+        if request.user != profile.user:
+            return Response({"error": "You do not have permission to update this profile."}, status=HTTP_400_BAD_REQUEST)
+
+        serializer = ProfileSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, username):
+        """
+        Partially update the profile.
+        """
+        profile = get_object_or_404(Profile, user__username=username)
+        
+        # Ensure the user is updating their own profile
+        if request.user != profile.user:
+            return Response({"error": "You do not have permission to update this profile."}, status=HTTP_400_BAD_REQUEST)
+
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     '''
     PATCH --> if request.user == self
     '''
