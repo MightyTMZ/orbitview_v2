@@ -229,6 +229,8 @@ class SavePost(APIView):
             return Response({"saved": "saved"}, status=status.HTTP_200_OK)
         else:
             return Response({"saved": "not saved"}, status=status.HTTP_200_OK)
+        
+        # DO NOT show saves_count in this view
 
 
     def post(self, request, pk):

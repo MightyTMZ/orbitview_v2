@@ -5,6 +5,8 @@ import { backendServer } from "@/importantLinks";
 import { useState, useEffect, useRef } from "react";
 import { AiOutlineLike } from "react-icons/ai";
 import { AiFillLike } from "react-icons/ai";
+import { FaBookmark } from "react-icons/fa";
+import { FaRegBookmark } from "react-icons/fa";
 
 import axios from "axios";
 
@@ -102,6 +104,7 @@ const PostCard = ({ post }: CardProps) => {
 
   const [likesCount, setLikesCount] = useState(post.likes_count);
   const [likedPost, setLikedPost] = useState(false);
+  const [savedPost, setSavedPost] = useState(false);
 
   // fetch the status to see if the post is already liked or not
 
@@ -110,29 +113,48 @@ const PostCard = ({ post }: CardProps) => {
       try {
         const response = await API.get(`/content/posts/${post.id}/like/`);
         const data = response.data;
-  
+
         // Update the likedPost state only on the initial fetch
         setLikedPost(data.liked === "liked");
       } catch (error) {
         console.error("Error fetching like status:", error);
       }
     };
-  
+    const fetchSaveStatus = async () => {
+      try {
+        const response = await API.get(`/content/posts/${post.id}/save/`);
+        const data = response.data;
+
+        // Update the likedPost state only on the initial fetch
+        setSavedPost(data.liked === "saved");
+      } catch (error) {
+        console.error("Error fetching saved status:", error);
+      }
+    };
+
     fetchLikeStatus();
+    fetchSaveStatus();
   }, []); // Run only once on component mount
-  
+
   const handleLikingPost = async () => {
     try {
       const response = await API.post(`/content/posts/${post.id}/like/`);
       setLikesCount(response.data.likes_count); // Update likes count
       setLikedPost((prevLikedPost) => !prevLikedPost); // Toggle the local state
+      // alert(`Post was successfully liked`);
     } catch (error) {
       console.error("Error liking post:", error);
     }
   };
 
   const handleSavingPost = async (post: Post) => {
-    const saveURL = getPostFullURL(post) + "/save/";
+    try {
+      const response = await API.post(`/content/posts/${post.id}/save/`);
+      setSavedPost((prevSavedPost) => !prevSavedPost); // Toggle the local state
+      // alert("Post was successfully saved.")
+    } catch (error) {
+      console.error("Error saving post:", error);
+    }
   };
 
   const handleSharingPost = (post: Post) => {
@@ -218,12 +240,11 @@ const PostCard = ({ post }: CardProps) => {
         <button
           className="flex items-center"
           onClick={() => handleLikingPost()}
-          style={{  
-            color: "#000d20" // OrbitView navy!
+          style={{
+            color: "#000d20", // OrbitView navy!
           }}
         >
           {likedPost ? <AiFillLike size={30} /> : <AiOutlineLike size={30} />}
-
           <span style={{ fontSize: 24, marginLeft: "3px" }}>{likesCount}</span>
         </button>
         <button
@@ -244,15 +265,7 @@ const PostCard = ({ post }: CardProps) => {
           className="flex items-center text-gray-500 hover:text-gray-600"
           onClick={() => handleSavingPost(post)}
         >
-          <svg
-            className="w-5 h-5 mr-1"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path d="M19 3h-4.18C14.4 2.42 13.3 2 12 2c-1.3 0-2.4.42-3.82 1H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h6v-6h4v6h6c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14h-6v-4h-4v4H4V5h15v12z" />
-          </svg>
-          {post.saves_count}
+          {savedPost ? <FaBookmark size={30} /> : <FaRegBookmark size={30} />}
         </button>
       </div>
     </div>
