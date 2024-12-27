@@ -195,6 +195,14 @@ class LikePost(APIView):
     Handles liking and unliking a post.
     """
 
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        
+        if request.user in post.likes.all():
+            return Response({"liked": "liked"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"liked": "not liked"}, status=status.HTTP_200_OK)
+
 
     def post(self, request, pk):
         if not request.user.is_authenticated:
@@ -203,16 +211,25 @@ class LikePost(APIView):
         post = get_object_or_404(Post, pk=pk)
         if request.user in post.likes.all():
             post.likes.remove(request.user)
-            return Response({"message": "Post unliked."}, status=status.HTTP_200_OK)
+            return Response({"message": "Post unliked.", "likes_count": post.likes_count}, status=status.HTTP_200_OK)
         else:
             post.likes.add(request.user)
-            return Response({"message": "Post liked."}, status=status.HTTP_200_OK)
+            return Response({"message": "Post liked.", "likes_count": post.likes_count}, status=status.HTTP_200_OK)
 
 
 class SavePost(APIView):
     """
     Handles saving and unsaving a post.
     """
+
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        
+        if request.user in post.saves.all():
+            return Response({"saved": "saved"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"saved": "not saved"}, status=status.HTTP_200_OK)
+
 
     def post(self, request, pk):
         if not request.user.is_authenticated:
