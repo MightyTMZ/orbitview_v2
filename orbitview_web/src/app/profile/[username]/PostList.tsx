@@ -7,7 +7,8 @@ import { AiOutlineLike } from "react-icons/ai";
 import { AiFillLike } from "react-icons/ai";
 import { FaBookmark } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
-import styles from "./PostList.module.css";
+import { FaShareSquare } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
 
 import axios from "axios";
 
@@ -160,6 +161,10 @@ const PostCard = ({ post }: CardProps) => {
     }
   };
 
+  const handleCommenting = async (post: Post) => {
+    console.log("the user now wants to comment on this post");
+  };
+
   const handleSharingPost = (post: Post) => {
     console.log(`${post.title} ${post.id} was shared`);
   };
@@ -239,7 +244,7 @@ const PostCard = ({ post }: CardProps) => {
       </div>
 
       {/* Engagement Metrics */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-6">
         <button
           className="flex items-center"
           onClick={() => handleLikingPost()}
@@ -258,16 +263,18 @@ const PostCard = ({ post }: CardProps) => {
         <button
           className="flex items-center text-blue-500 hover:text-blue-600"
           onClick={() => handleSharingPost(post)}
+          style={{
+            color: "#000d20", // OrbitView navy!
+          }}
         >
-          <svg
-            className="w-5 h-5 mr-1"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path d="M21 11.11c-.61-.35-1.28-.6-2-.73V4c0-1.1-.9-2-2-2h-3c-1.1 0-2 .9-2 2v6c-.6.07-1.19.23-1.73.49C6.6 11.11 4 14.09 4 17.79c0 3.32 2.69 6.02 6 6.21V22h4v-1.99c1.1-.08 2-.76 2.54-1.67.54-.91.68-2.01.39-3.06-.29-1.05-.99-1.98-1.93-2.57-.94-.59-2.06-.84-3.17-.68-.78.11-1.52.46-2.1.99V6.39c.72.11 1.44.33 2.09.66C12.07 8.41 14.5 10.86 14.5 14H17v2.34c.48-.45 1.01-.83 1.6-1.1.59-.27 1.22-.44 1.87-.5v-1.63c0-.69-.08-1.36-.24-2-.13-.51-.35-.99-.66-1.44z" />
-          </svg>
-          {post.shares_count}
+          <FaShareSquare size={30} />
+        </button>
+        <button
+          className="flex items-center text-gray-500 hover:text-gray-600"
+          onClick={() => handleCommenting(post)}
+        >
+          <FaRegCommentDots size={30} />
+          <span>&nbsp;5</span> {/* assume about 5ish comments */}
         </button>
         <button
           className="flex items-center text-gray-500 hover:text-gray-600"
