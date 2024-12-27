@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProfileDetailAPIView, FollowUserAPIView, FollowRequestManageAPIView
+from .views import ProfileDetailAPIView, FollowUserAPIView, FollowRequestManageAPIView, csrf_token_view
 
 urlpatterns = [
     path('profile/<str:username>/', ProfileDetailAPIView.as_view(), name='profile-detail'),

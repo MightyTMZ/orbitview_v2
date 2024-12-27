@@ -6,6 +6,8 @@ from django.views.decorators.cache import cache_page
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import timedelta
@@ -162,3 +164,7 @@ class CustomLoginAPIView(APIView):
         print("Login FAILED!")
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
     
+
+
+def csrf_token_view(request):
+    return JsonResponse({'csrfToken': get_token(request)})

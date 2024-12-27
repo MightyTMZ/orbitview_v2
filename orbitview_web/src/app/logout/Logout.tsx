@@ -10,6 +10,9 @@ const Logout = () => {
   useEffect(() => {
     dispatch(logout()); // Dispatch logout when the component mounts
   }, [dispatch]);
+  
+  localStorage.setItem("accessToken", ""); // clear
+  localStorage.setItem("refreshToken", ""); // clear
 
   return (
     <div

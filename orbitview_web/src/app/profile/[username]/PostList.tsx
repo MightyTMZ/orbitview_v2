@@ -3,6 +3,7 @@
 // import styles from "./PostPreviewCard.module.css"
 import { backendServer } from "@/importantLinks";
 import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 interface User {
   id: number;
@@ -58,23 +59,60 @@ const PostCard = ({ post }: CardProps) => {
   const [isOverflowing, setIsOverflowing] = useState(false); // Track if content overflows
   const [showFullContent, setShowFullContent] = useState(false); // Track if full content is shown
 
+  const API = axios.create({
+    baseURL: backendServer, // Replace with your backend's base URL
+    withCredentials: true,
+  });
+
+  API.interceptors.request.use((config) => {
+    const token = localStorage.getItem("accessToken"); // Assume the JWT token is stored in localStorage
+    const csrfToken = fetchCsrfToken();
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (csrfToken) {
+      config.headers["X-CSRFToken"] = csrfToken;
+    }
+
+    return config;
+  });
+
+  const fetchCsrfToken = async () => {
+    try {
+      const response = await fetch(`${backendServer}/csrf-token/`, {
+        method: "GET",
+      });
+
+      const data = await response.json();
+      const csrfToken = data.csrfToken;
+      return csrfToken;
+    } catch (error) {
+      console.error("Failed to fetch CSRF token:", error);
+    }
+  };
+
   const getPostFullURL = (post: Post) => {
     return `${backendServer}/posts/${post.id}`;
   };
 
-  const likeURL = getPostFullURL(post) + "/like/";
-  const saveURL = getPostFullURL(post) + "/save/";
+  const handleLikingPost = async (post: Post) => {
+    try {
+      const response = await API.post(`/content/posts/${post.id}/like/`);
+      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      throw error.response ? error.response.data : error;
+    }
+  };
 
-  const handleLikingPost = (post: Post) => {
-    console.log(`${post.title} ${post.id} was liked`);
+  const handleSavingPost = async (post: Post) => {
+    const saveURL = getPostFullURL(post) + "/save/";
   };
 
   const handleSharingPost = (post: Post) => {
     console.log(`${post.title} ${post.id} was shared`);
-  };
-
-  const handleSavingPost = (post: Post) => {
-    console.log(`${post.title} ${post.id} was saved`);
   };
 
   useEffect(() => {

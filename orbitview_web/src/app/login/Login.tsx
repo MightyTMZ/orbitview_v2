@@ -56,18 +56,18 @@ export default function Login() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${backendServer}/auth/token/login/`, {
+      const response = await fetch(`${backendServer}/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username_or_email, password, save_info }),
-        credentials: "include", // include the cookies in the request
+        // credentials: "include", // include the cookies in the request
       });
 
       const data = await response.json();
 
-      console.log("API Response:", data);
+      // console.log("API Response:", data);
 
       if (response.ok) {
         // console.log("User profile data received:", data.user); // Check the structure
@@ -91,9 +91,17 @@ export default function Login() {
           followers_count: data.logged_in_user.followers_count,
           following_count: data.logged_in_user.following_count,
         };
-        console.log("User profile being dispatched:", userProfile);
+        // console.log("User profile being dispatched:", userProfile);
+
+        console.log(data);
 
         dispatch(login(userProfile));
+
+        localStorage.setItem("accessToken", data.access); // NOT data.accessToken
+        localStorage.setItem("refreshToken", data.refresh); // NOT data.refreshToken
+
+        // user and authentication state is being stored in Redux, the tokens will be in localstorage
+
       } else if (!response.ok) {
         // console.log(response.status);
         // console.log(typeof response.status);
