@@ -37,7 +37,7 @@ class ProfileDetailAPIView(APIView):
         
         # Ensure the user is updating their own profile
         if request.user != profile.user:
-            return Response({"error": "You do not have permission to update this profile."}, status=HTTP_400_BAD_REQUEST)
+            return Response({"error": "You do not have permission to update this profile."}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = ProfileSerializer(profile, data=request.data)
         if serializer.is_valid():

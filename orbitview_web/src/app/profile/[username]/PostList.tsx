@@ -7,6 +7,7 @@ import { AiOutlineLike } from "react-icons/ai";
 import { AiFillLike } from "react-icons/ai";
 import { FaBookmark } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
+import styles from "./PostList.module.css";
 
 import axios from "axios";
 
@@ -126,7 +127,7 @@ const PostCard = ({ post }: CardProps) => {
         const data = response.data;
 
         // Update the likedPost state only on the initial fetch
-        setSavedPost(data.liked === "saved");
+        setSavedPost(data.saved === "saved");
       } catch (error) {
         console.error("Error fetching saved status:", error);
       }
@@ -139,9 +140,10 @@ const PostCard = ({ post }: CardProps) => {
   const handleLikingPost = async () => {
     try {
       const response = await API.post(`/content/posts/${post.id}/like/`);
+
       setLikesCount(response.data.likes_count); // Update likes count
       setLikedPost((prevLikedPost) => !prevLikedPost); // Toggle the local state
-      // alert(`Post was successfully liked`);
+      // send a visible message to the user saying that they liked or unliked the post in a professional element they can see instead of an alert
     } catch (error) {
       console.error("Error liking post:", error);
     }
@@ -150,6 +152,7 @@ const PostCard = ({ post }: CardProps) => {
   const handleSavingPost = async (post: Post) => {
     try {
       const response = await API.post(`/content/posts/${post.id}/save/`);
+
       setSavedPost((prevSavedPost) => !prevSavedPost); // Toggle the local state
       // alert("Post was successfully saved.")
     } catch (error) {
@@ -159,6 +162,10 @@ const PostCard = ({ post }: CardProps) => {
 
   const handleSharingPost = (post: Post) => {
     console.log(`${post.title} ${post.id} was shared`);
+  };
+
+  const redirectToPostDetail = () => {
+    window.location.href = `${window.location.href}/p/${post.id}`;
   };
 
   useEffect(() => {
@@ -180,16 +187,16 @@ const PostCard = ({ post }: CardProps) => {
   }, [post.content]);
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto mb-6">
+    <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto mb-6 transition-transform duration-300 hover:scale-105 hover:shadow-xl group">
       {/* Author Details */}
       <div className="flex items-center mb-4">
         <img
-          className="w-12 h-12 rounded-full mr-4"
+          className="w-12 h-12 rounded-full mr-4 transition-transform duration-300 group-hover:rotate-6"
           src={correctImagePath(post.author.image)}
           alt={`${post.author.user.first_name} ${post.author.user.last_name}`}
         />
         <div>
-          <h3 className="font-semibold text-lg">
+          <h3 className="font-semibold text-lg text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
             {renderFullName(post.author)}
           </h3>
           <p className="text-sm text-gray-500">{post.author.by_line}</p>
@@ -197,7 +204,12 @@ const PostCard = ({ post }: CardProps) => {
       </div>
 
       {/* Title */}
-      <h2 className="text-xl font-bold mb-3">{post.title}</h2>
+      <h2
+        className={`text-xl font-bold mb-3 text-gray-900 group-hover:text-indigo-600 transition-colors duration-300 cursor-pointer`}
+        onClick={() => redirectToPostDetail()}
+      >
+        {post.title}
+      </h2>
 
       {/* Content */}
       <div>
@@ -226,15 +238,6 @@ const PostCard = ({ post }: CardProps) => {
         )}
       </div>
 
-      {/* Image (if exists) 
-      {post.image && (
-        <img
-          className="rounded-lg w-full object-cover h-64 mb-4"
-          src={post.image}
-          alt="Post image"
-        />
-      )}*/}
-
       {/* Engagement Metrics */}
       <div className="flex justify-between items-center mt-4">
         <button
@@ -245,7 +248,12 @@ const PostCard = ({ post }: CardProps) => {
           }}
         >
           {likedPost ? <AiFillLike size={30} /> : <AiOutlineLike size={30} />}
-          <span style={{ fontSize: 24, marginLeft: "3px" }}>{likesCount}</span>
+          <span
+            className="ml-1 text-gray-700 group-hover:text-indigo-600 transition-colors duration-300"
+            style={{ fontSize: 24 }}
+          >
+            {likesCount}
+          </span>
         </button>
         <button
           className="flex items-center text-blue-500 hover:text-blue-600"
