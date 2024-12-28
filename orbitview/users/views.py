@@ -13,6 +13,8 @@ from rest_framework import status
 from datetime import timedelta
 from .serializers import ProfileSerializer, FollowRequestSerializer, LoggedOnProfileSerializer
 from .models import Profile, FollowRequest
+from django.db import transaction
+
 
 
 @method_decorator(cache_page(90), name='dispatch') # cache it for 90 seconds
@@ -74,30 +76,44 @@ class FollowUserAPIView(APIView):
         target_user = get_object_or_404(User, username=username)
         if target_user in request.user.profile.following.all():
             return Response({"following": "following"}, status=status.HTTP_200_OK)
+        return Response({"following": "not following"}, status=status.HTTP_200_OK)
 
-        else:
-            return Response({"following": "not following"}, status=status.HTTP_200_OK)
-        
 
     def post(self, request, username):
         target_user = get_object_or_404(User, username=username)
         profile = get_object_or_404(Profile, user=target_user)
         sender_profile = get_object_or_404(Profile, user=request.user)
 
-        # If the account is private, create a follow request
+        # Check if already following
+        if target_user in sender_profile.following.all():
+            # Unfollow logic
+            sender_profile.following.remove(target_user)
+            profile.followers.remove(request.user)
+            return Response(
+                {"message": f"You have unfollowed {username}."},
+                status=status.HTTP_200_OK,
+            )
+
+        # Handle private accounts (Follow Request)
         if profile.is_private:
             if FollowRequest.objects.filter(sender=request.user, receiver=target_user).exists():
-                return Response({"message": "Follow request already sent."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"message": "Follow request already sent."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             FollowRequest.objects.create(sender=request.user, receiver=target_user)
-            return Response({"message": f"Follow request sent to {username}."}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": f"Follow request sent to {username}."},
+                status=status.HTTP_200_OK,
+            )
 
-        # If the account is public, follow directly
+        # Handle public accounts (Direct Follow)
         sender_profile.following.add(target_user)
         profile.followers.add(request.user)
-        return Response({"message": f"You are now following {username}."}, status=status.HTTP_200_OK)
-
-
-
+        return Response(
+            {"message": f"You are now following {username}."},
+            status=status.HTTP_200_OK,
+        )
 
 
 
