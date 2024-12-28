@@ -54,3 +54,7 @@
   font-size: 1.2rem;
   color: #333;
 }
+
+.authorByName:hover {
+  font-weight: bold;
+}

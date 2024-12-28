@@ -154,12 +154,21 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
             src={`${backendServer}/${article.author.profile.image}/`}
             alt={`${article.author.first_name}'s profile`}
             className={styles.profileImage}
+            onClick={() =>
+              router.push(`/profile/${article.author.username}/articles/`)
+            }
           />
           <p>
-            By{" "}
-            <strong>
-              {article.author.first_name} {article.author.last_name}
-            </strong>{" "}
+            <div
+              onClick={() =>
+                router.push(`/profile/${article.author.username}/articles/`)
+              }
+              className={styles.authorByName}
+            >
+              <strong>
+                {article.author.first_name} {article.author.last_name}
+              </strong>{" "}
+            </div>
             | Published on {new Date(article.created_at).toLocaleDateString()}
           </p>
         </div>

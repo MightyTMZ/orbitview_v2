@@ -93,3 +93,7 @@
      3px 0 rgba(0, 255, 255, 1);
 }
 */
+
+.authorByName:hover {
+  font-weight: bold;
+}

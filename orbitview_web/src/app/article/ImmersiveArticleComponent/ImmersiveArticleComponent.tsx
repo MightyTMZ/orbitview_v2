@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import "./ImmersiveArticleComponent.css";
 import { backendServer } from "@/importantLinks";
 import Spinner from "@/components/Spinner/Spinner";
+import { useRouter } from "next/navigation";
 
 interface Author {
   id: number;
@@ -49,6 +50,8 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
   /*if (loading) {
     return <Spinner />;
   } */
+
+  const router = useRouter();
 
   const handleSettingChange = (
     setting: keyof typeof settings,
@@ -130,10 +133,20 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
             <img
               src={`${backendServer}/${author.profile.image}`}
               alt={`${author.first_name} ${author.last_name}`}
+              onClick={() =>
+                router.push(`/profile/${author.username}/articles/`)
+              }
             />
             <p>
-              By {author.first_name} {author.last_name} -{" "}
-              {new Date(created_at).toLocaleDateString()}
+              <span
+                onClick={() =>
+                  router.push(`/profile/${author.username}/articles/`)
+                }
+                className="authorByName"
+              >
+                {author.first_name} {author.last_name}
+              </span>
+              - {new Date(created_at).toLocaleDateString()}
             </p>
           </div>
         </header>
