@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 // import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -106,7 +106,7 @@ const ibm_plex_sans = IBM_Plex_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-ibm-plex-sans",
-  weight: ["100", "200", "300", "400", "500", '600', '700'],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
 
 const lexend = Lexend({
@@ -170,8 +170,10 @@ export default function RootLayout({
           `}
       >
         <Provider store={store}>
-              <PersistGate loading={<Spinner />} persistor={persistor}><AppContainer> {children}</AppContainer></PersistGate></Provider>
-        
+          <PersistGate loading={<Spinner />} persistor={persistor}>
+            <AppContainer> {children}</AppContainer>
+          </PersistGate>
+        </Provider>
       </body>
     </html>
   );

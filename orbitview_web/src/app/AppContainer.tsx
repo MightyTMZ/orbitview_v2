@@ -5,12 +5,13 @@ import { backendServer } from "@/components/importantLinks";
 import Link from "next/link";
 import { FaUserCircle, FaTimes, FaBars } from "react-icons/fa";
 import styles from "./AppContainer.module.css";
-import { store, persistor } from "@/redux/store";
-import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
+import { store } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/authSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import Spinner from "@/components/Spinner/Spinner";
+import { TokenIsStillValid } from "./refreshLoginLogic";
 import Image from "next/image";
 
 interface Props {
@@ -25,7 +26,6 @@ const AppContainer = (props: Props) => {
   const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
   const [isWideForRightOrLeft, setisWideForRightOrLeft] = useState(false);
   // const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
 
   /* if (user || error) {
     // ghost reference
@@ -34,6 +34,12 @@ const AppContainer = (props: Props) => {
   const { isAuthenticated, current_user } = useSelector(
     (state: RootState) => state.auth
   );
+
+  const dispatch = useDispatch();
+
+  if (!TokenIsStillValid) {
+    dispatch(logout());
+  }
 
   const checkDeviceType = () => {
     setisWideForRightOrLeft(window.innerWidth >= 1500);

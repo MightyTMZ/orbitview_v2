@@ -2,8 +2,6 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { login } from "../../redux/authSlice";

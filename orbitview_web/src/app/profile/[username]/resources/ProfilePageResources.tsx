@@ -13,6 +13,7 @@ import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
 import ContentTypeComingSoon from "../ContentTypeComingSoon";
 import MessageButton from "../MessageButton/MessageButton";
 import FollowButton from "../FollowButton/FollowButton";
+import ConnectButton from "../ConnectButton/ConnectButton";
 
 interface User {
   id: number;
@@ -226,12 +227,7 @@ const ProfilePageResources = () => {
           </>
         ) : (
           <>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleConnectingUser()}
-            >
-              Connect
-            </button>
+            <ConnectButton />
             <FollowButton profile={profile} />
             <MessageButton />
           </>

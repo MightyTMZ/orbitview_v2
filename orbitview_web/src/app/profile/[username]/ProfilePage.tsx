@@ -10,6 +10,7 @@ import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import MessageButton from "./MessageButton/MessageButton";
 import FollowButton from "./FollowButton/FollowButton";
+import ConnectButton from "./ConnectButton/ConnectButton";
 
 interface User {
   id: number;
@@ -221,12 +222,7 @@ const ProfilePage = () => {
           </>
         ) : (
           <>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleConnectingUser()}
-            >
-              Connect
-            </button>
+            <ConnectButton />
             <FollowButton profile={profile} />
             <MessageButton />
           </>
