@@ -70,6 +70,14 @@ class FollowUserAPIView(APIView):
     """
     Follow a user (handle private and public profiles).
     """
+    def get(self, request, username):
+        target_user = get_object_or_404(User, username=username)
+        if target_user in request.user.profile.following.all():
+            return Response({"following": "following"}, status=status.HTTP_200_OK)
+
+        else:
+            return Response({"following": "not following"}, status=status.HTTP_200_OK)
+        
 
     def post(self, request, username):
         target_user = get_object_or_404(User, username=username)

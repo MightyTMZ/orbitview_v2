@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
 import ContentTypeComingSoon from "../ContentTypeComingSoon";
 import MessageButton from "../MessageButton/MessageButton";
+import FollowButton from "../FollowButton/FollowButton";
 
 interface User {
   id: number;
@@ -231,12 +232,7 @@ const ProfilePageResources = () => {
             >
               Connect
             </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleFollowingUser()}
-            >
-              Follow
-            </button>
+            <FollowButton profile={profile} />
             <MessageButton />
           </>
         )}

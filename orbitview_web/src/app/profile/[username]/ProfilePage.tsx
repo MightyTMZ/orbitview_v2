@@ -8,6 +8,8 @@ import PostsList from "./PostList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import MessageButton from "./MessageButton/MessageButton";
+import FollowButton from "./FollowButton/FollowButton";
 
 interface User {
   id: number;
@@ -225,18 +227,8 @@ const ProfilePage = () => {
             >
               Connect
             </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleFollowingUser()}
-            >
-              Follow
-            </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleMessageUser()}
-            >
-              Message
-            </button>
+            <FollowButton profile={profile} />
+            <MessageButton />
           </>
         )}
       </div>

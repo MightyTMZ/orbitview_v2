@@ -11,6 +11,7 @@ import Spinner from "@/components/Spinner/Spinner";
 import { useRouter } from "next/navigation";
 import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
 import MessageButton from "../MessageButton/MessageButton";
+import FollowButton from "../FollowButton/FollowButton";
 
 interface User {
   id: number;
@@ -229,12 +230,7 @@ const ProfilePageArticles = () => {
             >
               Connect
             </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleFollowingUser()}
-            >
-              Follow
-            </button>
+            <FollowButton profile={profile} />
             <MessageButton />
           </>
         )}
