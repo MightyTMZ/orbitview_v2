@@ -11,6 +11,7 @@ import Spinner from "@/components/Spinner/Spinner";
 import { useRouter } from "next/navigation";
 import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
 import ContentTypeComingSoon from "../ContentTypeComingSoon";
+import MessageButton from "../MessageButton/MessageButton";
 
 interface User {
   id: number;
@@ -236,12 +237,7 @@ const ProfilePageVideos = () => {
             >
               Follow
             </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleMessageUser()}
-            >
-              Message
-            </button>
+            <MessageButton />
           </>
         )}
       </div>

@@ -1,0 +1,42 @@
+.messageButton {
+  background-color: #cccccc; /* Gray to indicate disabled */
+  color: #666666; /* Lighter text */
+  border: 2px solid #cccccc; /* Border to match the disabled background */
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: not-allowed; /* Disable the cursor to indicate it's not clickable */
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Tooltip */
+.tooltip {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.messageButton:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* When hovering over the disabled button */
+.messageButton:hover {
+  background-color: #cccccc; /* Keep the button disabled-looking on hover */
+  color: #666666; /* Keep the text color lighter */
+}

@@ -10,6 +10,7 @@ import { RootState } from "@/redux/store";
 import Spinner from "@/components/Spinner/Spinner";
 import { useRouter } from "next/navigation";
 import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
+import MessageButton from "../MessageButton/MessageButton";
 
 interface User {
   id: number;
@@ -234,12 +235,7 @@ const ProfilePageArticles = () => {
             >
               Follow
             </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => handleMessageUser()}
-            >
-              Message
-            </button>
+            <MessageButton />
           </>
         )}
       </div>
