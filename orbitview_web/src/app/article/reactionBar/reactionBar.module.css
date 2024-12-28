@@ -1,0 +1,32 @@
+.reactionBar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+}
+
+.reactionButton {
+  background: none;
+  border: none;
+  color: #3b4a6b; /* OrbitView Light Navy */
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.1s ease;
+}
+
+.reactionButton:hover {
+  color: #2c3b57; /* Slightly darker navy */
+  transform: scale(1.1);
+}
+
+.reactionButton:active {
+  transform: scale(0.95);
+}
+
+.count {
+  font-weight: normal;
+  margin-left: 5px;
+  color: #6a7b97; /* Subtle light navy for count display */
+}

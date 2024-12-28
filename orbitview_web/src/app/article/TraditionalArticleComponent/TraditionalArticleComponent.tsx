@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { backendServer } from "@/importantLinks";
 import styles from "./TraditionalArticle.module.css";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import Spinner from "@/components/Spinner/Spinner";
+import ReactionBar from "../reactionBar/reactionBar";
 
 interface Author {
   id: number;
@@ -20,8 +22,10 @@ interface ArticleProps {
   id: number; // Article ID for fetching the data
 }
 
-// takes in only the id parameter
 const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
+  const router = useRouter();
+  const [likedArticle, setLikedArticle] = useState(false);
+  const [savedArticle, setSavedArticle] = useState(false);
   const [article, setArticle] = useState<null | {
     title: string;
     content: string;
@@ -33,6 +37,42 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
   }>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
+
+  // Set up Axios instance
+  const API = axios.create({
+    baseURL: backendServer,
+    withCredentials: true,
+  });
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await fetch(`${backendServer}/csrf-token/`, {
+          method: "GET",
+        });
+        const data = await response.json();
+        setCsrfToken(data.csrfToken);
+      } catch (error) {
+        console.error("Failed to fetch CSRF token:", error);
+      }
+    };
+
+    fetchCsrfToken();
+  }, []);
+
+  useEffect(() => {
+    if (csrfToken) {
+      API.interceptors.request.use((config) => {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        config.headers["X-CSRFToken"] = csrfToken;
+        return config;
+      });
+    }
+  }, [csrfToken]);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -53,6 +93,48 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
     fetchArticle();
   }, [id]);
 
+  const handleReaction = async (type: "like" | "share" | "save") => {
+    try {
+      const response = await API.post(`/content/articles/${id}/${type}/`);
+      if (type === "like") {
+        setLikedArticle((prev) => !prev);
+      } else if (type === "save") {
+        setSavedArticle((prev) => !prev);
+      } else if (type === "share") {
+        console.log("The user wants to share the article.");
+      }
+
+      if (response.status === 401) {
+        router.replace("/login");
+      }
+    } catch (error) {
+      console.error("Error handling reaction to article: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      try {
+        const response = await API.get(`/content/articles/${id}/like/`);
+        setLikedArticle(response.data.liked === "liked");
+      } catch (error) {
+        console.error("Error fetching like status:", error);
+      }
+    };
+
+    const fetchSaveStatus = async () => {
+      try {
+        const response = await API.get(`/content/articles/${id}/save/`);
+        setSavedArticle(response.data.saved === "saved");
+      } catch (error) {
+        console.error("Error fetching saved status:", error);
+      }
+    };
+
+    fetchLikeStatus();
+    fetchSaveStatus();
+  }, [id]);
+
   if (loading) {
     return <Spinner />;
   }
@@ -67,13 +149,6 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
 
   return (
     <article className={styles.article}>
-      {/*<Helmet>
-        <title>{article.title} | OrbitView</title>
-        <meta name="description" content={`${article.title} by ${article.author.first_name} ${article.author.last_name}`} />
-        <meta name="author" content={`${article.author.first_name} ${article.author.last_name}`} />
-        <meta name="keywords" content="OrbitView, articles, immersive, technology" />
-      </Helmet>*/}
-
       <header className={styles.header}>
         <h1 className={styles.title}>{article.title}</h1>
         <div className={styles.meta}>
@@ -90,7 +165,25 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
             | Published on {new Date(article.created_at).toLocaleDateString()}
           </p>
         </div>
-        <Link href={`/article/${id}/immersive`}>Read in immersive </Link>
+        <button
+          className="mt-3"
+          style={{
+            padding: "5px",
+            border: "1px solid black",
+          }}
+          onClick={() => router.push(`${id}/immersive`)}
+        >
+          Read in immersive
+        </button>
+
+        <ReactionBar
+          liked={likedArticle}
+          saved={savedArticle}
+          likesCount={article.likes_count}
+          sharesCount={article.shares_count}
+          savesCount={article.saves_count}
+          onReact={handleReaction}
+        />
       </header>
 
       <section
@@ -98,13 +191,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
         dangerouslySetInnerHTML={{ __html: article.content }}
       ></section>
 
-      <footer className={styles.footer}>
-        <p>
-          <strong>Likes:</strong> {article.likes_count} |{" "}
-          <strong>Shares:</strong> {article.shares_count} |{" "}
-          <strong>Saves:</strong> {article.saves_count}
-        </p>
-      </footer>
+      <footer className={styles.footer}></footer>
     </article>
   );
 };

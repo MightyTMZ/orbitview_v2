@@ -11,6 +11,7 @@ import { FaShareSquare } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: number;
@@ -62,6 +63,8 @@ const renderFullName = (author: Author) => {
 };
 
 const PostCard = ({ post }: CardProps) => {
+  const router = useRouter();
+
   const contentRef = useRef<HTMLDivElement>(null); // Ref for the content div
   const [isOverflowing, setIsOverflowing] = useState(false); // Track if content overflows
   const [showFullContent, setShowFullContent] = useState(false); // Track if full content is shown
@@ -145,6 +148,12 @@ const PostCard = ({ post }: CardProps) => {
       setLikesCount(response.data.likes_count); // Update likes count
       setLikedPost((prevLikedPost) => !prevLikedPost); // Toggle the local state
       // send a visible message to the user saying that they liked or unliked the post in a professional element they can see instead of an alert
+
+      if (response.status == 401) {
+        router.replace("/login"); // redirect you to relogin
+      } else if (response.status == 200) {
+        // EVERYTHING GOOD 👍
+      }
     } catch (error) {
       console.error("Error liking post:", error);
     }
@@ -156,6 +165,10 @@ const PostCard = ({ post }: CardProps) => {
 
       setSavedPost((prevSavedPost) => !prevSavedPost); // Toggle the local state
       // alert("Post was successfully saved.")
+
+      if (response.status == 401) {
+        router.replace("/login"); // redirect you to relogin
+      }
     } catch (error) {
       console.error("Error saving post:", error);
     }

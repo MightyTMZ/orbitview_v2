@@ -252,6 +252,14 @@ class LikeArticle(APIView):
     Handles liking and unliking a post.
     """
 
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        
+        if request.user in article.likes.all():
+            return Response({"liked": "liked"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"liked": "not liked"}, status=status.HTTP_200_OK)
+
     def post(self, request, pk):
         # check if the user is authenticated
         if not request.user.is_authenticated:
@@ -271,6 +279,13 @@ class SaveArticle(APIView):
     """
     Handles saving and unsaving a post.
     """
+    def get(self, request, pk):
+        article = get_object_or_404(Article, pk=pk)
+        
+        if request.user in article.likes.all():
+            return Response({"saved": "saved"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"saved": "not saved"}, status=status.HTTP_200_OK)
 
     def post(self, request, pk):
         if not request.user.is_authenticated:
