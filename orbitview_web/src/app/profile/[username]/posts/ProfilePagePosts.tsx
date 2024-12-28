@@ -13,6 +13,7 @@ import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
 import MessageButton from "../MessageButton/MessageButton";
 import FollowButton from "../FollowButton/FollowButton";
 import ConnectButton from "../ConnectButton/ConnectButton";
+import { debounce } from "lodash"; // Import lodash debounce
 
 interface User {
   id: number;
@@ -30,7 +31,7 @@ interface Profile {
   by_line: string;
   date_of_birth: string;
   updated: string;
-  created: string; //  --> when did they join OrbitView
+  created: string; // --> when did they join OrbitView
   image: string;
   followers_count: number;
   following_count: number;
@@ -42,12 +43,10 @@ const ProfilePagePosts = () => {
   const { username } = useParams();
   const [profile, setProfile] = useState<Profile>();
   const [loading, setLoading] = useState(true);
-
-  // what type of content is it being rendered right now?
-
   const [contentType, setContentType] = useState("posts");
-
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1); // Track the current page
+  const [hasMorePosts, setHasMorePosts] = useState(true); // Whether there are more posts to load
 
   const { isAuthenticated, current_user } = useSelector(
     (state: RootState) => state.auth
@@ -63,39 +62,32 @@ const ProfilePagePosts = () => {
     }
   }, [isAuthenticated, current_user, profile]);
 
-  // console.log("User is authenticated: " + isAuthenticated);
-  // console.log("User is: " + current_user);
-
-  // user --> the current user in the Redux state
-  // profile --> the fetched profile based on the URL
-
-  // console.log(profileFetchEndpoint);
-
+  // Fetch the user profile and posts data
   useEffect(() => {
-    if (username) {
-      const fetchData = async () => {
-        try {
-          setLoading(true);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
+        const { data: profileData } = await axios.get(profileFetchEndpoint);
+        setProfile(profileData);
 
-          // Fetch user profile
-          const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
-          const { data: profileData } = await axios.get(profileFetchEndpoint);
-          setProfile(profileData);
+        const postsFetchEndpoint = `${backendServer}/content/posts/${username}/?page=${page}`;
+        const response = await axios.get(postsFetchEndpoint);
 
-          // by default, we fetch the posts
-          const postsFetchEndpoint = `${backendServer}/content/posts/${username}/`;
-          const { data: postsData } = await axios.get(postsFetchEndpoint);
-          setPosts(postsData);
-        } catch (error) {
-          console.error("Error fetching profile or content:", error);
-        } finally {
-          setLoading(false);
+        if (response.data.results.length > 0) {
+          setPosts((prevPosts) => prevPosts.concat(response.data.results));
+        } else {
+          setHasMorePosts(false); // No more posts to load
         }
-      };
+      } catch (error) {
+        console.error("Error fetching profile or content:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchData();
-    }
-  }, [username, contentType]);
+    fetchData();
+  }, [username, page]);
 
   const router = useRouter();
 
@@ -113,6 +105,23 @@ const ProfilePagePosts = () => {
     }
   }, [contentType, username]);
 
+  // Debounce the scroll event to prevent multiple calls in quick succession
+  const handleScroll = debounce(() => {
+    const bottom =
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight;
+    if (bottom && hasMorePosts) {
+      setPage((prevPage) => prevPage + 1); // Load next page
+    }
+  }, 300); // 300ms debounce delay
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasMorePosts]);
+
   if (loading) {
     return <Spinner />;
   }
@@ -127,50 +136,6 @@ const ProfilePagePosts = () => {
 
   const followURL = getProfileURL + "/follow/";
   const profileConnectionsListURL = `${backendServer}/social/connections/`;
-
-  const handleFollowingUser = () => {
-    console.log(`${username} was just followed...`);
-  };
-
-  const handleConnectingUser = () => {
-    console.log(`Connecting request was just sent to ${username}`);
-  };
-
-  const handleMessageUser = () => {
-    console.log(`Messaging ${username} right now`);
-  };
-
-  const handleClickOnDashboard = () => {
-    if (current_user) {
-      console.log(
-        `You are logged in as ${current_user.user.username}. Hope you enjoy your dashboard`
-      );
-    } else {
-      console.log(
-        "You are signed in. Please make an account so you gain access to your very own dashboard"
-      );
-    }
-  };
-
-  const handleClickOnEditProfile = () => {
-    if (current_user) {
-      console.log(
-        "Redirecting you to the page so you can edit your profile..."
-      );
-    } else {
-      console.log(
-        "You are not signed in. I don't know who you are so I don't which profile I should allow you to edit."
-      );
-    }
-  };
-
-  const handleViewArchive = () => {
-    if (current_user) {
-      console.log("Redirecting you to your archive page");
-    } else {
-      console.log("NO ARCHIVE. Please log in to see your archive.");
-    }
-  };
 
   return (
     <div className={styles.profilePage}>
@@ -202,24 +167,23 @@ const ProfilePagePosts = () => {
         </div>
 
         {/* Follow button */}
-
         {isTheUserSeeingTheirOwnProfile ? (
           <>
             <button
               className={styles.actionBtn}
-              onClick={() => handleClickOnEditProfile()}
+              onClick={() => console.log("Edit profile has been clicked")}
             >
               Edit Profile
             </button>
             <button
               className={styles.actionBtn}
-              onClick={() => handleViewArchive()}
+              onClick={() => console.log("View archive has been clicked")}
             >
               View Archive
             </button>
             <button
               className={styles.actionBtn}
-              onClick={() => handleClickOnDashboard()}
+              onClick={() => console.log("Dashboard has been clicked.")}
             >
               Dashboard
             </button>
@@ -251,41 +215,20 @@ const ProfilePagePosts = () => {
           <div className={`${styles.highlight} ${styles[contentType]}`} />
         </div>
       </div>
+
       <div id="list-of-their-posts" className="container mx-auto mt-8 px-4">
-        {/*<h1 className="text-4xl font-extrabold text-black mb-6">Posts</h1>*/}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/*<div>
-              {posts.map((userPost) => (
-                <PostPreviewCard key={userPost} post={userPost} />
-              ))}
-            </div>*/}
-          {profile.is_private ? (
-            <PrivateAccountDisclaimer />
-          ) : (
-            <>
-              {posts.length > 0 ? (
-                <div>
-                  <PostsList posts={posts}></PostsList>
-                </div>
-              ) : (
-                <div>
-                  {isTheUserSeeingTheirOwnProfile && posts.length == 0 ? (
-                    <>
-                      <div>
-                        You have not made a post yet... Create your post{" "}
-                        <a href="">here!</a>
-                        Learn more about posting on OrbitView{" "}
-                        <a href="">here</a>
-                      </div>
-                    </>
-                  ) : (
-                    <>No posts yet</>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-        </div>
+        {profile.is_private ? (
+          <PrivateAccountDisclaimer />
+        ) : (
+          <>
+            {posts.length > 0 ? (
+              <PostsList posts={posts}></PostsList>
+            ) : (
+              <div>No posts yet</div>
+            )}
+            {!hasMorePosts && <div>No more posts to load.</div>}
+          </>
+        )}
       </div>
     </div>
   );
