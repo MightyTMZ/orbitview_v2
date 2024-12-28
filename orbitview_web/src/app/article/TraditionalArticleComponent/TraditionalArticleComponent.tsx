@@ -24,8 +24,7 @@ interface ArticleProps {
 
 const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
   const router = useRouter();
-  const [likedArticle, setLikedArticle] = useState(false);
-  const [savedArticle, setSavedArticle] = useState(false);
+
   const [article, setArticle] = useState<null | {
     title: string;
     content: string;
@@ -37,42 +36,41 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
   }>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [csrfToken, setCsrfToken] = useState<string | null>(null);
-
+  const [likedArticle, setLikedArticle] = useState(false);
+  const [savedArticle, setSavedArticle] = useState(false);
   // Set up Axios instance
   const API = axios.create({
     baseURL: backendServer,
     withCredentials: true,
   });
 
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        const response = await fetch(`${backendServer}/csrf-token/`, {
-          method: "GET",
-        });
-        const data = await response.json();
-        setCsrfToken(data.csrfToken);
-      } catch (error) {
-        console.error("Failed to fetch CSRF token:", error);
-      }
-    };
-
-    fetchCsrfToken();
-  }, []);
-
-  useEffect(() => {
-    if (csrfToken) {
-      API.interceptors.request.use((config) => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        config.headers["X-CSRFToken"] = csrfToken;
-        return config;
+  const fetchCsrfToken = async () => {
+    try {
+      const response = await fetch(`${backendServer}/csrf-token/`, {
+        method: "GET",
       });
+      const data = await response.json();
+      const csrfToken = data.csrfToken;
+      return csrfToken;
+    } catch (error) {
+      console.error("Failed to fetch CSRF token:", error);
     }
-  }, [csrfToken]);
+  };
+
+  API.interceptors.request.use((config) => {
+    const token = localStorage.getItem("accessToken"); // Assume the JWT token is stored in localStorage
+    const csrfToken = fetchCsrfToken();
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (csrfToken) {
+      config.headers["X-CSRFToken"] = csrfToken;
+    }
+
+    return config;
+  });
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -104,7 +102,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
         console.log("The user wants to share the article.");
       }
 
-      if (response.status === 401) {
+      if (response.status === 401 || response.status == 403) {
         router.replace("/login");
       }
     } catch (error) {

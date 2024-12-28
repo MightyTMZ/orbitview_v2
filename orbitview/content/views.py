@@ -269,10 +269,10 @@ class LikeArticle(APIView):
         
         if request.user in article.likes.all():
             article.likes.remove(request.user)
-            return Response({"message": "Post unliked."}, status=status.HTTP_200_OK)
+            return Response({"message": "Article unliked."}, status=status.HTTP_200_OK)
         else:
             article.likes.add(request.user)
-            return Response({"message": "Post liked."}, status=status.HTTP_200_OK)
+            return Response({"message": "Article liked."}, status=status.HTTP_200_OK)
 
 
 class SaveArticle(APIView):

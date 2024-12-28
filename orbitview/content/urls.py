@@ -17,8 +17,8 @@ urlpatterns = [
     path('posts/<int:pk>/save/', views.SavePost.as_view(), name='save-post'),
     
     # Reacting to articles (liking, saving, sharing (coming soon))
-    path('article/<int:pk>/like/', views.LikeArticle.as_view(), name='like-article'),
-    path('article/<int:pk>/save/', views.SaveArticle.as_view(), name='save-article'),
+    path('articles/<int:pk>/like/', views.LikeArticle.as_view(), name='like-article'),
+    path('articles/<int:pk>/save/', views.SaveArticle.as_view(), name='save-article'),
 
     # Seeing the people who reacted posts
     path('posts/<int:pk>/likes/', views.PostLikesList.as_view(), name="post-list-of-users-likes"),

@@ -29,7 +29,7 @@ const ReactionBar: React.FC<ReactionBarProps> = ({
   const [shares, setShares] = useState(sharesCount);
   const [saves, setSaves] = useState(savesCount);
 
-  const iconSize = 30;
+  // const iconSize = 30;
 
   const handleReaction = (type: "like" | "share" | "save") => {
     if (type === "like") {
@@ -37,7 +37,7 @@ const ReactionBar: React.FC<ReactionBarProps> = ({
       setLikes(isLiked ? likes - 1 : likes + 1); // Toggle like count
     }
     if (type === "share") {
-      setShares(shares + 1); // Increment share count
+      // setShares(shares + 1); // Increment share count
     }
     if (type === "save") {
       setIsSaved(!isSaved);
