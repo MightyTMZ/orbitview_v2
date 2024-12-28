@@ -38,61 +38,66 @@ const FollowButton = ({ profile }: FollowButtonProps) => {
   });
 
   API.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accessToken"); // Assume the JWT token is stored in localStorage
-    const csrfToken = fetchCsrfToken();
-
+    const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    if (csrfToken) {
-      config.headers["X-CSRFToken"] = csrfToken;
-    }
-
     return config;
   });
 
-  const fetchCsrfToken = async () => {
-    try {
-      const response = await fetch(`${backendServer}/csrf-token/`, {
-        method: "GET",
-      });
+  const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-      const data = await response.json();
-      const csrfToken = data.csrfToken;
-      return csrfToken;
-    } catch (error) {
-      console.error("Failed to fetch CSRF token:", error);
-    }
-  };
-
-  const [isFollowing, setIsFollowing] = useState(false);
-
+  // Fetch follow status on mount
   useEffect(() => {
     const fetchFollowStatus = async () => {
       try {
         const response = await API.get(
           `/profile/${profile.user.username}/follow/`
         );
-        const data = response.data;
-
-        // Update the likedPost state only on the initial fetch
-        setIsFollowing(data.following === "following");
+        setIsFollowing(response.data.following === "following");
       } catch (error) {
         console.error("Error fetching follow status:", error);
       }
     };
 
     fetchFollowStatus();
-  }, []);
+  }, [profile.user.username]);
+
+  // Toggle follow status
+  const handleFollowToggle = async () => {
+    setIsLoading(true);
+    try {
+      const response = await API.post(
+        `/profile/${profile.user.username}/follow/`
+      );
+      const message = response.data.message;
+
+      // Update UI based on the response message
+      if (message.includes("now following")) {
+        setIsFollowing(true);
+      } else if (message.includes("unfollowed")) {
+        setIsFollowing(false);
+      } else if (message.includes("Follow request sent")) {
+        alert("Follow request sent for private profile.");
+      }
+    } catch (error) {
+      console.error("Error toggling follow status:", error);
+      alert("Something went wrong. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <button
       className={`${styles.followButton} ${
         isFollowing ? styles.following : ""
       }`}
+      onClick={handleFollowToggle}
+      disabled={isLoading || isFollowing === null}
     >
-      {isFollowing ? "Following" : "Follow"}
+      {isLoading ? "Processing..." : isFollowing ? "Following" : "Follow"}
     </button>
   );
 };
