@@ -27,6 +27,16 @@ class UserSerializer(serializers.ModelSerializer):
                   'last_name']
         
 
+class CurrentUserSerializer(serializers.ModelSerializer):
+    # used for moments when privacy is not a concern
+    class Meta:
+        model = User
+        fields = ['id', 
+                  'username', 
+                  'email', 
+                  'first_name', 
+                  'last_name']
+
 # used when the user is actually logged on
 class LoggedOnUserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -152,7 +152,11 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
 }
 
-
+DJOSER = {
+    "SERIALIZERS": {
+        'current_user': 'users.serializers.CurrentUserSerializer',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
