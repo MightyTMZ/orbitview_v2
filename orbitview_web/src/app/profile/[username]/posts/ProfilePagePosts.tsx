@@ -14,6 +14,7 @@ import MessageButton from "../MessageButton/MessageButton";
 import FollowButton from "../FollowButton/FollowButton";
 import ConnectButton from "../ConnectButton/ConnectButton";
 import { debounce } from "lodash"; // Import lodash debounce
+import { backendServer } from "@/importantLinks";
 
 interface User {
   id: number;
@@ -37,14 +38,12 @@ interface Profile {
   following_count: number;
 }
 
-// Profile component
 const ProfilePagePosts = () => {
-  const backendServer = "http://127.0.0.1:8000";
   const { username } = useParams();
-  const [profile, setProfile] = useState<Profile>();
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [contentType, setContentType] = useState("posts");
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<any[]>([]); // Specify post types
   const [page, setPage] = useState(1); // Track the current page
   const [hasMorePosts, setHasMorePosts] = useState(true); // Whether there are more posts to load
 
@@ -69,13 +68,17 @@ const ProfilePagePosts = () => {
         setLoading(true);
         const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
         const { data: profileData } = await axios.get(profileFetchEndpoint);
-        setProfile(profileData);
+        setProfile(profileData); // Reset profile state
+
+        // Reset posts state if profile changes
+        setPosts([]); // Clear posts if profile changes
+        setPage(1); // Reset the page when switching profiles
 
         const postsFetchEndpoint = `${backendServer}/content/posts/${username}/?page=${page}`;
         const response = await axios.get(postsFetchEndpoint);
 
         if (response.data.results.length > 0) {
-          setPosts((prevPosts) => prevPosts.concat(response.data.results));
+          setPosts(response.data.results);
         } else {
           setHasMorePosts(false); // No more posts to load
         }
@@ -87,7 +90,7 @@ const ProfilePagePosts = () => {
     };
 
     fetchData();
-  }, [username, page]);
+  }, [username, page]); // Fetch data whenever username or page changes
 
   const router = useRouter();
 
@@ -129,13 +132,6 @@ const ProfilePagePosts = () => {
   if (!profile) {
     return <div>Profile not found.</div>;
   }
-
-  const getProfileURL = () => {
-    return `${backendServer}/profile/${username}`;
-  };
-
-  const followURL = getProfileURL + "/follow/";
-  const profileConnectionsListURL = `${backendServer}/social/connections/`;
 
   return (
     <div className={styles.profilePage}>
@@ -222,7 +218,7 @@ const ProfilePagePosts = () => {
         ) : (
           <>
             {posts.length > 0 ? (
-              <PostsList posts={posts}></PostsList>
+              <PostsList posts={posts} />
             ) : (
               <div>No posts yet</div>
             )}

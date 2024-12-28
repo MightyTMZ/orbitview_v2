@@ -50,7 +50,7 @@ const ArticleCard = ({ article }: Props) => {
       {/* Featured Image */}
       <div className="relative">
         <img
-          src={`${backendServer}/${article.featured_image}`}
+          src={`${article.featured_image}`}
           alt={article.title}
           className="w-full h-40 object-cover transition-opacity duration-300 group-hover:opacity-90"
         />
@@ -76,7 +76,7 @@ const ArticleCard = ({ article }: Props) => {
           <span className="flex items-center space-x-1">
             <img
               key={article.author.id}
-              src={`${backendServer}/${article.author.profile.image}`}
+              src={article.author.profile?.image ? `${article.author.profile.image}` : "/default-avatar.jpg"}
               alt={`${article.author.first_name} ${article.author.last_name}`}
               className="w-6 h-6 rounded-full border border-gray-300"
             />

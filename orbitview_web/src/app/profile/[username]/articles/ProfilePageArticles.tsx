@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import styles from "../ProfilePage.module.css";
-import ArticleList from "../ArticleList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Spinner from "@/components/Spinner/Spinner";
@@ -13,6 +12,9 @@ import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
 import MessageButton from "../MessageButton/MessageButton";
 import FollowButton from "../FollowButton/FollowButton";
 import ConnectButton from "../ConnectButton/ConnectButton";
+import { debounce } from "lodash"; // Import lodash debounce
+import { backendServer } from "@/importantLinks";
+import ArticleList from "../ArticleList";
 
 interface User {
   id: number;
@@ -30,24 +32,20 @@ interface Profile {
   by_line: string;
   date_of_birth: string;
   updated: string;
-  created: string; //  --> when did they join OrbitView
+  created: string; // --> when did they join OrbitView 
   image: string;
   followers_count: number;
   following_count: number;
 }
 
-// Profile component
 const ProfilePageArticles = () => {
-  const backendServer = "http://127.0.0.1:8000";
   const { username } = useParams();
-  const [profile, setProfile] = useState<Profile>();
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-
-  // what type of content is it being rendered right now?
-
   const [contentType, setContentType] = useState("articles");
-
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<any[]>([]); // Specify post types
+  const [page, setPage] = useState(1); // Track the current page
+  const [hasMoreArticles, setHasMoreArticles] = useState(true); // Whether there are more posts to load
 
   const { isAuthenticated, current_user } = useSelector(
     (state: RootState) => state.auth
@@ -63,38 +61,36 @@ const ProfilePageArticles = () => {
     }
   }, [isAuthenticated, current_user, profile]);
 
-  // console.log("User is authenticated: " + isAuthenticated);
-  // console.log("User is: " + current_user);
-
-  // user --> the current user in the Redux state
-  // profile --> the fetched profile based on the URL
-
-  // console.log(profileFetchEndpoint);
-
+  // Fetch the user profile and posts data
   useEffect(() => {
-    if (username) {
-      const fetchData = async () => {
-        try {
-          setLoading(true);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
+        const { data: profileData } = await axios.get(profileFetchEndpoint);
+        setProfile(profileData); // Reset profile state
 
-          // Fetch user profile
-          const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
-          const { data: profileData } = await axios.get(profileFetchEndpoint);
-          setProfile(profileData);
+        // Reset posts state if profile changes
+        setArticles([]); // Clear posts if profile changes
+        setPage(1); // Reset the page when switching profiles
 
-          const articlesFetchEndpoint = `${backendServer}/content/articles/${username}/`;
-          const { data: articlesData } = await axios.get(articlesFetchEndpoint);
-          setArticles(articlesData);
-        } catch (error) {
-          console.error("Error fetching profile or content:", error);
-        } finally {
-          setLoading(false);
+        const postsFetchEndpoint = `${backendServer}/content/articles/${username}/?page=${page}`;
+        const response = await axios.get(postsFetchEndpoint);
+
+        if (response.data.results.length > 0) {
+          setArticles(response.data.results);
+        } else {
+          setHasMoreArticles(false); // No more to load
         }
-      };
+      } catch (error) {
+        console.error("Error fetching profile or content:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchData();
-    }
-  }, [username, contentType]);
+    fetchData();
+  }, [username, page]); // Fetch data whenever username or page changes
 
   const router = useRouter();
 
@@ -112,6 +108,23 @@ const ProfilePageArticles = () => {
     }
   }, [contentType, username]);
 
+  // Debounce the scroll event to prevent multiple calls in quick succession
+  const handleScroll = debounce(() => {
+    const bottom =
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight;
+    if (bottom && hasMoreArticles) {
+      setPage((prevPage) => prevPage + 1); // Load next page
+    }
+  }, 300); // 300ms debounce delay
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasMoreArticles]);
+
   if (loading) {
     return <Spinner />;
   }
@@ -119,57 +132,6 @@ const ProfilePageArticles = () => {
   if (!profile) {
     return <div>Profile not found.</div>;
   }
-
-  const getProfileURL = () => {
-    return `${backendServer}/profile/${username}`;
-  };
-
-  const followURL = getProfileURL + "/follow/";
-  const profileConnectionsListURL = `${backendServer}/social/connections/`;
-
-  const handleFollowingUser = () => {
-    console.log(`${username} was just followed...`);
-  };
-
-  const handleConnectingUser = () => {
-    console.log(`Connecting request was just sent to ${username}`);
-  };
-
-  const handleMessageUser = () => {
-    console.log(`Messaging ${username} right now`);
-  };
-
-  const handleClickOnDashboard = () => {
-    if (current_user) {
-      console.log(
-        `You are logged in as ${current_user.user.username}. Hope you enjoy your dashboard`
-      );
-    } else {
-      console.log(
-        "You are signed in. Please make an account so you gain access to your very own dashboard"
-      );
-    }
-  };
-
-  const handleClickOnEditProfile = () => {
-    if (current_user) {
-      console.log(
-        "Redirecting you to the page so you can edit your profile..."
-      );
-    } else {
-      console.log(
-        "You are not signed in. I don't know who you are so I don't which profile I should allow you to edit."
-      );
-    }
-  };
-
-  const handleViewArchive = () => {
-    if (current_user) {
-      console.log("Redirecting you to your archive page");
-    } else {
-      console.log("NO ARCHIVE. Please log in to see your archive.");
-    }
-  };
 
   return (
     <div className={styles.profilePage}>
@@ -201,24 +163,23 @@ const ProfilePageArticles = () => {
         </div>
 
         {/* Follow button */}
-
         {isTheUserSeeingTheirOwnProfile ? (
           <>
             <button
               className={styles.actionBtn}
-              onClick={() => handleClickOnEditProfile()}
+              onClick={() => console.log("Edit profile has been clicked")}
             >
               Edit Profile
             </button>
             <button
               className={styles.actionBtn}
-              onClick={() => handleViewArchive()}
+              onClick={() => console.log("View archive has been clicked")}
             >
               View Archive
             </button>
             <button
               className={styles.actionBtn}
-              onClick={() => handleClickOnDashboard()}
+              onClick={() => console.log("Dashboard has been clicked.")}
             >
               Dashboard
             </button>
@@ -251,38 +212,17 @@ const ProfilePageArticles = () => {
         </div>
       </div>
 
-      <div id="list-of-their-articles">
+      <div id="list-of-their-posts" className="container mx-auto mt-8 px-4">
         {profile.is_private ? (
           <PrivateAccountDisclaimer />
         ) : (
           <>
             {articles.length > 0 ? (
-              <div
-                style={{
-                  marginTop: "80px",
-                }}
-              >
-                <ArticleList articles={articles} />
-              </div>
+              <ArticleList articles={articles} />
             ) : (
-              <div>
-                {isTheUserSeeingTheirOwnProfile && articles.length == 0 ? (
-                  <>
-                    <div>
-                      You have not written an article yet... Create your first
-                      article <a href="">here!</a>
-                      Learn more about articles on OrbitView <a href="">here</a>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <br />
-                    <br />
-                    <span style={{ marginTop: "40px" }}>No articles yet</span>
-                  </>
-                )}
-              </div>
+              <div>No articles yet</div>
             )}
+            {!hasMoreArticles && <div>No more articles to load.</div>}
           </>
         )}
       </div>
