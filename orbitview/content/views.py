@@ -12,62 +12,71 @@ from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from .models import Post, Comment, Article
 from .serializers import PostSerializer, CommentSerializer, ArticleSerializer
+from rest_framework.generics import ListCreateAPIView, ListAPIView
+from .pagination import CustomPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.filters import SearchFilter
+from .filters import PostFilter, ArticleFilter
 
 
-class PostListCreate(APIView):
 
-    permission_classes = []
+class PostListCreateView(ListCreateAPIView):
+    queryset = Post.objects.all().order_by('-date_posted')
+    serializer_class = PostSerializer
+    pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['author__profile__industry']
+    filterset_class = PostFilter
+    search_fields = ['title', 'content', 'author__username', "author__first_name", 'author__last_name']  # Add fields to search
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    # add pagination
-    def get(self, request):
-        if request.user.is_authenticated:
-            posts = Post.objects.filter(
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return Post.objects.filter(
                 Q(author__profile__is_private=False) | 
-                Q(author__user__in=request.user.following.all())
+                Q(author__user__in=self.request.user.following.all())
             ).order_by('-date_posted')
-            
         else:
-            posts = Post.objects.filter(author__profile__is_private=False).order_by('-date_posted')
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            return Post.objects.filter(author__profile__is_private=False).order_by('-date_posted')
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return Response({'message': "Please sign in to create a post."})
+            return Response({'message': "Please sign in to create a post."}, status=status.HTTP_401_UNAUTHORIZED)
 
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
-# must be authenticated 
-class ArticleListCreate(APIView):
+class ArticleListCreateView(ListCreateAPIView):
+    queryset = Article.objects.all().order_by('-created_at')
+    serializer_class = ArticleSerializer
+    pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['author__profile__industry', 'author__profile__location']  # Add custom filterable fields
+    filterset_class = ArticleFilter
+    search_fields = ['title', 'content', 'author__username', 'author__first_name', 'author__last_name']  # Fields for searching
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    permission_classes = []
-
-    # add pagination 
-    def get(self, request):
-        if request.user.is_authenticated:
-            posts = Article.objects.filter(
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return Article.objects.filter(
                 Q(author__profile__is_private=False) | 
-                Q(author__user__in=request.user.following.all())
+                Q(author__user__in=self.request.user.following.all())
             ).order_by('-created_at')
-            
         else:
-            posts = Article.objects.filter(author__profile__is_private=False).order_by('-created_at')
-        serializer = ArticleSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def post(self, request):
+            return Article.objects.filter(author__profile__is_private=False).order_by('-created_at')
+
+    def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return Response({'message': "Please sign in to create a post."})
-        serializer = ArticleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': "Please sign in to create an article."}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 class PostDetail(APIView):
@@ -123,40 +132,54 @@ class ArticleDetail(APIView):
 
 # the user's own list of posts that they can edit
 # @method_decorator(cache_page(30), name='dispatch')  # Cache for 15 minutes
-class UserPostList(APIView):
-    # get the cookies here
-    
-    permission_classes = []
+class UserPostList(ListAPIView):
+    serializer_class = PostSerializer
+    pagination_class = CustomPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = PostFilter
+    search_fields = ['title', 'content', 'author__username', "author__first_name", 'author__last_name']  # Add fields to search
 
-    def get(self, request, user_name):
+    def get_queryset(self):
+        user_name = self.kwargs['user_name']
         user = get_object_or_404(User, username=user_name)
 
-        if user.profile.is_private and not request.user.is_authenticated:
-            return Response({'message': "This account is private. Follow to see posts and articles."}, 
-                            status=status.HTTP_403_FORBIDDEN)
-        
-        elif user.profile.public: 
-            queryset = Post.objects.filter(author__username=user_name).order_by('-date_posted')
-            serializer = PostSerializer(queryset, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        elif user.profile.is_private and user in request.user.profile.following.all():
-            queryset = Post.objects.filter(author__username=user_name).order_by('-date_posted')
-        
-            serializer = PostSerializer(queryset, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        if user.profile.public:
+            return Post.objects.filter(author__username=user_name).order_by('-date_posted')
+        return Post.objects.none()  # Return empty queryset if private accounts are handled in the future
 
-        return Response({'message': "This account is private. Follow to see posts and articles."}, 
-                            status=status.HTTP_403_FORBIDDEN)
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-class UserArticleList(APIView):
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
-    permission_classes = []
 
-    def get(self, request, user_name):
-        queryset = Article.objects.filter(author__username=user_name).order_by('-created_at')
-        serializer = ArticleSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserArticleList(ListAPIView):
+    serializer_class = ArticleSerializer
+    pagination_class = CustomPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = ArticleFilter
+    search_fields = ['title', 'content', 'author__username', 'author__first_name', 'author__last_name']  # Fields for searching
+
+    def get_queryset(self):
+        user_name = self.kwargs['user_name']
+        return Article.objects.filter(author__username=user_name).order_by('-created_at')
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CommentListCreate(APIView):

@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from transformers import pipeline
 from django.dispatch import receiver
 from datetime import date
+from .industry_choices import INDUSTRIES
 
 
 def validate_age(value):
@@ -47,6 +48,7 @@ class Profile(models.Model):
     date_of_birth = models.DateField(validators=[validate_age])
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    industry = models.CharField(max_length=50, choices=INDUSTRIES, blank=True, null=True)
     image = models.ImageField(default='default_pfp.jpg', upload_to='media/profile_pics', blank=True, null=True)
     visible_to_search = models.BooleanField(default=False)
     # do they want to appear in natural language queries or not
