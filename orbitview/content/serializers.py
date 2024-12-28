@@ -103,8 +103,10 @@ class ArticleSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'content',
+            'slug',
             'author',
             'created_at',
+            'updated_at',
             'featured_image',
             'public',
             'archived',
@@ -112,6 +114,8 @@ class ArticleSerializer(serializers.ModelSerializer):
             'likes_count',
             'shares_count',
             'saves_count',
+            'hide_likes_counts', # my spelling is so garbage LMAO
+            'hide_shares_counts'
         ]
 
     def get_likes_count(self, obj):

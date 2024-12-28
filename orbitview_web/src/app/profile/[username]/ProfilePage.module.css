@@ -96,3 +96,90 @@
     transform: rotate(360deg);
   }
 }
+
+.adjustmentBarContainer {
+  display: flex;
+  margin-top: 20px;
+}
+
+/* Adjustment Bar Wrapper */
+.adjustmentBar {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  min-width: 240px;
+  height: 50px;
+  background: #f0f0f0;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Tabs */
+.adjustmentTab {
+  flex: 1;
+  text-align: center;
+  z-index: 1;
+  font-size: 16px;
+  font-weight: 500;
+  color: #303030;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  user-select: none;
+  position: relative;
+}
+
+/* Hover Effects */
+.adjustmentTab:hover {
+  color: #444;
+}
+
+/* Active Tab */
+.adjustmentTab.active {
+  color: #020d2b;
+  font-weight: bold;
+}
+
+/* Highlight for Active Tab */
+.highlight {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  transition: transform 0.3s ease-in-out;
+  z-index: 0;
+}
+
+/* Dynamic Highlight based on contentType */
+.highlight.posts {
+  transform: translateX(0%);
+}
+
+.highlight.articles {
+  transform: translateX(100%);
+}
+
+.highlight.resources {
+  transform: translateX(200%);
+}
+
+.highlight.videos {
+  transform: translateX(300%);
+}
+
+.highlight.events {
+  transform: translateX(400%);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 500px) {
+  .adjustmentBar {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+  .adjustmentTab {
+    font-size: 14px;
+  }
+}

@@ -3,11 +3,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import styles from "./ProfilePage.module.css";
-import PostsList from "./PostList";
+import styles from "../ProfilePage.module.css";
+import PostsList from "../PostList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Spinner from "@/components/Spinner/Spinner";
 import { useRouter } from "next/navigation";
+import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
+import ContentTypeComingSoon from "../ContentTypeComingSoon";
 
 interface User {
   id: number;
@@ -32,7 +35,7 @@ interface Profile {
 }
 
 // Profile component
-const ProfilePage = () => {
+const ProfilePageResources = () => {
   const backendServer = "http://127.0.0.1:8000";
   const { username } = useParams();
   const [profile, setProfile] = useState<Profile>();
@@ -40,7 +43,9 @@ const ProfilePage = () => {
 
   // what type of content is it being rendered right now?
 
-  const [contentType, setContentType] = useState("posts");
+  const [contentType, setContentType] = useState("resources");
+
+  // const [resources, setResources] = useState([]);
 
   const { isAuthenticated, current_user } = useSelector(
     (state: RootState) => state.auth
@@ -94,20 +99,20 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (contentType === "posts") {
-      router.push(`${username}/posts`);
+      router.push(`posts`);
     } else if (contentType === "articles") {
-      router.push(`${username}/articles`);
+      router.push(`articles`);
     } else if (contentType === "resources") {
-      router.push(`${username}/resources`);
+      router.push(`resources`);
     } else if (contentType === "videos") {
-      router.push(`${username}/videos`);
+      router.push(`videos`);
     } else if (contentType === "events") {
-      router.push(`${username}/events`);
+      router.push(`events`);
     }
   }, [contentType, username]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   if (!profile) {
@@ -259,8 +264,25 @@ const ProfilePage = () => {
           <div className={`${styles.highlight} ${styles[contentType]}`} />
         </div>
       </div>
+      <div id="list-of-their-posts" className="container mx-auto mt-8 px-4">
+        {/*<h1 className="text-4xl font-extrabold text-black mb-6">Posts</h1>*/}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/*<div>
+              {posts.map((userPost) => (
+                <PostPreviewCard key={userPost} post={userPost} />
+              ))}
+            </div>*/}
+          {profile.is_private ? (
+            <PrivateAccountDisclaimer />
+          ) : (
+            <>
+              <ContentTypeComingSoon contentType="Resources" />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default ProfilePage;
+export default ProfilePageResources;

@@ -53,10 +53,10 @@ class ArticleListCreate(APIView):
             posts = Article.objects.filter(
                 Q(author__profile__is_private=False) | 
                 Q(author__user__in=request.user.following.all())
-            ).order_by('-date_posted')
+            ).order_by('-created_at')
             
         else:
-            posts = Article.objects.filter(author__profile__is_private=False).order_by('-date_posted')
+            posts = Article.objects.filter(author__profile__is_private=False).order_by('-created_at')
         serializer = ArticleSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
