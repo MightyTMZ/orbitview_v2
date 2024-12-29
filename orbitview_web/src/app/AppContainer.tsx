@@ -393,7 +393,6 @@ const AppContainer = (props: Props) => {
         className={`${styles["main-content"]}`}
         style={{
           marginRight: navbarOrientation === "right" ? "200px" : "0",
-          marginTop: "-20px",
         }}
       >
         {props.children}
