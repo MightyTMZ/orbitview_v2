@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import styles from "./ProfilePage.module.css";
-import PostsList from "./PostList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
@@ -117,24 +116,7 @@ const ProfilePage = () => {
     return <div>Profile not found.</div>;
   }
 
-  const getProfileURL = () => {
-    return `${backendServer}/profile/${username}`;
-  };
-
-  const followURL = getProfileURL + "/follow/";
-  const profileConnectionsListURL = `${backendServer}/social/connections/`;
-
-  const handleFollowingUser = () => {
-    console.log(`${username} was just followed...`);
-  };
-
-  const handleConnectingUser = () => {
-    console.log(`Connecting request was just sent to ${username}`);
-  };
-
-  const handleMessageUser = () => {
-    console.log(`Messaging ${username} right now`);
-  };
+  
 
   const handleClickOnDashboard = () => {
     if (current_user) {

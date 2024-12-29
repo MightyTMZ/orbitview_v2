@@ -6,6 +6,7 @@ from django.views.decorators.cache import cache_page
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -17,7 +18,8 @@ from content.models import Post, Article
 from django.db import transaction
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
-
+from django.core.exceptions import PermissionDenied
+from .pagination import CustomPagination
 
 
 
@@ -70,6 +72,33 @@ class ProfileDetailAPIView(APIView):
     '''
     PATCH --> if request.user == self
     '''
+
+class UserFollowingAPIView(ListAPIView):
+    """
+    Fetch the list of users the current user is following.
+    Paginated response.
+    """
+    serializer_class = ProfileSerializer  # Use an appropriate serializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            raise PermissionDenied("Authentication is required.")
+        return user.profile.following.all()  
+
+    def list(self, request, *args, **kwargs):
+        """
+        Override list to add additional details if needed.
+        """
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class FollowUserAPIView(APIView):

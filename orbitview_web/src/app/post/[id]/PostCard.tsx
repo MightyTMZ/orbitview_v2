@@ -12,6 +12,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import FollowButton from "@/app/profile/[username]/FollowButton/FollowButton";
 
 interface User {
   id: number;
@@ -175,11 +176,6 @@ export const PostCard = ({ post }: CardProps) => {
     console.log(`${post.title} ${post.id} was shared`);
   };
 
-  const redirectToPostDetail = () => {
-    window.location.href = `${window.location.href}/p/${post.id}`;
-  };
-
-  
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto mb-6 transition-transform duration-300 hover:scale-105 hover:shadow-xl group">
       {/* Author Details */}
@@ -191,7 +187,9 @@ export const PostCard = ({ post }: CardProps) => {
         />
         <div>
           <h3 className="font-semibold text-lg text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
-            {renderFullName(post.author)}
+            <a href={`/profile/${post.author.user.username}/`}>
+              {renderFullName(post.author)}
+            </a>
           </h3>
           <p className="text-sm text-gray-500">{post.author.by_line}</p>
         </div>

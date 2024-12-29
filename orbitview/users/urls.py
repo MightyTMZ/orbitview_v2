@@ -1,10 +1,12 @@
 from django.urls import path
-from .views import ProfileDetailAPIView, FollowUserAPIView, FollowRequestManageAPIView, csrf_token_view
+from . import views
 
 urlpatterns = [
-    path('profile/<str:username>/', ProfileDetailAPIView.as_view(), name='profile-detail'),
-    path('profile/<str:username>/follow/', FollowUserAPIView.as_view(), name='profile-follow'),
-    path('follow-request/<int:request_id>/<str:action>/', FollowRequestManageAPIView.as_view(), name='follow-request-manage'),
+    path('profile/<str:username>/', views.ProfileDetailAPIView.as_view(), name='profile-detail'),
+    path('profile/<str:username>/follow/', views.FollowUserAPIView.as_view(), name='profile-follow'),
+    path('follow-request/<int:request_id>/<str:action>/', views.FollowRequestManageAPIView.as_view(), name='follow-request-manage'),
+    # path('my/following/', views.UserFollowingAPIView.as_view())
+    # path('profile')
 ]
 
 

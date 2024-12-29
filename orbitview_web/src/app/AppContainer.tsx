@@ -5,7 +5,6 @@ import { backendServer } from "@/components/importantLinks";
 import Link from "next/link";
 import { FaUserCircle, FaTimes, FaBars } from "react-icons/fa";
 import styles from "./AppContainer.module.css";
-import { FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
 import { useSelector } from "react-redux";
