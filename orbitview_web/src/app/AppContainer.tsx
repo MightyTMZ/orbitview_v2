@@ -5,14 +5,14 @@ import { backendServer } from "@/components/importantLinks";
 import Link from "next/link";
 import { FaUserCircle, FaTimes, FaBars } from "react-icons/fa";
 import styles from "./AppContainer.module.css";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { TokenIsStillValid } from "./refreshLoginLogic";
 import Image from "next/image";
+import OrbitViewLogo from "./OrbitView_Media-removebg-preview (2).png";
 
 interface Props {
   children: ReactNode;
@@ -119,14 +119,16 @@ const AppContainer = (props: Props) => {
           <nav
             className={`bg-gray-800 p-4 text-white flex justify-between items-center ${styles.nav} ${styles.topNavigation}`}
           >
+            <Image
+              src={OrbitViewLogo} // Replace with the correct path to your logo
+              alt="OrbitView Logo"
+              height={40}
+            />
             <Link href="/" className="text-2xl font-bold mr-2">
               OrbitView
             </Link>
             <div className="space-x-4">
-              <Link href="/dashboard">Dashboard</Link>
-              <Link href="/events">Events</Link>
-              <Link href="/network">Network</Link>
-              <Link href="/learn">Learn</Link>
+              <Link href="/search">Search</Link>
 
               {isAuthenticated && current_user ? (
                 <>
@@ -389,9 +391,10 @@ const AppContainer = (props: Props) => {
       {renderingAppropriateNavbar()}
       {/*renderControlPanel() */}
       <main
-        id="main-content"
+        className={`${styles["main-content"]}`}
         style={{
           marginRight: navbarOrientation === "right" ? "200px" : "0",
+          marginTop: "-20px",
         }}
       >
         {props.children}

@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from users.views import CustomLoginAPIView, csrf_token_view
+from users.views import CustomLoginAPIView, csrf_token_view, search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,6 +31,7 @@ urlpatterns = [
     path("auth/", include("djoser.urls.jwt")),
     path("login/", CustomLoginAPIView.as_view()),
     path("csrf-token/", csrf_token_view, name="csrf-token"),
+    path("search/", search),
     # orbitview.net/tom.zhang.official
     path('', include('users.urls')),
 ]

@@ -13,7 +13,11 @@ from rest_framework import status
 from datetime import timedelta
 from .serializers import ProfileSerializer, FollowRequestSerializer, LoggedOnProfileSerializer
 from .models import Profile, FollowRequest
+from content.models import Post, Article
 from django.db import transaction
+from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 
@@ -221,6 +225,43 @@ class CustomLoginAPIView(APIView):
         print("Login FAILED!")
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
     
+
+
+@csrf_exempt  # testing with client-side requests, you can exempt CSRF check
+def search(request):
+    if request.method != "GET":
+        return JsonResponse({"error": "Invalid HTTP method. Use GET."}, status=405)
+    
+    query = request.GET.get('query', None)
+
+    if not query:
+        return JsonResponse({"error": "Search query is required"}, status=400)
+
+    # Search for users, posts, and articles using case-insensitive match
+    profiles = Profile.objects.filter(
+        Q(user__username__icontains=query) | Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query)
+    )[:5]  # Limit to 5 users for performance
+
+    posts = Post.objects.filter(
+        Q(title__icontains=query) | Q(content__icontains=query)
+    )[:5]  # Limit to 5 posts for performance
+
+    articles = Article.objects.filter(
+        Q(title__icontains=query) | Q(content__icontains=query)
+    )[:5]  # Limit to 5 articles for performance
+
+    # Prepare data for response
+    users_data = [{"username": profile.user.username, "first_name": profile.user.first_name, "last_name": profile.user.last_name} for profile in profiles]
+    posts_data = [{"title": post.title, "content": post.content} for post in posts]
+    articles_data = [{"title": article.title, "content": article.content} for article in articles]
+
+    # Return search results as JSON
+    return JsonResponse({
+        "users": users_data,
+        "posts": posts_data,
+        "articles": articles_data,
+    })
+
 
 
 def csrf_token_view(request):

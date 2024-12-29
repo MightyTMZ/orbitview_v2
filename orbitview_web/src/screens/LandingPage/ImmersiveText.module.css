@@ -1,0 +1,64 @@
+/* ImmersiveText.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  padding-top: 35px;
+  padding-bottom: 20px;
+  background: linear-gradient(135deg, #fcfcfc, #bccbf7);
+  color: #000000;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.text {
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  transition: all 0.3s ease-in-out;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.stereoscopic-mode {
+  text-shadow: -3px 0 rgba(255, 0, 0, 0.8), 3px 0 rgba(0, 255, 255, 0.8);
+}
+
+/* Toggle Switch */
+.toggleSwitch {
+  width: 60px;
+  height: 30px;
+  background: #ccc;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggleSwitch:hover {
+  background: #b3b3b3;
+}
+
+.toggleThumb {
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s ease;
+}
+
+.toggleThumb.active {
+  left: 32px;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+}
+
+/* Active State */
+.toggleSwitch:hover .toggleThumb.active {
+  box-shadow: 0 0 5px rgba(0, 198, 255, 0.8);
+}

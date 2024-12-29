@@ -1,10 +1,11 @@
 "use client";
 
-import LandingPage from "./home/LandingPage";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import Spinner from "@/components/Spinner/Spinner";
 import { store, persistor } from "@/redux/store";
+// import HomeFeed from "@/screens/HomeFeed";
+import { LandingPage } from "../screens/LandingPage/LandingPage";
 
 export default function Home() {
   return (

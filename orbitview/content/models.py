@@ -8,6 +8,8 @@ from django.core.exceptions import ValidationError
 from ckeditor.fields import RichTextField
 from django.core.validators import FileExtensionValidator
 from bs4 import BeautifulSoup
+from django.contrib.postgres.search import SearchVectorField
+
 
 
 
@@ -24,6 +26,8 @@ class Post(models.Model):
     shares = models.ManyToManyField(User, related_name="shared_posts", blank=True)
     archived = models.BooleanField(default=False)
     unlisted = models.BooleanField(default=False)
+
+    search_vector = SearchVectorField(null=True)
 
 
     def total_likes(self):
@@ -102,6 +106,9 @@ class Article(models.Model):
     shares = models.ManyToManyField(User, related_name="shared_articles", blank=True)
     hide_likes_counts = models.BooleanField(default=False)
     hide_shares_counts = models.BooleanField(default=False)
+
+    search_vector = SearchVectorField(null=True)
+
     
 
     def total_likes(self):

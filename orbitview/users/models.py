@@ -5,6 +5,8 @@ from transformers import pipeline
 from django.dispatch import receiver
 from datetime import date
 from .industry_choices import INDUSTRIES
+from django.contrib.postgres.search import SearchVectorField
+
 
 
 def validate_age(value):
@@ -54,6 +56,9 @@ class Profile(models.Model):
     # do they want to appear in natural language queries or not
     embedding = models.JSONField(null=True, blank=True) # store the embeddings
     
+    search_vector = SearchVectorField(null=True)
+
+
     @property
     def public(self):
         return not self.is_private

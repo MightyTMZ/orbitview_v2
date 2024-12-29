@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { login } from "../../redux/authSlice";
 import { backendServer } from "@/components/importantLinks";
+import WarningComponent from "@/components/WarningComponent/WarningComponent";
 
 interface User {
   id: number;
@@ -99,7 +100,6 @@ export default function Login() {
         localStorage.setItem("refreshToken", data.refresh); // NOT data.refreshToken
 
         // user and authentication state is being stored in Redux, the tokens will be in localstorage
-
       } else if (!response.ok) {
         // console.log(response.status);
         // console.log(typeof response.status);
@@ -132,6 +132,8 @@ export default function Login() {
     <Provider store={store}>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+          <WarningComponent message="We are currently open to beta users. Please contact us at orbitview@email.com if you are interested in becoming a beta user. Thanks!" />
+
           <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
           <form onSubmit={handleLogin}>
             <div className="mb-4">
