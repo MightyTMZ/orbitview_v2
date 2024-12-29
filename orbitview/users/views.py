@@ -239,16 +239,21 @@ def search(request):
 
     # Search for users, posts, and articles using case-insensitive match
     profiles = Profile.objects.filter(
-        Q(user__username__icontains=query) | Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query)
+        Q(user__username__icontains=query) | Q(user__first_name__istartswith=query) | Q(user__last_name__istartswith=query)
     )[:5]  # Limit to 5 users for performance
 
     posts = Post.objects.filter(
-        Q(title__icontains=query) | Q(content__icontains=query)
+        Q(title__istartswith=query) | Q(content__icontains=query)
     )[:5]  # Limit to 5 posts for performance
 
     articles = Article.objects.filter(
-        Q(title__icontains=query) | Q(content__icontains=query)
+        Q(title__istartswith=query) | Q(content__icontains=query)
     )[:5]  # Limit to 5 articles for performance
+
+    '''profiles = Profile.objects.filter(Q(user__username__istartswith='t'))
+    posts = Post.objects.filter(Q(title__istartswith='cont'))
+    articles = Article.objects.filter(Q(content__icontains='orbitview'))'''
+
 
     # Prepare data for response
     users_data = [{"username": profile.user.username, "first_name": profile.user.first_name, "last_name": profile.user.last_name} for profile in profiles]

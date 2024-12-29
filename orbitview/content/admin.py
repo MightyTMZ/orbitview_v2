@@ -25,6 +25,8 @@ class PostAdmin(admin.ModelAdmin):
         'shares_count',
         'archived',
         'unlisted',
+        'search_vector',
+        
     )
 
 
@@ -41,4 +43,5 @@ class ArticleAdmin(admin.ModelAdmin):
         'likes_count',
         'saves_count',
         'shares_count',
+        'search_vector',
     )

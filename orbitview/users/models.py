@@ -56,7 +56,7 @@ class Profile(models.Model):
     # do they want to appear in natural language queries or not
     embedding = models.JSONField(null=True, blank=True) # store the embeddings
     
-    search_vector = SearchVectorField(null=True)
+    search_vector = SearchVectorField(null=True, blank=True)
 
 
     @property
