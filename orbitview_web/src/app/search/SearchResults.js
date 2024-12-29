@@ -21,7 +21,9 @@ export const SearchResults = ({ results }) => {
           {results.posts.map((post, index) => (
             <div key={index} className="post-card border p-2 rounded mb-2">
               <h3 className="font-semibold text-lg">{post.title}</h3>
-              <p className="text-sm text-gray-600">{post.content}</p>
+              <p className="text-sm text-gray-600">
+                {post.author.first_name} {post.author.last_name}
+              </p>
             </div>
           ))}
         </div>
@@ -33,7 +35,9 @@ export const SearchResults = ({ results }) => {
           {results.articles.map((article, index) => (
             <div key={index} className="article-card border p-2 rounded mb-2">
               <h3 className="font-semibold text-lg">{article.title}</h3>
-              <p className="text-sm text-gray-600">{article.content}</p>
+              <p className="text-sm text-gray-600">
+                {article.author.first_name} {article.author.last_name}
+              </p>
             </div>
           ))}
         </div>

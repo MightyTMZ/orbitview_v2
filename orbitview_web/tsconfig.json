@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/NavigationSettingsTab.js", "src/components/NavBarSettings.js", "src/app/feed/posts/PostsRetrieve.tsx", "src/app/messaging/MessageDisplay.js", "src/components/stereoscopic1/Stereoscopic.tsx", "src/app/search/Search.js", "src/app/search/SearchBar.js", "src/app/search/SearchResults.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/NavigationSettingsTab.js", "src/components/NavBarSettings.js", "src/app/feed/posts/PostsRetrieve.tsx", "src/app/messaging/MessageDisplay.js", "src/components/stereoscopic1/Stereoscopic.tsx", "src/app/search/Search.tsx", "src/app/search/SearchBar.js", "src/app/search/SearchResults.js"],
   "exclude": ["node_modules"]
 }

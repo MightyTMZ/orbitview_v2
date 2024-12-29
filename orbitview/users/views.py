@@ -243,7 +243,7 @@ def search(request):
     )[:5]  # Limit to 5 users for performance
 
     posts = Post.objects.filter(
-        Q(title__istartswith=query) | Q(content__icontains=query)
+        Q(title__istartswith=query) | Q(content__icontains=query) 
     )[:5]  # Limit to 5 posts for performance
 
     articles = Article.objects.filter(
@@ -256,9 +256,21 @@ def search(request):
 
 
     # Prepare data for response
-    users_data = [{"username": profile.user.username, "first_name": profile.user.first_name, "last_name": profile.user.last_name} for profile in profiles]
-    posts_data = [{"title": post.title, "content": post.content} for post in posts]
-    articles_data = [{"title": article.title, "content": article.content} for article in articles]
+    users_data = [{
+        "username": profile.user.username, 
+        "first_name": profile.user.first_name, 
+        "last_name": profile.user.last_name, 
+        "image": str(profile.image)
+        } 
+    for profile in profiles]
+    posts_data = [{
+        'id': post.id,
+        "title": post.title, 
+        "content": post.content,
+        'full_author': post.author.first_name + " " + post.author.last_name,
+        
+        } for post in posts]
+    articles_data = [{"id": article.id, "title": article.title, "subtitle": article.subtitle} for article in articles]
 
     # Return search results as JSON
     return JsonResponse({
