@@ -4,7 +4,7 @@ export const redirectToLogin = () => {
   window.location.href = "/";
 };
 
-export const TokenIsStillValid = () => {
+export const TokenIsStillValid = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return false;
@@ -32,10 +32,12 @@ export const TokenIsStillValid = () => {
       return false;
     }
   };
+
+  const userIsValid = await getUser();
+  return userIsValid;
 };
 
-
-// only call this when the token is not valid 
+// only call this when the token is not valid
 
 /*
 if (!TokenIsStillValid) {
@@ -47,35 +49,34 @@ export const refreshLoginAndRedirectToLoginIfInvalidRefreshToken = () => {
   // the token is not valid, what do we do now?
 
   // refresh the token using refresh token
-  
-    const refreshToken = localStorage.getItem("refreshToken");
 
-    if (!refreshToken) {
-      redirectToLogin();
-    }
+  const refreshToken = localStorage.getItem("refreshToken");
 
-    const refreshEndpoint = `${backendServer}/auth/jwt/refresh/`;
+  if (!refreshToken) {
+    redirectToLogin();
+  }
 
-    // we try to get a user
-    const refreshAccessToken = async () => {
-      try {
-        const response = await fetch(refreshEndpoint, {
-          method: "POST",
-          body: JSON.stringify({ refresh: refreshToken }),
-        });
+  const refreshEndpoint = `${backendServer}/auth/jwt/refresh/`;
 
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem("accessToken", data.access);
-        } else {
-          redirectToLogin();
-        }
-      } catch (error) {
-        console.log("Error:", error);
+  // we try to get a user
+  const refreshAccessToken = async () => {
+    try {
+      const response = await fetch(refreshEndpoint, {
+        method: "POST",
+        body: JSON.stringify({ refresh: refreshToken }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("accessToken", data.access);
+      } else {
         redirectToLogin();
       }
-    };
+    } catch (error) {
+      console.log("Error:", error);
+      redirectToLogin();
+    }
+  };
 
-    refreshAccessToken();
-
+  refreshAccessToken();
 };

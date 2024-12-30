@@ -103,9 +103,6 @@ const PostCard = ({ post }: CardProps) => {
     }
   };
 
-  const getPostFullURL = (post: Post) => {
-    return `${backendServer}/posts/${post.id}`;
-  };
 
   const [likesCount, setLikesCount] = useState(post.likes_count);
   const [likedPost, setLikedPost] = useState(false);

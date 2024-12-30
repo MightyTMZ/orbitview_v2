@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import styles from "./Search.module.css";
 import { backendServer } from "@/importantLinks";
+import { ReactTyped } from "react-typed";
 
 interface ArticleProfile {
   image: string;
@@ -75,6 +76,7 @@ interface User {
   username: string;
   first_name: string;
   last_name: string;
+  by_line: string;
   image: string;
 }
 
@@ -84,8 +86,23 @@ interface SearchResult {
   articles: Article[];
 }
 
+/*const industries = [
+  "All",
+  "Technology",
+  "Finance",
+  "Healthcare",
+  "Education",
+  "Entertainment",
+  "Retail",
+  "Manufacturing",
+  "Real Estate",
+  "Travel",
+  "Other",
+];*/
+
 const SearchPage = () => {
   const [query, setQuery] = useState("");
+  // const [selectedIndustry, setSelectedIndustry] = useState("---");
   const [searchResults, setSearchResults] = useState<SearchResult>({
     users: [],
     posts: [],
@@ -119,13 +136,28 @@ const SearchPage = () => {
           type="text"
           value={query}
           onChange={(e) => {
-            const newQuery = e.target.value;
-            setQuery(newQuery);
-            // handleSearch(newQuery); // Pass the updated value directly
+            setQuery(e.target.value);
+            if (query.length > 0) {
+              handleSearch(query);
+            }
           }}
           placeholder="Search for users, posts, or articles"
           className={styles["search-input"]}
         />
+
+        {/*<select
+          value={selectedIndustry}
+          onChange={(e) => setSelectedIndustry(e.target.value)}
+          className={styles["industry-dropdown"]}
+        >
+          <option value="">All Industries</option>
+          {industries.map((industry) => (
+            <option key={industry} value={industry}>
+              {industry}
+            </option>
+          ))}
+        </select> */}
+
         <button
           onClick={() => handleSearch(query)}
           className={styles["search-button"]}
@@ -157,11 +189,11 @@ const SearchPage = () => {
                       }}
                     />
                     <p className="text-lg font-medium">
-                      <a href={`/profile/${user.username}`}>{user.username}</a>
+                      <a href={`/profile/${user.username}`}>
+                        {user.first_name} {user.last_name}
+                      </a>
                     </p>
-                    <p className="text-sm text-gray-600">
-                      {user.first_name} {user.last_name}
-                    </p>
+                    <p className="text-sm text-gray-600">{user.by_line}</p>
                   </div>
                 ))}
               </div>
@@ -207,7 +239,51 @@ const SearchPage = () => {
           </>
         )}
 
-        {searchResults &&
+        {query.length == 0 ? (
+          <div>
+            <p className={styles["search-typed"]}>
+              <ReactTyped
+                strings={[
+                  "Search for people",
+                  "Search for posts",
+                  "Search for articles",
+                  /*"Explore people building in Web3 and AI",
+                  "Search for growth tools and strategies",
+                  "Discover posts about career transitions",
+                  "Search for Gen Z-friendly investment tips",
+                  "Find advice on networking and building connections",
+                  "Discover unique stories from first-time founders",
+                  "Search for people leading social impact startups",
+                  "Explore posts on overcoming startup challenges",
+                  "Search for people redefining industries",
+                  "Find posts on mental resilience for entrepreneurs",
+                  "Search for articles on mastering side hustles",
+                  "Discover creators reshaping the future",*/
+                ]}
+                typeSpeed={40}
+                backSpeed={50}
+                loop
+              ></ReactTyped>
+            </p>
+
+            <p>
+              Learn more about searching on OrbitView{" "}
+              <a
+                href="/search-guide"
+                style={{
+                  color: "blue",
+                }}
+              >
+                here
+              </a>
+            </p>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {query.length > 0 &&
+          searchResults &&
           searchResults.users.length === 0 &&
           searchResults.posts.length === 0 &&
           searchResults.articles.length === 0 && <div>No results found</div>}

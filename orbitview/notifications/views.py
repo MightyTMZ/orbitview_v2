@@ -4,12 +4,14 @@ from rest_framework.decorators import action
 from rest_framework import status
 from .models import Notification
 from .serializers import NotificationSerializer
+from .pagination import CustomPagination
 from rest_framework.permissions import IsAuthenticated
 
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     # List notifications for the authenticated user
     def get_queryset(self):

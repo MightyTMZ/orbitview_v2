@@ -1,7 +1,7 @@
 import axios from "axios";
 import { backendServer } from "@/importantLinks";
 
-const API = axios.create({
+export const API = axios.create({
   baseURL: backendServer, // Replace with your backend's base URL
   withCredentials: true,
 });

@@ -289,6 +289,7 @@ def search(request):
         "username": profile.user.username, 
         "first_name": profile.user.first_name, 
         "last_name": profile.user.last_name, 
+        'by_line': profile.by_line,
         "image": str(profile.image)
         } 
     for profile in profiles]

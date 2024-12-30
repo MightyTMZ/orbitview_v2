@@ -18,7 +18,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.filters import SearchFilter
 from .filters import PostFilter, ArticleFilter
-
+import random
 
 
 class PostListCreateView(ListCreateAPIView):
@@ -418,3 +418,56 @@ class ArticleSavesList(APIView):
         serializer = ProfileUserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+# /content/recommendations/posts/
+
+class RecommendationFeedPosts(ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    pagination_class = CustomPagination
+
+    def get(self, request, content_type):
+        user = request.user
+        possible_accounts = user.profile.following.all()
+        posts = Post.objects.filter(author__profile__in=possible_accounts)
+
+        # Shuffle the posts
+        shuffled_posts = list(posts)
+        random.shuffle(shuffled_posts)
+
+        # Paginate the response
+        page = self.paginate_queryset(shuffled_posts)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(shuffled_posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+# /content/recommendations/articles/
+
+class RecommendationFeedArticles(ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = ArticleSerializer
+    pagination_class = CustomPagination
+
+    def get(self, request, content_type):
+        user = request.user
+        possible_accounts = user.profile.following.all()
+        
+        articles = Article.objects.filter(author__profile__in=possible_accounts)
+        # Shuffle the articles
+        shuffled_articles = list(articles)
+        random.shuffle(shuffled_articles)
+
+        # Paginate the response
+        page = self.paginate_queryset(shuffled_articles)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(shuffled_articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
