@@ -24,6 +24,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title', 
+            'uuid',
             'content',
             'date_posted',
             'date_updated',
@@ -102,6 +103,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
+            'slug',
             'content',
             'slug',
             'author',

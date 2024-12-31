@@ -9,6 +9,9 @@ from ckeditor.fields import RichTextField
 from django.core.validators import FileExtensionValidator
 from bs4 import BeautifulSoup
 from django.contrib.postgres.search import SearchVectorField
+import uuid
+from django.utils.text import slugify
+from django.db import transaction
 
 
 
@@ -63,6 +66,12 @@ class Post(models.Model):
         return reverse('post-detail', kwargs={"pk":self.pk})
 
 
+    def save(self, *args, **kwargs):
+        # Ensure that a UUID is assigned if it's not already set
+        if not self.uuid or self.uuid == "-":
+            self.uuid = uuid.uuid4()
+        super().save(*args, **kwargs)  # Call the parent save method
+
 '''
 class PostAttachment(models.Model): # PDFs, files, images or any attachments people want to send
     file = models.FileField(upload_to=dynamic route that sorts the file attachments people put on)
@@ -93,7 +102,7 @@ class Article(models.Model):
 
     title = models.CharField(max_length=255)
     subtitle = models.TextField(validators=[validate_subtitle_length], blank=True, null=True)
-    slug = models.SlugField(default="-")
+    slug = models.CharField(default="-", editable=False, max_length=450)  # Ensure the slug is unique
     featured_image = models.ImageField(upload_to="media/featured_images", default="media/default_article_feature_img.webp")
     content = RichTextField() #validators=validate_article)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
@@ -143,8 +152,21 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('article-detail', kwargs={"pk":self.pk})
     
-    
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == "-":
+            # Generate the base slug from the title
+            base_slug = slugify(self.title) or "article"
+            unique_slug = base_slug
+            counter = 1
 
+            # Ensure the slug is unique
+            while Article.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{counter}"
+                counter += 1
+            
+            self.slug = unique_slug
+
+        super().save(*args, **kwargs)
 
 class Comment(models.Model):
     # Generic relation to allow commenting on any model

@@ -4,7 +4,6 @@
 import React, { useState } from "react";
 import "./ImmersiveArticleComponent.css";
 import { backendServer } from "@/importantLinks";
-import Spinner from "@/components/Spinner/Spinner";
 import { useRouter } from "next/navigation";
 
 interface Author {
@@ -41,7 +40,7 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
     fontSize: "1rem",
     fontFamily: "Arial, sans-serif",
     contrast: "normal",
-    stereoscopic: false,
+    stereoscopic: true,
   },
 }) => {
   const [settings, setSettings] = useState(immersiveSettings);
@@ -130,6 +129,9 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
               settings.stereoscopic ? "orbitViewText" : ""
             }`}
           >
+            <p>
+              Written by {author.first_name} {author.last_name}
+            </p>
             <img
               src={`${backendServer}/${author.profile.image}`}
               alt={`${author.first_name} ${author.last_name}`}

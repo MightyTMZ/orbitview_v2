@@ -108,8 +108,8 @@ class ArticleDetail(APIView):
 
     permission_classes = []
 
-    def get(self, request, id):
-        article = get_object_or_404(Article, pk=id)
+    def get(self, request, id, slug):
+        article = get_object_or_404(Article, pk=id, slug=slug)
         # print(article)
         serializer = ArticleSerializer(article)
         # print(serializer.data)

@@ -20,9 +20,10 @@ interface Author {
 
 interface ArticleProps {
   id: number; // Article ID for fetching the data
+  slug: string;
 }
 
-const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
+const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
   const router = useRouter();
 
   const [article, setArticle] = useState<null | {
@@ -76,7 +77,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
     const fetchArticle = async () => {
       try {
         const response = await fetch(
-          `${backendServer}/content/articles/${id}/`
+          `${backendServer}/content/articles/${id}/${slug}`
         );
         if (!response.ok) throw new Error("Failed to fetch article.");
         const data = await response.json();
@@ -89,7 +90,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
     };
 
     fetchArticle();
-  }, [id]);
+  }, [id, slug]);
 
   const handleReaction = async (type: "like" | "share" | "save") => {
     try {
@@ -178,7 +179,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id }) => {
             padding: "5px",
             border: "1px solid black",
           }}
-          onClick={() => router.push(`${id}/immersive`)}
+          onClick={() => router.push(`/${slug}/immersive`)}
         >
           Read in immersive
         </button>
