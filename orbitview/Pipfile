@@ -14,6 +14,7 @@ djangorestframework-simplejwt = "*"
 tensorflow = "*"
 tf-keras = "*"
 django-filter = "*"
+django-watson = "*"
 
 [dev-packages]
 

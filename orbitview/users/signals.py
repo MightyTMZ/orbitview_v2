@@ -1,21 +1,23 @@
-from django.db.models import F, Value
+from django.db.models import Value
 from django.db.models.functions import Concat
 from django.contrib.postgres.search import SearchVector
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Profile
 
-@receiver(post_save, sender=Profile)
+'''@receiver(post_save, sender=Profile)
 def update_user_search_vector(sender, instance, **kwargs):
-    # Concatenate user fields into a single string
+    # Access the user's fields directly via the instance
     user_full_name = Concat(
-        F('user__username'),
+        Value(instance.user.username),  # Access user fields directly from the instance
         Value(' '),  # Add a space separator
-        F('user__first_name'),
+        Value(instance.user.first_name),
         Value(' '),
-        F('user__last_name'),
+        Value(instance.user.last_name),
         Value(' '),
-        F('bio')
+        Value(instance.bio), 
+        Value(' '),
+        Value(instance.by_line),
     )
     
     # Use the concatenated string for the search vector
@@ -23,3 +25,4 @@ def update_user_search_vector(sender, instance, **kwargs):
     
     print(f'Search vector for {sender} is saved')
     instance.save()
+'''

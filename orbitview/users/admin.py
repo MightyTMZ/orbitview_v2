@@ -4,20 +4,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 
-admin.site.register(Profile)
 
-'''@admin.site.unregister(User)
-@admin.register(User)
+@admin.register(Profile)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active']
+    list_display = ['user__username', 'user__first_name', 'user__last_name', 'user__email']
     
-    list_editable = ['first_name', 'last_name']
-
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('first_name', 'last_name')}),
-    )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('first_name', 'last_name')}),
-    )
+    search_fields = ('user__username',)  # Reference the 'user' field correctly if needed
 
     # add permissions here'''
