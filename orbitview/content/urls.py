@@ -35,6 +35,6 @@ urlpatterns = [
     
 
     # For the frontend recommendation feed
-    path('recommendations/articles/', views.RecommendationFeedArticles.as_view(), name="recommended_articles"),
-    path('recommendations/posts/', views.RecommendationFeedPosts.as_view(), name="recommended-posts"),
+    # path('recommendations/articles/', views.RecommendationFeedArticles.as_view(), name="recommended_articles"),
+    # path('recommendations/posts/', views.RecommendationFeedPosts.as_view(), name="recommended-posts"),
 ]
