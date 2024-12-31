@@ -9,10 +9,14 @@ import { FaBookmark } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaShareSquare } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/authSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import FollowButton from "@/app/profile/[username]/FollowButton/FollowButton";
+// import FollowButton from "@/app/profile/[username]/FollowButton/FollowButton";
 
 interface User {
   id: number;
@@ -62,6 +66,12 @@ const renderFullName = (author: Author) => {
 export const PostCard = ({ post }: CardProps) => {
   const router = useRouter();
 
+  const { isAuthenticated, current_user } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const dispatch = useDispatch();
+
   const contentRef = useRef<HTMLDivElement>(null); // Ref for the content div
   const API = axios.create({
     baseURL: backendServer, // Replace with your backend's base URL
@@ -95,10 +105,6 @@ export const PostCard = ({ post }: CardProps) => {
     } catch (error) {
       console.error("Failed to fetch CSRF token:", error);
     }
-  };
-
-  const getPostFullURL = (post: Post) => {
-    return `${backendServer}/posts/${post.id}`;
   };
 
   const [likesCount, setLikesCount] = useState(post.likes_count);
@@ -139,15 +145,16 @@ export const PostCard = ({ post }: CardProps) => {
     try {
       const response = await API.post(`/content/posts/${post.id}/like/`);
 
+      if (response.status == 401) {
+        alert("Please log into your account to like this post");
+        dispatch(logout());
+        localStorage.setItem("currentContent", window.location.href);
+        window.location.href = "/login/";
+      }
+
       setLikesCount(response.data.likes_count); // Update likes count
       setLikedPost((prevLikedPost) => !prevLikedPost); // Toggle the local state
       // send a visible message to the user saying that they liked or unliked the post in a professional element they can see instead of an alert
-
-      if (response.status == 401) {
-        router.replace("/login"); // redirect you to relogin
-      } else if (response.status == 200) {
-        // EVERYTHING GOOD 👍
-      }
     } catch (error) {
       console.error("Error liking post:", error);
     }
@@ -156,6 +163,13 @@ export const PostCard = ({ post }: CardProps) => {
   const handleSavingPost = async (post: Post) => {
     try {
       const response = await API.post(`/content/posts/${post.id}/save/`);
+
+      if (response.status == 401) {
+        alert("Please log into your account to like this post");
+        dispatch(logout());
+        localStorage.setItem("currentContent", window.location.href);
+        window.location.href = "/login/";
+      }
 
       setSavedPost((prevSavedPost) => !prevSavedPost); // Toggle the local state
       // alert("Post was successfully saved.")

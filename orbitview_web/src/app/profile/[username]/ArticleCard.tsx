@@ -17,6 +17,7 @@ interface Article {
   id: number;
   title: string;
   subtitle: string;
+  slug: string;
   author: Author;
   content: string;
   created_at: string;
@@ -39,7 +40,7 @@ interface Props {
 const ArticleCard = ({ article }: Props) => {
   const handleArticleClick = () => {
     // Redirect to article detail page
-    window.location.href = `/article/${article.id}`; // as of Dec 27, 2024, this is how the frontend routing for articles work
+    window.location.href = `/article/${article.id}/${article.slug}`; // as of Dec 27, 2024, this is how the frontend routing for articles work
   };
 
   return (

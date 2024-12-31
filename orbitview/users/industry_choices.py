@@ -72,4 +72,5 @@ INDUSTRIES = [
     ("chemical", "Chemical"),
     ("defense", "Defense"),
     ("nonprofit_tech", "Nonprofit Tech"),
+    ("startup_acceleration", "Startup Acceleration"),
 ]

@@ -97,7 +97,7 @@ class Article(models.Model):
         
 
     def validate_subtitle_length(subtitle):
-        if len(subtitle) > 150:
+        if len(subtitle) > 350:
             raise ValidationError("Subtitle cannot be longer than 150 characters.")
 
     title = models.CharField(max_length=255)

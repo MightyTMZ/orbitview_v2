@@ -1,8 +1,12 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { backendServer } from "@/importantLinks";
 import styles from "./TraditionalArticle.module.css";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/authSlice";
 import Spinner from "@/components/Spinner/Spinner";
 import ReactionBar from "../reactionBar/reactionBar";
 
@@ -24,6 +28,8 @@ interface ArticleProps {
 }
 
 const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
+  const dispatch = useDispatch();
+
   const router = useRouter();
 
   const [article, setArticle] = useState<null | {
@@ -95,6 +101,15 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
   const handleReaction = async (type: "like" | "share" | "save") => {
     try {
       const response = await API.post(`/content/articles/${id}/${type}/`);
+
+      if (response.status === 401) {
+        alert("Please log into your account to interact with this post.");
+        dispatch(logout());
+        localStorage.setItem("currentContent", window.location.href);
+        window.location.href = "/login/"; // Redirect to login page
+        return; // Stop execution here if the user is unauthorized
+      }
+
       if (type === "like") {
         setLikedArticle((prev) => !prev);
       } else if (type === "save") {
@@ -103,7 +118,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
         console.log("The user wants to share the article.");
       }
 
-      if (response.status === 401 || response.status == 403) {
+      if (response.status === 401 || response.status === 403) {
         router.replace("/login");
       }
     } catch (error) {
@@ -179,7 +194,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
             padding: "5px",
             border: "1px solid black",
           }}
-          onClick={() => router.push(`/${slug}/immersive`)}
+          onClick={() => router.push(`/article/${id}/${slug}/immersive`)}
         >
           Read in immersive
         </button>
