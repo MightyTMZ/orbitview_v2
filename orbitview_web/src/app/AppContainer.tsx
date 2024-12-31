@@ -146,8 +146,7 @@ const AppContainer = (props: Props) => {
               ) : (
                 <>
                   <Link href="/login">Login</Link>
-                  <Link href="/signup">Sign Up</Link>
-                </>
+                  <Link href="/join">Join OrbitView</Link>                </>
               )}
             </div>
           </nav>

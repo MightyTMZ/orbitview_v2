@@ -66,6 +66,9 @@ const page = () => {
       <div className="mt-4">
         {error && <h1>{error}</h1>}
         {!post ? <h1>Hmm... Could not find post</h1> : <PostCard post={post} />}
+        <div className="for-ads" style={{ 
+          height: "50vh"
+        }}></div>
       </div>
     </div>
   );

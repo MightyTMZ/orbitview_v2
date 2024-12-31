@@ -31,3 +31,25 @@ main {
 *::after {
   box-sizing: border-box;
 }
+
+
+.contrast-normal {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+}
+
+.contrast-high {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+}
+
+.contrast-low {
+  --bg-color: #f0f0f0;
+  --text-color: #333333;
+}
+
+/* Apply the variables to the root element */
+html {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
