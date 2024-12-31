@@ -19,14 +19,14 @@ const ReactionBar: React.FC<ReactionBarProps> = ({
   liked,
   saved,
   likesCount,
-  sharesCount,
+  // sharesCount,
   savesCount,
   onReact,
 }) => {
   const [isLiked, setIsLiked] = useState(liked);
   const [isSaved, setIsSaved] = useState(saved);
   const [likes, setLikes] = useState(likesCount);
-  const [shares, setShares] = useState(sharesCount);
+  // const [shares, setShares] = useState(sharesCount);
   const [saves, setSaves] = useState(savesCount);
 
   // const iconSize = 30;
@@ -64,7 +64,7 @@ const ReactionBar: React.FC<ReactionBarProps> = ({
         onClick={() => handleReaction("share")}
         aria-label="Share"
       >
-        🔗 Share <span className={styles.count}>{shares}</span>
+        🔗 Share <span className={styles.count}></span>
       </button>
 
       {/* Save Button */}

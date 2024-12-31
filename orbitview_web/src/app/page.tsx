@@ -9,7 +9,7 @@ import { LandingPage } from "../screens/LandingPage/LandingPage";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 // import HomeFeed from "@/screens/HomeFeed";
-import SearchPage from "./search/Search";
+import HomeFeed from "@/screens/HomeFeed";
 
 export default function Home() {
   const { isAuthenticated, current_user } = useSelector(
@@ -20,7 +20,7 @@ export default function Home() {
     <Provider store={store}>
       {/* PersistGate helps with the rehydration of persisted Redux state */}
       <PersistGate loading={<Spinner />} persistor={persistor}>
-        {!isAuthenticated ? <LandingPage /> : <SearchPage />}
+        {!isAuthenticated ? <LandingPage /> : <HomeFeed />}
       </PersistGate>
     </Provider>
   );

@@ -7,6 +7,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/redux/store";
 import { Provider } from "react-redux";
 import Spinner from "@/components/Spinner/Spinner";
+import Footer from "./home/oldLandingComponents/Footer";
 // importing the additional fonts that we support here on OrbitView
 import {
   Poppins,
@@ -172,6 +173,7 @@ export default function RootLayout({
         <Provider store={store}>
           <PersistGate loading={<Spinner />} persistor={persistor}>
             <AppContainer> {children}</AppContainer>
+            <Footer/>
           </PersistGate>
         </Provider>
       </body>

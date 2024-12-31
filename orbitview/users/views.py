@@ -20,6 +20,7 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import PermissionDenied
 from .pagination import CustomPagination
+from .industry_choices import INDUSTRIES
 
 
 
@@ -300,7 +301,7 @@ def search(request):
         'full_author': post.author.first_name + " " + post.author.last_name,
         
         } for post in posts]
-    articles_data = [{"id": article.id, "title": article.title, "subtitle": article.subtitle} for article in articles]
+    articles_data = [{"id": article.id, "title": article.title, "subtitle": article.subtitle, 'slug': article.slug} for article in articles]
 
     # Return search results as JSON
     return JsonResponse({
@@ -309,6 +310,10 @@ def search(request):
         "articles": articles_data,
     })
 
+@csrf_exempt
+# @cache_page(60*60)
+def industries(request):
+    return JsonResponse({'industries': INDUSTRIES})
 
 
 def csrf_token_view(request):

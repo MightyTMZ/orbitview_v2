@@ -18,6 +18,7 @@
 .title {
   font-size: 2.5rem;
   color: #333;
+  font-weight: bold;
 }
 
 .meta {
@@ -33,6 +34,10 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.profileImage:hover {
+  scale: 1.1;
 }
 
 .content {
@@ -57,4 +62,26 @@
 
 .authorByName:hover {
   font-weight: bold;
+}
+
+.immersive-button {
+  padding: 20px 40px;
+  background-color: #0e2c4b; /* Bootstrap primary blue */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.immersive-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.immersive-button:active {
+  transform: translateY(1px); /* Slight "press" effect */
 }

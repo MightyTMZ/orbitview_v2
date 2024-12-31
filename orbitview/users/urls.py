@@ -7,6 +7,7 @@ urlpatterns = [
     path('follow-request/<int:request_id>/<str:action>/', views.FollowRequestManageAPIView.as_view(), name='follow-request-manage'),
     # path('my/following/', views.UserFollowingAPIView.as_view())
     # path('profile')
+    path('industries/', views.industries, name="industry-list"),
 ]
 
 

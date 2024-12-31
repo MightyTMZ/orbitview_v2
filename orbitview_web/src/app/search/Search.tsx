@@ -22,6 +22,7 @@ interface Article {
   id: number;
   title: string;
   subtitle: string;
+  slug: string;
   author: ArticleAuthor;
   content: string;
   created_at: string;
@@ -101,7 +102,9 @@ interface SearchResult {
 ];*/
 
 const SearchPage = () => {
-  const [query, setQuery] = useState("");
+  const lastSearchQuery = localStorage.getItem("lastSearchQuery");
+
+  const [query, setQuery] = useState(lastSearchQuery ? lastSearchQuery : "");
   // const [selectedIndustry, setSelectedIndustry] = useState("---");
   const [searchResults, setSearchResults] = useState<SearchResult>({
     users: [],
@@ -111,7 +114,9 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSearch = async (query: String) => {
+  const handleSearch = async (query: string) => {
+    localStorage.setItem("lastSearchQuery", query);
+
     setLoading(true);
     setError(null);
     try {
@@ -174,7 +179,7 @@ const SearchPage = () => {
           <>
             {searchResults.users.length > 0 && (
               <div className="users-results mb-6">
-                <h2 className="text-xl font-bold mb-2">Users</h2>
+                <h2 className="text-xl font-bold mb-2">Accounts</h2>
                 {searchResults.users.map((user, index) => (
                   <div
                     key={index}
@@ -226,7 +231,9 @@ const SearchPage = () => {
                       className="article-card border p-2 rounded mb-2"
                     >
                       <h3 className="font-semibold text-lg">
-                        <a href={`/article/${article.id}`}>{article.title}</a>
+                        <a href={`/article/${article.id}/${article.slug}`}>
+                          {article.title}
+                        </a>
                       </h3>
                       <p className="text-sm text-gray-600">
                         {article.subtitle}
@@ -236,6 +243,12 @@ const SearchPage = () => {
                 </div>
               </div>
             )}
+            <div
+              className="for-ads"
+              style={{
+                height: "100vh",
+              }}
+            ></div>
           </>
         )}
 
@@ -277,6 +290,12 @@ const SearchPage = () => {
                 here
               </a>
             </p>
+            <div
+              className="for-ads"
+              style={{
+                height: "100vh",
+              }}
+            ></div>
           </div>
         ) : (
           <></>

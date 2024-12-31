@@ -1,5 +1,27 @@
+@import url("../../fonts.css");
+
+
+
+.arial {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.times-new-roman {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.courier-new {
+  font-family: "Courier New", Courier, monospace;
+}
+
+.profilePicture:hover {
+  scale: 1.1;
+}
+
+
 /* Main Article Container */
 .article-container {
+  position: relative;
   margin: 0 auto;
   padding: 2rem;
   max-width: 800px;
@@ -20,12 +42,22 @@
 
 /* Toolbar */
 .toolbar {
+  font-family: "Poppins", Helvetica, sans-serif;
+  gap: 0.5rem;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 1rem;
   padding: 1rem;
   background-color: #f1f1f1;
+  color: black;
   border-radius: 8px;
+  font-size: 1rem;
+  position: sticky;
+}
+
+.toolbar-sticky {
+  top: 80px;
 }
 
 .toolbar label {
@@ -44,12 +76,12 @@
   transition: all 0.3s ease-in-out;
 }
 
-.article-content.contrast-high {
+.contrast-high {
   background-color: #000;
   color: #fff;
 }
 
-.article-content.contrast-low {
+.contrast-low {
   background-color: #f9f9f9;
   color: #666;
 }
@@ -62,6 +94,14 @@
   gap: 1rem;
 }
 
+.author-info {
+  display: inline-flex;
+}
+
+.publish-date {
+  float: right;
+}
+
 .author-info img {
   width: 50px;
   height: 50px;
@@ -69,15 +109,12 @@
 }
 
 .orbitViewText {
-  text-shadow: 
-    -2px 0 rgba(255, 0, 0, 0.9), /* Red shadow for left eye */
-     2px 0 rgba(0, 255, 255, 0.9); /* Cyan shadow for right eye */
+  text-shadow: -2px 0 rgba(255, 0, 0, 0.9),
+    /* Red shadow for left eye */ 2px 0 rgba(0, 255, 255, 0.9); /* Cyan shadow for right eye */
 }
 
 .orbitViewTitle {
-  text-shadow: 
-    -3px 0 rgba(255, 0, 0, 0.7), 
-     3px 0 rgba(0, 255, 255, 0.7);
+  text-shadow: -3px 0 rgba(255, 0, 0, 0.7), 3px 0 rgba(0, 255, 255, 0.7);
 }
 
 /* Hover interaction 
@@ -93,6 +130,10 @@
      3px 0 rgba(0, 255, 255, 1);
 }
 */
+
+.authorByName {
+  font-size: 1.25rem;
+}
 
 .authorByName:hover {
   font-weight: bold;

@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
 import Spinner from "@/components/Spinner/Spinner";
 import ReactionBar from "../reactionBar/reactionBar";
+import { formatDate } from "../formattingDate";
 
 interface Author {
   id: number;
@@ -170,12 +171,14 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
             src={`${backendServer}/${article.author.profile.image}/`}
             alt={`${article.author.first_name}'s profile`}
             className={styles.profileImage}
+            title={`View ${article.author.first_name} ${article.author.last_name}`}
             onClick={() =>
               router.push(`/profile/${article.author.username}/articles/`)
             }
           />
           <p>
             <div
+              title={`View ${article.author.first_name} ${article.author.last_name}`}
               onClick={() =>
                 router.push(`/profile/${article.author.username}/articles/`)
               }
@@ -185,19 +188,11 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
                 {article.author.first_name} {article.author.last_name}
               </strong>{" "}
             </div>
-            | Published on {new Date(article.created_at).toLocaleDateString()}
+            | Published on{" "}
+            {formatDate(new Date(article.created_at).toLocaleDateString())}
           </p>
         </div>
-        <button
-          className="mt-3"
-          style={{
-            padding: "5px",
-            border: "1px solid black",
-          }}
-          onClick={() => router.push(`/article/${id}/${slug}/immersive`)}
-        >
-          Read in immersive
-        </button>
+        <br />
 
         <ReactionBar
           liked={likedArticle}
@@ -208,6 +203,18 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
           onReact={handleReaction}
         />
       </header>
+      <button
+        className={`mt-3 ${styles["immersive-button"]}`}
+        style={{
+          padding: "5px",
+          border: "1px solid black",
+          marginTop: "10px",
+          marginBottom: "10px",
+        }}
+        onClick={() => router.push(`/article/${id}/${slug}/immersive`)}
+      >
+        Read in immersive mode
+      </button>
 
       <section
         className={styles.content}
