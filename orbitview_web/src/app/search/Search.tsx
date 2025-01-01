@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import styles from "./Search.module.css";
 import { backendServer } from "@/importantLinks";
 import { ReactTyped } from "react-typed";
-import Image from "next/image";
+// import Image from "next/image";
 
 interface ArticleProfile {
   image: string;
@@ -190,7 +190,7 @@ const SearchPage = () => {
                     key={index}
                     className="user-card border p-2 rounded mb-2"
                   >
-                    <Image
+                    <img
                       src={`${backendServer}/${user.image}`}
                       alt={user.first_name + " " + user.last_name}
                       style={{

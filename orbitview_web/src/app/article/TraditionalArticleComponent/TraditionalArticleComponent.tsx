@@ -4,13 +4,12 @@ import React, { useEffect, useState } from "react";
 import { backendServer } from "@/importantLinks";
 import styles from "./TraditionalArticle.module.css";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
 import Spinner from "@/components/Spinner/Spinner";
 import ReactionBar from "../reactionBar/reactionBar";
 import { formatDate } from "../formattingDate";
-import Image from "next/image";
+import { API } from "@/components/API";
 
 interface Author {
   id: number;
@@ -47,39 +46,6 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
   const [error, setError] = useState<string | null>(null);
   const [likedArticle, setLikedArticle] = useState(false);
   const [savedArticle, setSavedArticle] = useState(false);
-  // Set up Axios instance
-  const API = axios.create({
-    baseURL: backendServer,
-    withCredentials: true,
-  });
-
-  const fetchCsrfToken = async () => {
-    try {
-      const response = await fetch(`${backendServer}/csrf-token/`, {
-        method: "GET",
-      });
-      const data = await response.json();
-      const csrfToken = data.csrfToken;
-      return csrfToken;
-    } catch (error) {
-      console.error("Failed to fetch CSRF token:", error);
-    }
-  };
-
-  API.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accessToken"); // Assume the JWT token is stored in localStorage
-    const csrfToken = fetchCsrfToken();
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    if (csrfToken) {
-      config.headers["X-CSRFToken"] = csrfToken;
-    }
-
-    return config;
-  });
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -172,7 +138,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
       <header className={styles.header}>
         <h1 className={styles.title}>{article.title}</h1>
         <div className={styles.meta}>
-          <Image
+          <img
             src={`${backendServer}/${article.author.profile.image}/`}
             alt={`${article.author.first_name}'s profile`}
             className={styles.profileImage}

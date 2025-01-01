@@ -36,7 +36,13 @@ export const LandingPage = () => {
 
       {/* Features Section */}
       <section className="py-16 px-6 bg-white text-gray-900">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+        <h2
+          className="text-3xl md:text-4xl font-bold text-center mb-12"
+          style={{
+            fontSize: "2rem",
+            marginTop: "1.5rem",
+          }}
+        >
           Why Choose OrbitView?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-6">

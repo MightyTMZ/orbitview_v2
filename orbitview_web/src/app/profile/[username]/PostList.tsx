@@ -1,7 +1,6 @@
 "use client";
 
 // import styles from "./PostPreviewCard.module.css"
-import { backendServer } from "@/importantLinks";
 import { useState, useEffect, useRef } from "react";
 import { AiOutlineLike } from "react-icons/ai";
 import { AiFillLike } from "react-icons/ai";
@@ -10,8 +9,8 @@ import { FaRegBookmark } from "react-icons/fa";
 import { FaShareSquare } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import { API } from "@/components/API";
 
 interface User {
   id: number;
@@ -68,40 +67,6 @@ const PostCard = ({ post }: CardProps) => {
   const contentRef = useRef<HTMLDivElement>(null); // Ref for the content div
   const [isOverflowing, setIsOverflowing] = useState(false); // Track if content overflows
   const [showFullContent, setShowFullContent] = useState(false); // Track if full content is shown
-
-  const API = axios.create({
-    baseURL: backendServer, // Replace with your backend's base URL
-    withCredentials: true,
-  });
-
-  API.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accessToken"); // Assume the JWT token is stored in localStorage
-    const csrfToken = fetchCsrfToken();
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    if (csrfToken) {
-      config.headers["X-CSRFToken"] = csrfToken;
-    }
-
-    return config;
-  });
-
-  const fetchCsrfToken = async () => {
-    try {
-      const response = await fetch(`${backendServer}/csrf-token/`, {
-        method: "GET",
-      });
-
-      const data = await response.json();
-      const csrfToken = data.csrfToken;
-      return csrfToken;
-    } catch (error) {
-      console.error("Failed to fetch CSRF token:", error);
-    }
-  };
 
 
   const [likesCount, setLikesCount] = useState(post.likes_count);

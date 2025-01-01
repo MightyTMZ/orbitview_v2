@@ -52,7 +52,7 @@ const HomeFeed = () => {
     };
 
     fetchArticles();
-  }, [fetchEndpoint, hasMore, loading]);
+  }, [industry, page]); // Removed `articles` from the dependency array
 
   const handleIndustryChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {

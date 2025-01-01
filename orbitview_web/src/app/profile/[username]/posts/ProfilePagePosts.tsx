@@ -3,19 +3,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import styles from "../ProfilePage.module.css";
 import PostsList from "../PostList";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import Spinner from "@/components/Spinner/Spinner";
-import { useRouter } from "next/navigation";
-import PrivateAccountDisclaimer from "../PrivateAccountDisclaimer";
-import MessageButton from "../MessageButton/MessageButton";
-import FollowButton from "../FollowButton/FollowButton";
-import ConnectButton from "../ConnectButton/ConnectButton";
 import { debounce } from "lodash"; // Import lodash debounce
 import { backendServer } from "@/importantLinks";
-import Image from "next/image";
+import ProfilePage from "../ProfilePage";
 
 interface User {
   id: number;
@@ -65,40 +57,20 @@ interface Post {
   saves_count: number;
 }
 
-
 const ProfilePagePosts = () => {
   const { username } = useParams();
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [contentType, setContentType] = useState("posts");
   const [posts, setPosts] = useState<Post[]>([]); // Specify post types
   const [page, setPage] = useState(1); // Track the current page
   const [hasMorePosts, setHasMorePosts] = useState(true); // Whether there are more posts to load
 
-  const { isAuthenticated, current_user } = useSelector(
-    (state: RootState) => state.auth
-  );
-  const [isTheUserSeeingTheirOwnProfile, setIsTheUserSeeingTheirOwnProfile] =
-    useState(false);
 
-  useEffect(() => {
-    // Check if the current user is seeing their own profile
-    if (isAuthenticated && current_user && profile) {
-      const isOwnProfile = current_user.user.id === profile.user.id;
-      setIsTheUserSeeingTheirOwnProfile(isOwnProfile);
-    }
-  }, [isAuthenticated, current_user, profile]);
 
+ 
   // Fetch the user profile and posts data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
-        const { data: profileData } = await axios.get(profileFetchEndpoint);
-        setProfile(profileData); // Reset profile state
-
-        // Reset posts state if profile changes
         setPosts([]); // Clear posts if profile changes
         setPage(1); // Reset the page when switching profiles
 
@@ -119,22 +91,6 @@ const ProfilePagePosts = () => {
 
     fetchData();
   }, [username, page]); // Fetch data whenever username or page changes
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (contentType === "posts") {
-      router.push(`posts`);
-    } else if (contentType === "articles") {
-      router.push(`articles`);
-    } else if (contentType === "resources") {
-      router.push(`resources`);
-    } else if (contentType === "videos") {
-      router.push(`videos`);
-    } else if (contentType === "events") {
-      router.push(`events`);
-    }
-  }, [contentType, username]);
 
   // Debounce the scroll event to prevent multiple calls in quick succession
   const handleScroll = debounce(() => {
@@ -157,104 +113,20 @@ const ProfilePagePosts = () => {
     return <Spinner />;
   }
 
-  if (!profile) {
-    return <div>Profile not found.</div>;
-  }
-
   return (
-    <div className={styles.profilePage}>
-      {/* Profile image */}
-      <div className={styles.profileHeader}>
-        <Image
-          src={`${backendServer}/${profile.image}`}
-          alt={`${profile.user.first_name} ${profile.user.last_name}`}
-          className={styles.profileImg}
-        />
-      </div>
-
-      {/* User details */}
-      <div className={styles.profileDetail}>
-        <h1 className={styles.profileH1}>
-          {profile.user.first_name} {profile.user.last_name}
-        </h1>
-        <p className={styles.bio}>{profile.bio}</p>
-        <p className={styles.byline}>{profile.by_line}</p>
-
-        {/* Followers and following */}
-        <div className={styles.followInfo}>
-          <div className={styles.followCount}>
-            <strong>{profile.followers_count}</strong> Followers
-          </div>
-          <div className={styles.followCount}>
-            <strong>{profile.following_count}</strong> Following
-          </div>
-        </div>
-
-        {/* Follow button */}
-        {isTheUserSeeingTheirOwnProfile ? (
-          <>
-            <button
-              className={styles.actionBtn}
-              onClick={() => console.log("Edit profile has been clicked")}
-            >
-              Edit Profile
-            </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => console.log("View archive has been clicked")}
-            >
-              View Archive
-            </button>
-            <button
-              className={styles.actionBtn}
-              onClick={() => console.log("Dashboard has been clicked.")}
-            >
-              Dashboard
-            </button>
-          </>
-        ) : (
-          <>
-            <ConnectButton />
-            <FollowButton profile={profile} />
-            <MessageButton />
-          </>
-        )}
-      </div>
-
-      <div className={styles.adjustmentBarContainer}>
-        <div className={styles.adjustmentBar}>
-          {["posts", "articles", "resources", "videos", "events"].map(
-            (type) => (
-              <div
-                key={type}
-                className={`${styles.adjustmentTab} ${
-                  contentType === type ? styles.active : ""
-                }`}
-                onClick={() => setContentType(type)}
-              >
-                {type[0].toUpperCase() + type.substring(1)}
-              </div>
-            )
-          )}
-          <div className={`${styles.highlight} ${styles[contentType]}`} />
-        </div>
-      </div>
-
+    <>
+      <ProfilePage content_type="posts" />
       <div id="list-of-their-posts" className="container mx-auto mt-8 px-4">
-        {profile.is_private ? (
-          <PrivateAccountDisclaimer />
-        ) : (
-          <>
-            {posts.length > 0 ? (
-              <PostsList posts={posts} />
-            ) : (
-              <div>No posts yet</div>
-            )}
-            {!hasMorePosts && <div>No more posts to load.</div>}
-          </>
-        )}
+        <>
+          {posts.length > 0 ? (
+            <PostsList posts={posts} />
+          ) : (
+            <div>No posts yet</div>
+          )}
+          {!hasMorePosts && <div>No more posts to load.</div>}
+        </>
       </div>
-    </div>
+    </>
   );
 };
 

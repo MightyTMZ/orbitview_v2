@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { formatDate } from "../formattingDate";
 import { IoClose } from "react-icons/io5";
 import { CiMenuBurger } from "react-icons/ci";
-import Image from "next/image";
+// import Image from "next/image";
 
 interface Author {
   id: number;
@@ -73,7 +73,7 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
   };
 
   // setTimeout(() => setLoading(false), 1000); load the advertisement
-  
+
   return (
     <div
       className={`article-container contrast-${settings.contrast} ${
@@ -225,7 +225,7 @@ const ImmersiveArticleComponent: React.FC<ArticleProps> = ({
               settings.stereoscopic ? "orbitViewText" : ""
             }`}
           >
-            <Image
+            <img
               src={`${backendServer}/${author.profile.image}`}
               alt={`${author.first_name} ${author.last_name}`}
               title={`View ${author.first_name} ${author.last_name}`}

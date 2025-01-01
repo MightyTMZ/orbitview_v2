@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import styles from "./ProfilePage.module.css";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import MessageButton from "./MessageButton/MessageButton";
 import FollowButton from "./FollowButton/FollowButton";
 import ConnectButton from "./ConnectButton/ConnectButton";
@@ -28,86 +26,52 @@ interface Profile {
   by_line: string;
   date_of_birth: string;
   updated: string;
-  created: string; //  --> when did they join OrbitView
+  created: string;
   image: string;
   followers_count: number;
   following_count: number;
 }
 
+interface ProfilePageProps {
+  content_type: string;
+}
+
 // Profile component
-const ProfilePage = () => {
+const ProfilePage = ({ content_type }: ProfilePageProps) => {
   const backendServer = "http://127.0.0.1:8000";
   const { username } = useParams();
-  const [profile, setProfile] = useState<Profile>();
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-
-  // what type of content is it being rendered right now?
-
-  const [contentType, setContentType] = useState("posts");
 
   const { isAuthenticated, current_user } = useSelector(
     (state: RootState) => state.auth
   );
-  const [isTheUserSeeingTheirOwnProfile, setIsTheUserSeeingTheirOwnProfile] =
-    useState(false);
 
-  useEffect(() => {
-    // Check if the current user is seeing their own profile
-    if (isAuthenticated && current_user && profile) {
-      const isOwnProfile = current_user.user.id === profile.user.id;
-      setIsTheUserSeeingTheirOwnProfile(isOwnProfile);
-    }
+  // Memoize derived state
+  const isTheUserSeeingTheirOwnProfile = useMemo(() => {
+    return isAuthenticated && current_user && profile
+      ? current_user.user.id === profile.user.id
+      : false;
   }, [isAuthenticated, current_user, profile]);
 
-  // console.log("User is authenticated: " + isAuthenticated);
-  // console.log("User is: " + current_user);
-
-  // user --> the current user in the Redux state
-  // profile --> the fetched profile based on the URL
-
-  // console.log(profileFetchEndpoint);
-
+  // Fetch profile once
   useEffect(() => {
     if (username) {
-      const fetchData = async () => {
+      const fetchProfile = async () => {
         try {
           setLoading(true);
-
-          // Fetch user profile
-          const profileFetchEndpoint = `${backendServer}/profile/${username}/`;
-          const { data: profileData } = await axios.get(profileFetchEndpoint);
-          setProfile(profileData);
-
-          // by default, we fetch the posts
-          // const postsFetchEndpoint = `${backendServer}/content/posts/${username}/`;
-          // const { data: postsData } = await axios.get(postsFetchEndpoint);
-          // setPosts(postsData);
+          const response = await axios.get(`${backendServer}/profile/${username}/`);
+          setProfile(response.data);
         } catch (error) {
-          console.error("Error fetching profile or content:", error);
+          console.error("Error fetching profile:", error);
         } finally {
           setLoading(false);
         }
       };
 
-      fetchData();
+      fetchProfile();
     }
-  }, [username, contentType]);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (contentType === "posts") {
-      router.push(`${username}/posts`);
-    } else if (contentType === "articles") {
-      router.push(`${username}/articles`);
-    } else if (contentType === "resources") {
-      router.push(`${username}/resources`);
-    } else if (contentType === "videos") {
-      router.push(`${username}/videos`);
-    } else if (contentType === "events") {
-      router.push(`${username}/events`);
-    }
-  }, [contentType, username, router]);
+  }, [username]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -153,7 +117,7 @@ const ProfilePage = () => {
     <div className={styles.profilePage}>
       {/* Profile image */}
       <div className={styles.profileHeader}>
-        <Image
+        <img
           src={`${backendServer}/${profile.image}`}
           alt={`${profile.user.first_name} ${profile.user.last_name}`}
           className={styles.profileImg}
@@ -178,25 +142,24 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Follow button */}
-
+        {/* Buttons */}
         {isTheUserSeeingTheirOwnProfile ? (
           <>
             <button
               className={styles.actionBtn}
-              onClick={() => handleClickOnEditProfile()}
+              onClick={handleClickOnEditProfile}
             >
               Edit Profile
             </button>
             <button
               className={styles.actionBtn}
-              onClick={() => handleViewArchive()}
+              onClick={handleViewArchive}
             >
               View Archive
             </button>
             <button
               className={styles.actionBtn}
-              onClick={() => handleClickOnDashboard()}
+              onClick={handleClickOnDashboard}
             >
               Dashboard
             </button>
@@ -217,15 +180,15 @@ const ProfilePage = () => {
               <div
                 key={type}
                 className={`${styles.adjustmentTab} ${
-                  contentType === type ? styles.active : ""
+                  content_type === type ? styles.active : ""
                 }`}
-                onClick={() => setContentType(type)}
+                onClick={() => (window.location.href = `/profile/${username}/${type}`)}
               >
                 {type[0].toUpperCase() + type.substring(1)}
               </div>
             )
           )}
-          <div className={`${styles.highlight} ${styles[contentType]}`} />
+          <div className={`${styles.highlight} ${styles[content_type]}`} />
         </div>
       </div>
     </div>

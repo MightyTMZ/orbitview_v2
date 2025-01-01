@@ -43,7 +43,6 @@ const ImmersiveArticlePage: React.FC = () => {
   const slug = String(params.slug);
 
   const fetchEndpoint = `${backendServer}/content/articles/${articleId}/${slug}`; // do not put the trailing slash
-  console.log(fetchEndpoint);
 
   const [article, setArticle] = useState<Article>();
   const [loading, setLoading] = useState(true);
@@ -72,7 +71,7 @@ const ImmersiveArticlePage: React.FC = () => {
 
       fetchArticle();
     }
-  }, [articleId, slug, article, fetchEndpoint]);
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
