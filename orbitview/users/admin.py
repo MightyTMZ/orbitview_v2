@@ -24,59 +24,40 @@ class ProfileAdmin(admin.ModelAdmin):
         'industry',
         'image',
     ]
-    # readonly_fields = ['user']
 
     def get_form(self, request, obj=None, **kwargs):
-        """Restrict fields for beta users."""
+        """Restrict fields for beta users and superusers."""
         form = super().get_form(request, obj, **kwargs)
-        # Restrict editable fields dynamically if needed
+        
         if request.user.is_superuser:
-            self.fields = [
-                'user',
-                'location',
-                'skills_description',
-                'interests_description',
-                'currently_working_on',
-                'check_in_cycle_length',
-                'bio',
-                'by_line',
-                'date_of_birth',
-                'industry',
-                'image',
-            ]
-        else:
-            # Fields for non-superusers (beta users)
-            self.fields = [
-                'user',
-                'location',
-                'skills_description',
-                'interests_description',
-                'currently_working_on',
-                'check_in_cycle_length',
-                'bio',
-                'by_line',
-                'date_of_birth',
-                'industry',
-                'image',
-            ]
-
+            # Superusers see all fields
+            return form
+        
+        if request.user.groups.filter(name="beta users").exists():
+            # Beta users should only edit their own profile
+            if obj and obj.id != request.user.id:
+                for field in form.base_fields:
+                    form.base_fields[field].widget.attrs['disabled'] = 'disabled'  # Disable all fields for non-editable profiles
         return form
     
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         if request.user.is_superuser:
             return queryset  # Superusers can see all
-        elif request.user.is_authenticated and request.user.is_beta_user:
-            return queryset.filter(id=request.user.id)  # Beta users can only see their own profile
+        elif request.user.groups.filter(name="beta users").exists():
+            return queryset.filter(user=request.user)  # Beta users can only see their own profile
         return queryset.none()  # Non-beta users see nothing
 
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser:
             return True  # Superusers can change anything
-        if obj is not None and obj.id == request.user.id:
+        if obj is not None and obj.user == request.user:
             return True  # Users can edit their own profiles
         return False
-    
 
-
-
+    def has_delete_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True  # Superusers can delete anything
+        if obj is not None and obj.user == request.user:
+            return True  # Users can delete their own profiles
+        return False
