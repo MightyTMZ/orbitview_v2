@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
@@ -15,20 +13,6 @@ interface User {
   email: string;
   first_name: string;
   last_name: string;
-}
-
-interface Profile {
-  user: User;
-  is_private: boolean;
-  is_online: boolean;
-  bio: string;
-  by_line: string;
-  date_of_birth: string;
-  updated: string;
-  created: string; // --> when did they join OrbitView
-  image: string;
-  followers_count: number;
-  following_count: number;
 }
 
 interface Author {
@@ -64,9 +48,6 @@ const ProfilePagePosts = () => {
   const [page, setPage] = useState(1); // Track the current page
   const [hasMorePosts, setHasMorePosts] = useState(true); // Whether there are more posts to load
 
-
-
- 
   // Fetch the user profile and posts data
   useEffect(() => {
     const fetchData = async () => {

@@ -12,9 +12,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
 import Image from "next/image";
-import { API, api } from "@/components/API";
-
-import axios from "axios";
+import { API } from "@/components/API";
 import { useRouter } from "next/navigation";
 // import FollowButton from "@/app/profile/[username]/FollowButton/FollowButton";
 

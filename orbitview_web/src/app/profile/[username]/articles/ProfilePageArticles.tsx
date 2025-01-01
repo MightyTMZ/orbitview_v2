@@ -68,7 +68,6 @@ interface Article {
 const ProfilePageArticles = () => {
   const { username } = useParams();
   const [loading, setLoading] = useState(true);
-  const [contentType, setContentType] = useState("articles");
   const [articles, setArticles] = useState<Article[]>([]); // Specify post types
   const [page, setPage] = useState(1); // Track the current page
   const [hasMoreArticles, setHasMoreArticles] = useState(true); // Whether there are more posts to load
@@ -99,21 +98,7 @@ const ProfilePageArticles = () => {
     fetchData();
   }, [username, page]); // Fetch data whenever username or page changes
 
-  const router = useRouter();
 
-  useEffect(() => {
-    if (contentType === "posts") {
-      router.push(`posts`);
-    } else if (contentType === "articles") {
-      router.push(`articles`);
-    } else if (contentType === "resources") {
-      router.push(`resources`);
-    } else if (contentType === "videos") {
-      router.push(`videos`);
-    } else if (contentType === "events") {
-      router.push(`events`);
-    }
-  }, [contentType, username]);
 
   // Debounce the scroll event to prevent multiple calls in quick succession
   const handleScroll = debounce(() => {
