@@ -172,7 +172,7 @@ const PostCard = ({ post }: CardProps) => {
   };
 
   const handleCommenting = async (post: Post) => {
-    console.log("the user now wants to comment on this post");
+    console.log("the user now wants to comment on this post" + post.id);
   };
 
   const handleSharingPost = (post: Post) => {
