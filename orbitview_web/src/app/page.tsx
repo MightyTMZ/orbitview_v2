@@ -12,7 +12,7 @@ import { RootState } from "@/redux/store";
 import HomeFeed from "@/screens/HomeFeed";
 
 export default function Home() {
-  const { isAuthenticated, current_user } = useSelector(
+  const { isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
 

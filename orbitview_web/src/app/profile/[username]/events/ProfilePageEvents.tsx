@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import styles from "../ProfilePage.module.css";
-import PostsList from "../PostList";
+// import PostsList from "../PostList";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Spinner from "@/components/Spinner/Spinner";

@@ -1,11 +1,4 @@
-import HeroSection from "./oldLandingComponents/HeroSection";
-import Highlights from "./oldLandingComponents/Highlights";
-import DemoShowcase from "./oldLandingComponents/DemoShowcase";
-import CommunityEvents from "./oldLandingComponents/CommunityEvents";
-import Testimonials from "./oldLandingComponents/Testimonials";
-import EdtechIntegration from "./oldLandingComponents/EdtechIntegration";
-import Pricing from "./oldLandingComponents/Pricing";
-import FAQ from "./oldLandingComponents/FAQ";
+
 import Newsletter from "./oldLandingComponents/Newsletter";
 import Footer from "./oldLandingComponents/Footer";
 

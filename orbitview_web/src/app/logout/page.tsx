@@ -3,9 +3,7 @@
 import React from "react";
 import Logout from "./Logout";
 import { Provider } from "react-redux";
-import { store, persistor } from "@/redux/store";
-import Spinner from "@/components/Spinner/Spinner";
-import { PersistGate } from "redux-persist/integration/react";
+import { store } from "@/redux/store";
 
 const page = () => {
   return (

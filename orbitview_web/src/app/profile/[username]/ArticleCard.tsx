@@ -1,5 +1,3 @@
-import { backendServer } from "@/importantLinks";
-
 interface Profile {
   image: string;
   by_line: string;
