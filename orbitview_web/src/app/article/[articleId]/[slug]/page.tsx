@@ -4,7 +4,7 @@ import React from "react";
 import { useParams } from "next/navigation";
 import TraditionalArticleComponent from "../../TraditionalArticleComponent/TraditionalArticleComponent";
 
-const page = () => {
+const Page = () => {
   const params = useParams();
 
   if (!params) {
@@ -32,4 +32,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

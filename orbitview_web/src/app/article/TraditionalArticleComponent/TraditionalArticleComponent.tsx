@@ -89,8 +89,12 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
         if (!response.ok) throw new Error("Failed to fetch article.");
         const data = await response.json();
         setArticle(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message); // If it's an Error instance, access the message
+        } else {
+          setError("An unknown error occurred."); // Handle non-Error instances
+        }
       } finally {
         setLoading(false);
       }

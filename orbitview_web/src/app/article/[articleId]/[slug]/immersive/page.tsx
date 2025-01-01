@@ -5,6 +5,37 @@ import { useParams } from "next/navigation";
 import { backendServer } from "@/importantLinks";
 import ImmersiveArticleComponent from "@/app/article/ImmersiveArticleComponent/ImmersiveArticleComponent";
 
+interface Author {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  profile: {
+    image: string;
+    by_line: string;
+    is_online: boolean;
+  };
+}
+
+interface Article {
+  id: number;
+  title: string;
+  subtitle: string;
+  author: Author;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  is_published: boolean;
+  featured_image: string;
+  public: boolean;
+  archived: boolean;
+  likes_count: number;
+  shares_count: number;
+  saves_count: number;
+  hide_likes_count: number;
+  hide_shares_count: number;
+}
+
 const ImmersiveArticlePage: React.FC = () => {
   const params = useParams();
 
@@ -12,11 +43,11 @@ const ImmersiveArticlePage: React.FC = () => {
   const slug = String(params.slug);
 
   const fetchEndpoint = `${backendServer}/content/articles/${articleId}/${slug}`; // do not put the trailing slash
-  console.log(fetchEndpoint)
+  console.log(fetchEndpoint);
 
-  const [article, setArticle] = useState<null | any>(null);
+  const [article, setArticle] = useState<Article>();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | Error>();
 
   useEffect(() => {
     if (articleId && slug) {
@@ -28,8 +59,12 @@ const ImmersiveArticlePage: React.FC = () => {
 
           setArticle(data);
           console.log(article);
-        } catch (err: any) {
-          setError(err.message);
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message); // If it's an Error instance, access the message
+          } else {
+            setError("An unknown error occurred."); // Handle non-Error instances
+          }
         } finally {
           setLoading(false);
         }
@@ -37,14 +72,14 @@ const ImmersiveArticlePage: React.FC = () => {
 
       fetchArticle();
     }
-  }, [articleId, slug]);
+  }, [articleId, slug, article, fetchEndpoint]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    console.error(error);
   }
 
   if (!article) {

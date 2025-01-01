@@ -38,7 +38,7 @@ interface Post {
   saves_count: number;
 }
 
-const page = () => {
+const Page = () => {
   const { id } = useParams();
   const [post, setPost] = useState<Post | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -74,4 +74,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

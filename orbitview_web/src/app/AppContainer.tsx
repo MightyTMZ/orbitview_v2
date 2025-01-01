@@ -3,7 +3,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { backendServer } from "@/components/importantLinks";
 import Link from "next/link";
-import { FaUserCircle, FaTimes, FaBars } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import styles from "./AppContainer.module.css";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
@@ -25,6 +25,11 @@ const AppContainer = (props: Props) => {
   const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
   const [isWideForRightOrLeft, setisWideForRightOrLeft] = useState(false);
   // const [user, setUser] = useState(null);
+
+  const saleem = "MS";
+  if (saleem) {
+    setIsNavbarCollapsed(false); // ghost reference
+  }
 
   /* if (user || error) {
     // ghost reference
@@ -146,7 +151,8 @@ const AppContainer = (props: Props) => {
               ) : (
                 <>
                   <Link href="/login">Login</Link>
-                  <Link href="/join">Join OrbitView</Link>                </>
+                  <Link href="/join">Join OrbitView</Link>{" "}
+                </>
               )}
             </div>
           </nav>

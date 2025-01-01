@@ -11,8 +11,6 @@ import { FaShareSquare } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -55,7 +53,7 @@ interface CardProps {
   post: Post;
 }
 
-const correctImagePath = (url: String) => {
+const correctImagePath = (url: string) => {
   return `${backendServer}/${url}`;
 };
 
@@ -65,10 +63,6 @@ const renderFullName = (author: Author) => {
 
 export const PostCard = ({ post }: CardProps) => {
   const router = useRouter();
-
-  const { isAuthenticated, current_user } = useSelector(
-    (state: RootState) => state.auth
-  );
 
   const dispatch = useDispatch();
 
@@ -139,7 +133,7 @@ export const PostCard = ({ post }: CardProps) => {
 
     fetchLikeStatus();
     fetchSaveStatus();
-  }, []); // Run only once on component mount
+  }); // Run only once on component mount
 
   const handleLikingPost = async () => {
     try {

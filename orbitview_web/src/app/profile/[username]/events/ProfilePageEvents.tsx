@@ -126,10 +126,10 @@ const ProfilePageEvents = () => {
     return `${backendServer}/profile/${username}`;
   };
 
-  const followURL = getProfileURL + "/follow/";
-  const profileConnectionsListURL = `${backendServer}/social/connections/`;
+  // const followURL = getProfileURL + "/follow/";
+  // const profileConnectionsListURL = `${backendServer}/social/connections/`;
 
-  const handleFollowingUser = () => {
+  /* const handleFollowingUser = () => {
     console.log(`${username} was just followed...`);
   };
 
@@ -139,7 +139,7 @@ const ProfilePageEvents = () => {
 
   const handleMessageUser = () => {
     console.log(`Messaging ${username} right now`);
-  };
+  };*/
 
   const handleClickOnDashboard = () => {
     if (current_user) {

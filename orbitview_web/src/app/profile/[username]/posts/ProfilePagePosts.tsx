@@ -38,12 +38,39 @@ interface Profile {
   following_count: number;
 }
 
+interface Author {
+  user: User;
+  is_private: boolean;
+  is_online: boolean;
+  bio: string;
+  by_line: string;
+  date_of_birth: string;
+  updated: string; // when did the user last update their profile
+  created: string; // when did the user join OrbitView?
+  image: string; //e.g. "/profile_pics/tom.jpg",
+  followers_count: number;
+  following_count: number;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  author: Author;
+  date_posted: string;
+  date_updated: string;
+  likes_count: number;
+  shares_count: number;
+  saves_count: number;
+}
+
+
 const ProfilePagePosts = () => {
   const { username } = useParams();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [contentType, setContentType] = useState("posts");
-  const [posts, setPosts] = useState<any[]>([]); // Specify post types
+  const [posts, setPosts] = useState<Post[]>([]); // Specify post types
   const [page, setPage] = useState(1); // Track the current page
   const [hasMorePosts, setHasMorePosts] = useState(true); // Whether there are more posts to load
 

@@ -38,12 +38,48 @@ interface Profile {
   following_count: number;
 }
 
+
+interface Profile {
+  image: string;
+  by_line: string;
+  is_online: boolean;
+}
+
+interface Author {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  profile: Profile;
+}
+
+interface Article {
+  id: number;
+  title: string;
+  subtitle: string;
+  slug: string;
+  author: Author;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  is_published: boolean;
+  featured_image: string;
+  public: boolean;
+  archived: boolean;
+  likes_count: number;
+  shares_count: number;
+  saves_count: number;
+  hide_likes_count: number;
+  hide_shares_count: number;
+}
+
+
+
 const ProfilePageArticles = () => {
   const { username } = useParams();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [contentType, setContentType] = useState("articles");
-  const [articles, setArticles] = useState<any[]>([]); // Specify post types
+  const [articles, setArticles] = useState<Article[]>([]); // Specify post types
   const [page, setPage] = useState(1); // Track the current page
   const [hasMoreArticles, setHasMoreArticles] = useState(true); // Whether there are more posts to load
 

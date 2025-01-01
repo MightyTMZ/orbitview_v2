@@ -4,7 +4,7 @@ import ArticleCard from "./ArticleCard"; // Assuming the individual card is in a
 interface Profile {
   image: string;
   by_line: string;
-  is_online: string;
+  is_online: boolean;
 }
 
 interface Author {
@@ -18,6 +18,7 @@ interface Article {
   id: number;
   title: string;
   subtitle: string;
+  slug: string;
   author: Author;
   content: string;
   created_at: string;

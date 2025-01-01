@@ -1,7 +1,6 @@
 interface Profile {
   image: string;
   by_line: string;
-  is_online: string;
 }
 
 interface Author {
