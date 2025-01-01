@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import styles from "./ReactionBar.module.css";
-import { AiOutlineLike } from "react-icons/ai";
-import { AiFillLike } from "react-icons/ai";
-import { FaBookmark } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa";
-import { FaShareSquare } from "react-icons/fa";
+import styles from "./reactionBar.module.css";
 
 interface ReactionBarProps {
   liked: boolean;
