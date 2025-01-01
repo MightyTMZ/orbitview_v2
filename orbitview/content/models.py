@@ -30,7 +30,6 @@ class Post(models.Model):
     archived = models.BooleanField(default=False)
     unlisted = models.BooleanField(default=False)
 
-    search_vector = SearchVectorField(null=True, blank=True)
 
 
     def total_likes(self):
@@ -116,9 +115,6 @@ class Article(models.Model):
     hide_likes_counts = models.BooleanField(default=False)
     hide_shares_counts = models.BooleanField(default=False)
 
-    search_vector = SearchVectorField(null=True, blank=True)
-
-    
 
     def total_likes(self):
         return self.likes.count()

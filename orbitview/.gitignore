@@ -6,3 +6,7 @@ __pycache__
 login_request_test.py
 
 successful_login_response.json
+
+python_anywhere_settings.py
+
+db.sqlite3
