@@ -136,7 +136,7 @@ const PostCard = ({ post }: CardProps) => {
 
     fetchLikeStatus();
     fetchSaveStatus();
-  }, []); // Run only once on component mount
+  }); // Run only once on component mount
 
   const handleLikingPost = async () => {
     try {

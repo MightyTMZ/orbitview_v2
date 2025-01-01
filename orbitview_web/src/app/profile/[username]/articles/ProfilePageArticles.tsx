@@ -14,6 +14,7 @@ import FollowButton from "../FollowButton/FollowButton";
 import ConnectButton from "../ConnectButton/ConnectButton";
 import { debounce } from "lodash"; // Import lodash debounce
 import { backendServer } from "@/importantLinks";
+import Image from "next/image";
 import ArticleList from "../ArticleList";
 
 interface User {
@@ -173,7 +174,7 @@ const ProfilePageArticles = () => {
     <div className={styles.profilePage}>
       {/* Profile image */}
       <div className={styles.profileHeader}>
-        <img
+        <Image
           src={`${backendServer}/${profile.image}`}
           alt={`${profile.user.first_name} ${profile.user.last_name}`}
           className={styles.profileImg}

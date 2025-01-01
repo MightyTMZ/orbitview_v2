@@ -112,7 +112,7 @@ const ProfilePageResources = () => {
     } else if (contentType === "events") {
       router.push(`events`);
     }
-  }, [contentType, username]);
+  }, [contentType, username, router]);
 
   if (loading) {
     return <Spinner />;

@@ -14,6 +14,7 @@ import ContentTypeComingSoon from "../ContentTypeComingSoon";
 import MessageButton from "../MessageButton/MessageButton";
 import FollowButton from "../FollowButton/FollowButton";
 import ConnectButton from "../ConnectButton/ConnectButton";
+import Image from "next/image";
 
 interface User {
   id: number;
@@ -112,7 +113,7 @@ const ProfilePageEvents = () => {
     } else if (contentType === "events") {
       router.push(`events`);
     }
-  }, [contentType, username]);
+  }, [contentType, username, router]);
 
   if (loading) {
     return <Spinner />;
@@ -177,7 +178,7 @@ const ProfilePageEvents = () => {
     <div className={styles.profilePage}>
       {/* Profile image */}
       <div className={styles.profileHeader}>
-        <img
+        <Image
           src={`${backendServer}/${profile.image}`}
           alt={`${profile.user.first_name} ${profile.user.last_name}`}
           className={styles.profileImg}

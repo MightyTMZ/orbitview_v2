@@ -10,6 +10,7 @@ import { logout } from "@/redux/authSlice";
 import Spinner from "@/components/Spinner/Spinner";
 import ReactionBar from "../reactionBar/reactionBar";
 import { formatDate } from "../formattingDate";
+import Image from "next/image";
 
 interface Author {
   id: number;
@@ -152,7 +153,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
 
     fetchLikeStatus();
     fetchSaveStatus();
-  }, [id]);
+  });
 
   if (loading) {
     return <Spinner />;
@@ -171,7 +172,7 @@ const TraditionalArticleComponent: React.FC<ArticleProps> = ({ id, slug }) => {
       <header className={styles.header}>
         <h1 className={styles.title}>{article.title}</h1>
         <div className={styles.meta}>
-          <img
+          <Image
             src={`${backendServer}/${article.author.profile.image}/`}
             alt={`${article.author.first_name}'s profile`}
             className={styles.profileImage}

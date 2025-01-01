@@ -1,3 +1,6 @@
+import Image from "next/image";
+
+
 interface Profile {
   image: string;
   by_line: string;
@@ -47,7 +50,7 @@ const ArticleCard = ({ article }: Props) => {
     >
       {/* Featured Image */}
       <div className="relative">
-        <img
+        <Image
           src={`${article.featured_image}`}
           alt={article.title}
           className="w-full h-40 object-cover transition-opacity duration-300 group-hover:opacity-90"
@@ -72,7 +75,7 @@ const ArticleCard = ({ article }: Props) => {
             })}
           </span>
           <span className="flex items-center space-x-1">
-            <img
+            <Image
               key={article.author.id}
               src={article.author.profile?.image ? `${article.author.profile.image}` : "/default-avatar.jpg"}
               alt={`${article.author.first_name} ${article.author.last_name}`}

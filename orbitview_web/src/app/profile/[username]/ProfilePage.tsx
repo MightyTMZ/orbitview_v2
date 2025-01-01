@@ -7,6 +7,7 @@ import styles from "./ProfilePage.module.css";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import MessageButton from "./MessageButton/MessageButton";
 import FollowButton from "./FollowButton/FollowButton";
 import ConnectButton from "./ConnectButton/ConnectButton";
@@ -106,7 +107,7 @@ const ProfilePage = () => {
     } else if (contentType === "events") {
       router.push(`${username}/events`);
     }
-  }, [contentType, username]);
+  }, [contentType, username, router]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -115,8 +116,6 @@ const ProfilePage = () => {
   if (!profile) {
     return <div>Profile not found.</div>;
   }
-
-  
 
   const handleClickOnDashboard = () => {
     if (current_user) {
@@ -154,7 +153,7 @@ const ProfilePage = () => {
     <div className={styles.profilePage}>
       {/* Profile image */}
       <div className={styles.profileHeader}>
-        <img
+        <Image
           src={`${backendServer}/${profile.image}`}
           alt={`${profile.user.first_name} ${profile.user.last_name}`}
           className={styles.profileImg}

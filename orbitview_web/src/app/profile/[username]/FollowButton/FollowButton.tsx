@@ -61,7 +61,7 @@ const FollowButton = ({ profile }: FollowButtonProps) => {
     };
 
     fetchFollowStatus();
-  }, [profile.user.username]);
+  });
 
   // Toggle follow status
   const handleFollowToggle = async () => {

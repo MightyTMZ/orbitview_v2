@@ -13,6 +13,7 @@ import ContentTypeComingSoon from "../ContentTypeComingSoon";
 import MessageButton from "../MessageButton/MessageButton";
 import FollowButton from "../FollowButton/FollowButton";
 import ConnectButton from "../ConnectButton/ConnectButton";
+import Image from "next/image";
 
 interface User {
   id: number;
@@ -111,7 +112,7 @@ const ProfilePageVideos = () => {
     } else if (contentType === "events") {
       router.push(`events`);
     }
-  }, [contentType, username]);
+  }, [contentType, username, router]);
 
   if (loading) {
     return <Spinner />;
@@ -120,7 +121,6 @@ const ProfilePageVideos = () => {
   if (!profile) {
     return <div>Profile not found.</div>;
   }
-
 
   // const followURL = getProfileURL + "/follow/";
   // const profileConnectionsListURL = `${backendServer}/social/connections/`;
@@ -173,7 +173,7 @@ const ProfilePageVideos = () => {
     <div className={styles.profilePage}>
       {/* Profile image */}
       <div className={styles.profileHeader}>
-        <img
+        <Image
           src={`${backendServer}/${profile.image}`}
           alt={`${profile.user.first_name} ${profile.user.last_name}`}
           className={styles.profileImg}
