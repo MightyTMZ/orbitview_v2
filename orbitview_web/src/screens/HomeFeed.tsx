@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import ArticleCard from "@/app/profile/[username]/ArticleCard";
 import { backendServer } from "@/importantLinks";
 import { FaSearch } from "react-icons/fa";
@@ -11,7 +11,6 @@ const INDUSTRIES = [
   ["finance", "Finance"],
   ["healthcare", "Healthcare"],
   ["education", "Education"],
-  // ... other industries
 ];
 
 const HomeFeed = () => {
@@ -21,12 +20,11 @@ const HomeFeed = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const queryParam =
-    industry === "All"
+  const fetchEndpoint = useMemo(() => {
+    return industry === "All"
       ? `?page=${page}`
       : `?author__profile__industry=${industry}&page=${page}`;
-
-  const fetchEndpoint = `${backendServer}/content/articles/${queryParam}`;
+  }, [industry, page]);
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -34,12 +32,14 @@ const HomeFeed = () => {
 
       setLoading(true);
       try {
-        const response = await fetch(fetchEndpoint);
+        const response = await fetch(
+          `${backendServer}/content/articles/${fetchEndpoint}`
+        );
         const data = await response.json();
 
         if (data.results && data.results.length > 0) {
           setArticles((prev) => prev.concat(data.results));
-          setHasMore(data.next !== null); // Check if there are more pages
+          setHasMore(data.next !== null);
         } else {
           setHasMore(false);
         }
@@ -52,23 +52,25 @@ const HomeFeed = () => {
     };
 
     fetchArticles();
-  }, [fetchEndpoint, page]);
+  }, [fetchEndpoint, hasMore, loading]);
 
-  const handleIndustryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setIndustry(e.target.value);
-    setPage(1);
-    setArticles([]);
-    setHasMore(true);
-  };
+  const handleIndustryChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setIndustry(e.target.value);
+      setPage(1);
+      setArticles([]);
+      setHasMore(true);
+    },
+    []
+  );
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!loading && hasMore) setPage((prev) => prev + 1);
-  };
+  }, [loading, hasMore]);
 
   return (
     <div className={styles["home-feed"]}>
-      <label htmlFor="industry-select">Find content in:{"    "}</label>
-
+      <label htmlFor="industry-select">Find content in:</label>
       <select
         id="industry-select"
         value={industry}
@@ -100,8 +102,8 @@ const HomeFeed = () => {
         {articles.length === 0 && !loading ? (
           <p>No articles found.</p>
         ) : (
-          articles.map((article, i) => (
-            <div className={styles.articleBox} key={i}>
+          articles.map((article, key) => (
+            <div className={styles.articleBox} key={key}>
               <ArticleCard article={article} />
             </div>
           ))
