@@ -43,7 +43,6 @@ class ProfileAdmin(admin.ModelAdmin):
                 'date_of_birth',
                 'industry',
                 'image',
-                'is_beta_user',  # Another example field
             ]
         else:
             # Fields for non-superusers (beta users)
