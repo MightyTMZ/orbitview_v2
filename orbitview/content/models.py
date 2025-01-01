@@ -64,13 +64,6 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={"pk":self.pk})
 
-
-    def save(self, *args, **kwargs):
-        # Ensure that a UUID is assigned if it's not already set
-        if not self.uuid or self.uuid == "-":
-            self.uuid = uuid.uuid4()
-        super().save(*args, **kwargs)  # Call the parent save method
-
 '''
 class PostAttachment(models.Model): # PDFs, files, images or any attachments people want to send
     file = models.FileField(upload_to=dynamic route that sorts the file attachments people put on)
