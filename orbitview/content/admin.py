@@ -18,8 +18,7 @@ class PostAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         # Automatically set the author to the current logged-in user
-        if not obj.author:
-            obj.author = request.user
+        obj.author = request.user
         obj.save()
 
 
@@ -28,7 +27,5 @@ class ArticleAdmin(admin.ModelAdmin):
     fields = ['title', 'subtitle', 'content', 'featured_image', 'archived', 'unlisted']
 
     def save_model(self, request, obj, form, change):
-        # Automatically set the author to the current logged-in user
-        if not obj.author:
-            obj.author = request.user
+        obj.author = request.user
         obj.save()
