@@ -89,7 +89,7 @@ const HomeFeed = () => {
       </select>
       <div className={`${styles.searchIcon} mt-6 mb-6`}>
         <span>
-          Can't find something?{" "}
+          Can&apos;t find something?{" "}
           <a href="/search" style={{ display: "inline-flex", gap: "0.5rem" }}>
             Try search <FaSearch />
           </a>
@@ -101,8 +101,8 @@ const HomeFeed = () => {
           <p>No articles found.</p>
         ) : (
           articles.map((article, i) => (
-            <div className={styles.articleBox}>
-              <ArticleCard key={i} article={article} />
+            <div className={styles.articleBox} key={i}>
+              <ArticleCard article={article} />
             </div>
           ))
         )}
