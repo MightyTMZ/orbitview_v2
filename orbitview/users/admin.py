@@ -30,6 +30,37 @@ class ProfileAdmin(admin.ModelAdmin):
         """Restrict fields for beta users."""
         form = super().get_form(request, obj, **kwargs)
         # Restrict editable fields dynamically if needed
+        if request.user.is_superuser:
+            self.fields = [
+                'user',
+                'location',
+                'skills_description',
+                'interests_description',
+                'currently_working_on',
+                'check_in_cycle_length',
+                'bio',
+                'by_line',
+                'date_of_birth',
+                'industry',
+                'image',
+                'is_beta_user',  # Another example field
+            ]
+        else:
+            # Fields for non-superusers (beta users)
+            self.fields = [
+                'user',
+                'location',
+                'skills_description',
+                'interests_description',
+                'currently_working_on',
+                'check_in_cycle_length',
+                'bio',
+                'by_line',
+                'date_of_birth',
+                'industry',
+                'image',
+            ]
+
         return form
     
     def get_queryset(self, request):
