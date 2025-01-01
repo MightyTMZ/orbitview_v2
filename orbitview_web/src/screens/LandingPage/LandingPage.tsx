@@ -4,7 +4,8 @@ import { TbAugmentedReality2 } from "react-icons/tb";
 import { MdCastForEducation } from "react-icons/md";
 import { SiHandshakeProtocol } from "react-icons/si";
 import ImmersiveText from "./ImmersiveText";
-import Footer from "@/app/home/oldLandingComponents/Footer";
+// import Footer from "@/app/home/oldLandingComponents/Footer";
+// No footer for deployment (Dec 31, 2024)
 
 export const LandingPage = () => {
   const iconSize = 30;
