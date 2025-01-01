@@ -1,7 +1,7 @@
 "use client";
 // because its immersive, it will be client
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./ImmersiveArticleComponent.css";
 import { backendServer } from "@/importantLinks";
 import { useRouter } from "next/navigation";

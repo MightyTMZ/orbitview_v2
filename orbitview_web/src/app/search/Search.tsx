@@ -127,8 +127,12 @@ const SearchPage = () => {
       const data = await response.json();
       console.log(data);
       setSearchResults(data);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message); // If it's an Error instance, access the message
+      } else {
+        console.error("An unknown error occurred."); // Handle non-Error instances
+      }
     } finally {
       setLoading(false);
     }

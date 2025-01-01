@@ -100,9 +100,9 @@ const HomeFeed = () => {
         {articles.length === 0 && !loading ? (
           <p>No articles found.</p>
         ) : (
-          articles.map((article, key) => (
+          articles.map((article, i) => (
             <div className={styles.articleBox}>
-              <ArticleCard key={key} article={article} />
+              <ArticleCard key={i} article={article} />
             </div>
           ))
         )}

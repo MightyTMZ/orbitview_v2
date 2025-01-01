@@ -1,7 +1,7 @@
 "use client";
 
 // import type { Metadata } from "next";
-import localFont from "next/font/local";
+// import localFont from "next/font/local";
 import AppContainer from "./AppContainer";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/redux/store";

@@ -54,13 +54,13 @@ interface PostListProps {
   posts: Post[];
 }
 
-const correctImagePath = (url: String) => {
+/*const correctImagePath = (url: String) => {
   return `${backendServer}/${url}`;
 };
 
 const renderFullName = (author: Author) => {
   return `${author.user.first_name} ${author.user.last_name}`;
-};
+};*/
 
 const PostCard = ({ post }: CardProps) => {
   const router = useRouter();

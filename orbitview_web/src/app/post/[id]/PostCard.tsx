@@ -11,6 +11,7 @@ import { FaShareSquare } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
+import Image from "next/image";
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -188,7 +189,7 @@ export const PostCard = ({ post }: CardProps) => {
     <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto mb-6 transition-transform duration-300 hover:scale-105 hover:shadow-xl group">
       {/* Author Details */}
       <div className="flex items-center mb-4">
-        <img
+        <Image
           className="w-12 h-12 rounded-full mr-4 transition-transform duration-300 group-hover:rotate-6"
           src={correctImagePath(post.author.image)}
           alt={`${post.author.user.first_name} ${post.author.user.last_name}`}

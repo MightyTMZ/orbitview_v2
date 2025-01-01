@@ -122,9 +122,9 @@ const ProfilePageEvents = () => {
     return <div>Profile not found.</div>;
   }
 
-  const getProfileURL = () => {
+  /*const getProfileURL = () => {
     return `${backendServer}/profile/${username}`;
-  };
+  };*/
 
   // const followURL = getProfileURL + "/follow/";
   // const profileConnectionsListURL = `${backendServer}/social/connections/`;

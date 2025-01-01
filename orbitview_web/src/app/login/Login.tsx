@@ -121,10 +121,14 @@ export default function Login() {
       };
 
       setTimeout(redirectToHomePage, 500); // redirect to home page after 1.5 seconds
-    } catch (error: any) {
-      console.error("Error during login:", error);
-      setError(error.message);
-      setServerError(true);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message); // If it's an Error instance, access the message
+        console.error("Error during login:", error);
+        setServerError(true);
+      } else {
+        setError("An unknown error occurred."); // Handle non-Error instances
+      }
     }
   };
 
