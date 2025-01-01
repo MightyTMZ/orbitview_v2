@@ -1,4 +1,4 @@
-const production = false;
+const production = true;
 
 export const backendServer = production
   ? "https://orbitview.pythonanywhere.com"
