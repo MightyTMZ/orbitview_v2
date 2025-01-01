@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 
 
 @admin.register(Profile)
-class CustomUserAdmin(admin.ModelAdmin):
+class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user__username', 'user__first_name', 'user__last_name', 'user__email']
     
     search_fields = ('user__username',)  # Reference the 'user' field correctly if needed
@@ -31,6 +31,21 @@ class CustomUserAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         # Restrict editable fields dynamically if needed
         return form
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset  # Superusers can see all
+        elif request.user.is_authenticated and request.user.is_beta_user:
+            return queryset.filter(id=request.user.id)  # Beta users can only see their own profile
+        return queryset.none()  # Non-beta users see nothing
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True  # Superusers can change anything
+        if obj is not None and obj.id == request.user.id:
+            return True  # Users can edit their own profiles
+        return False
     
 
 

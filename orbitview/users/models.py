@@ -54,7 +54,12 @@ class Profile(models.Model):
     visible_to_search = models.BooleanField(default=False)
     # do they want to appear in natural language queries or not
     embedding = models.JSONField(null=True, blank=True) # store the embeddings
-    
+    is_beta_user = models.BooleanField(default=True)
+
+    class Meta:
+        permissions = [
+            ("can_edit_own_profile", "Can edit their own profile"),
+        ]
 
 
     @property
