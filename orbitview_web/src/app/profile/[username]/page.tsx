@@ -12,7 +12,7 @@ const page = () => {
     <div>
       <Provider store={store}>
         <PersistGate loading={<Spinner />} persistor={persistor}>
-          <ProfilePage />
+          <ProfilePage content_type="articles"/>
         </PersistGate>
       </Provider>
     </div>

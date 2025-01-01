@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import Spinner from "@/components/Spinner/Spinner";
-import { useRouter } from "next/navigation";
 import { debounce } from "lodash"; // Import lodash debounce
 import { backendServer } from "@/importantLinks";
 import ArticleList from "../ArticleList";
