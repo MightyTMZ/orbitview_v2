@@ -11,4 +11,27 @@ class CustomUserAdmin(admin.ModelAdmin):
     
     search_fields = ('user__username',)  # Reference the 'user' field correctly if needed
 
-    # add permissions here'''
+    fields = [
+        'user',
+        'location',
+        'skills_description',
+        'interests_description',
+        'currently_working_on',
+        'check_in_cycle_length',
+        'bio',
+        'by_line',
+        'date_of_birth',
+        'industry',
+        'image',
+    ]
+    # readonly_fields = ['user']
+
+    def get_form(self, request, obj=None, **kwargs):
+        """Restrict fields for beta users."""
+        form = super().get_form(request, obj, **kwargs)
+        # Restrict editable fields dynamically if needed
+        return form
+    
+
+
+

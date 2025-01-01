@@ -14,34 +14,9 @@ from .models import (
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'title',
-        'author',
-        'date_posted',
-        'date_updated',
-        'likes_count',
-        'saves_count',
-        'shares_count',
-        'archived',
-        'unlisted',
-        'search_vector',
-        
-    )
+    fields = ['title', 'content', 'archived', 'unlisted']
 
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'title',
-        'author',
-        'created_at',
-        'updated_at',
-        'archived',
-        'unlisted',
-        'likes_count',
-        'saves_count',
-        'shares_count',
-        'search_vector',
-    )
+    fields = ['title', 'subtitle', 'content', 'featured_image', 'archived', 'unlisted']
