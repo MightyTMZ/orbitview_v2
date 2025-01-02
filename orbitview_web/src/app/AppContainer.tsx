@@ -88,13 +88,13 @@ const AppContainer: React.FC<Props> = ({ children }) => {
 
           {isAuthenticated && current_user ? (
             <>
-              <Image
+              <img
                 src={`${backendServer}/${current_user.image}`}
                 alt={`${current_user.user.first_name} ${current_user.user.last_name}`}
                 height={30}
                 width={30}
                 style={{ display: "inline", borderRadius: "50%" }}
-                priority
+              
               />
               <Link href="/logout">Log Out</Link>
             </>
