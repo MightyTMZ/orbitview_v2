@@ -9,6 +9,7 @@ import { RootState } from "@/redux/store";
 import MessageButton from "./MessageButton/MessageButton";
 import FollowButton from "./FollowButton/FollowButton";
 import ConnectButton from "./ConnectButton/ConnectButton";
+import { backendServer } from "@/importantLinks";
 
 interface User {
   id: number;
@@ -38,7 +39,6 @@ interface ProfilePageProps {
 
 // Profile component
 const ProfilePage = ({ content_type }: ProfilePageProps) => {
-  const backendServer = "http://127.0.0.1:8000";
   const { username } = useParams();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
