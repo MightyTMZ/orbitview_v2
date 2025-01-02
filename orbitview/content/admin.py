@@ -57,7 +57,7 @@ class ArticleAdmin(admin.ModelAdmin):
         queryset = super().get_queryset(request)
         if request.user.is_superuser:
             return queryset  # Superusers can see all
-        elif request.user.is_authenticated and request.user.is_beta_user:
+        elif request.user.is_authenticated:
             return queryset.filter(author=request.user)  # Beta users can only see their own posts
         return queryset.none()  # Non-beta users see nothing
 
