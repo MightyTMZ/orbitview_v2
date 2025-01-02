@@ -1,1 +1,1 @@
-export const backendServer = "http://127.0.0.1:8000/"
+export const backendServer = "https://orbitview.pythonanywhere.com"
