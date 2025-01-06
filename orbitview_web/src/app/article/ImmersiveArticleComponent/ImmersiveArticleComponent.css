@@ -109,12 +109,12 @@
 }
 
 .orbitViewText {
-  text-shadow: -2px 0 rgba(255, 0, 0, 0.9),
-    /* Red shadow for left eye */ 2px 0 rgba(0, 255, 255, 0.9); /* Cyan shadow for right eye */
+  text-shadow: -2px 0 #fe0604,
+    /* Red shadow for left eye */ 2px 0 #1dffff; /* Cyan shadow for right eye */
 }
 
 .orbitViewTitle {
-  text-shadow: -3px 0 rgba(255, 0, 0, 0.7), 3px 0 rgba(0, 255, 255, 0.7);
+  text-shadow: -3px 0 #fe0604, 3px 0 #1dffff;
 }
 
 /* Hover interaction 
