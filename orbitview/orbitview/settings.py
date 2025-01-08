@@ -52,7 +52,9 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'djoser',
+    'data',
     'rest_framework_simplejwt',
+    'django_elasticsearch_dsl',
     'ckeditor', 
     'blog',
     'chat', 
@@ -91,6 +93,13 @@ TEMPLATES = [
         },
     },
 ]
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'localhost:9200',
+        'http_auth': ('username', 'password'),
+    },
+}
 
 WSGI_APPLICATION = 'orbitview.wsgi.application'
 

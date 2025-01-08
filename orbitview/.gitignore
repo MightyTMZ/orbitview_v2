@@ -9,4 +9,4 @@ successful_login_response.json
 
 python_anywhere_settings.py
 
-db.sqlite3
+./db.sqlite3
