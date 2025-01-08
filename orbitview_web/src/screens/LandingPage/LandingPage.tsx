@@ -35,77 +35,84 @@ export const LandingPage = () => {
       </div>
 
       {/* Features Section */}
-      <section className="py-16 px-6 bg-white text-gray-900">
-        <h2
-          className="text-3xl md:text-4xl font-bold text-center mb-12"
+      <section className="py-16 px-6 bg-gradient-to-r from-blue-50 to-white text-gray-900">
+        {/*<h2
+          className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-800"
           style={{
-            fontSize: "2rem",
+            fontSize: "2.5rem",
             marginTop: "1.5rem",
           }}
         >
           Why Choose OrbitView?
-        </h2>
+        </h2>*/}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-6">
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-            <div>
-              <TbAugmentedReality2 size={iconSize} />
+          {/* Card 1 */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center transform transition-transform hover:scale-105 hover:shadow-2xl">
+            <div className="text-blue-600 mb-6">
+              <TbAugmentedReality2 size={50} />
             </div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-bold mb-4 text-gray-800">
               Augmented Media Experience
             </h3>
-            <p>
+            <p className="text-gray-600 leading-relaxed">
               Experience content like never before with our innovative
               stereoscopic filters and AR-enhanced features.
             </p>
           </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-            <div>
-              <MdCastForEducation size={iconSize} />
+          {/* Card 2 */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center transform transition-transform hover:scale-105 hover:shadow-2xl">
+            <div className="text-green-600 mb-6">
+              <MdCastForEducation size={50} />
             </div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-bold mb-4 text-gray-800">
               Revolutionary Learning
             </h3>
-            <p>
+            <p className="text-gray-600 leading-relaxed">
               Engage with tailored, interactive learning tools designed to make
               knowledge acquisition fun and effective.
             </p>
           </div>
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-            <div>
-              <SiHandshakeProtocol size={iconSize} />
+          {/* Card 3 */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center transform transition-transform hover:scale-105 hover:shadow-2xl">
+            <div className="text-indigo-600 mb-6">
+              <SiHandshakeProtocol size={50} />
             </div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-bold mb-4 text-gray-800">
               Genuine Connections (Coming Soon)
             </h3>
-            <p>
+            <p className="text-gray-600 leading-relaxed">
               Join a thriving community of like-minded individuals and foster
               meaningful professional relationships.
             </p>
           </div>
         </div>
       </section>
+
       <ImmersiveText />
 
       {/* Call to Action Section */}
-      <section className="py-16 bg-blue-600 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section
+        className="py-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-center text-white"
+        style={{ paddingTop: "3rem" }}
+      >
+        <h2
+          className="text-3xl md:text-4xl font-extrabold mb-6"
+          style={{ fontSize: "2.5rem" }}
+        >
           Ready to Explore OrbitView?
         </h2>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8">
+        <p
+          className="text-lg md:text-xl max-w-2xl mx-auto mb-8"
+          style={{ marginBottom: "1.5rem" }}
+        >
           Sign up today to start your journey into the most immersive and
           connected learning experience ever created.
         </p>
-        <button
-          onClick={() => (window.location.href = "/login")}
-          className="px-8 py-4 bg-yellow-400 text-blue-900 font-semibold rounded-full shadow-lg hover:bg-yellow-300 transition"
-          style={{
-            background: "white",
-            color: "black",
-            padding: "10px 20px",
-          }}
-        >
-          Get Started
-        </button>
+        <OrbitButton
+          text="Get Started"
+          hoverText="Get Started"
+          endpoint="/join"
+        />
       </section>
 
       {/* Footer Section */}
